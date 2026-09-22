@@ -1,10 +1,5 @@
-* text=auto
-*.cpp text eol=lf
-*.h text eol=lf
-*.py text eol=lf
-*.json text eol=lf
-*.md text eol=lf
-*.ps1 text eol=crlf
-*.cmd text eol=crlf
+# Preserve audited bytes, including upstream notices and hashed asset generators.
+# Line-ending conversion would break the provenance hashes after cloning.
+* -text
 *.dll binary
 *.lib binary

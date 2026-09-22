@@ -6,6 +6,7 @@
 **/Intermediate/
 **/Saved/
 **/DerivedDataCache/
+**/FileOpenOrder/
 **/__pycache__/
 *.pyc
 *.pdb

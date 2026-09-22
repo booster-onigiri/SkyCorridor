@@ -8,7 +8,7 @@ CASES={
  'memories':(['-EWMemory89Audit'],720,'memories'),
  'memories-resume':(['-EWMemory89Audit','-EWMemoryResume'],240,'memories'),
  'upper-rail':(['-EWSkyrailAudit','-EWUpper88'],1440,'upper-rail'),
- 'airship':(['-EWAero87Audit'],1080,'airship'),
+ 'airship':(['-EWAero87Audit','-EWRebaseEachChunk'],1080,'airship'),
  'airship-resume':(['-EWAero87Audit','-EWAero87Resume'],240,'airship'),
  'media':(['-EWMediaAudit'],360,'media'),
 }

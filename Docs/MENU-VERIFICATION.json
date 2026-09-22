@@ -1,0 +1,460 @@
+{
+  "success": true,
+  "failure": "",
+  "scope": "Actual production Slate button trees, public-default menu and phone guards, solo UI preservation. No online service, microphone, workshop generation, or personal save is exercised.",
+  "checks": [
+    {
+      "check": "initial title permits solo play",
+      "pass": true
+    },
+    {
+      "check": "title: disabled with development badge: 街を探す・街を開く",
+      "pass": true
+    },
+    {
+      "check": "title: disabled with development badge: 世界の卵・追加要素",
+      "pass": true
+    },
+    {
+      "check": "title: disabled with development badge: みんなで映画を見る",
+      "pass": true
+    },
+    {
+      "check": "title: working destination remains enabled: 画質と操作",
+      "pass": true
+    },
+    {
+      "check": "title: working destination remains enabled: 水辺の魚図鑑・釣りに行く",
+      "pass": true
+    },
+    {
+      "check": "title: working destination remains enabled: 映画館へ行く",
+      "pass": true
+    },
+    {
+      "check": "title: working destination remains enabled: 上層の客室を訪ねる",
+      "pass": true
+    },
+    {
+      "check": "title: solo start remains enabled",
+      "pass": true
+    },
+    {
+      "check": "title: direct blocked menu 9 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "title: direct blocked menu 8 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "title: direct blocked menu 13 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "title: direct blocked menu 14 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "settings opens normally",
+      "pass": true
+    },
+    {
+      "check": "blocked city preserves active settings",
+      "pass": true
+    },
+    {
+      "check": "normal solo start starts a session",
+      "pass": true
+    },
+    {
+      "check": "pause: disabled with development badge: 街を探す・街を開く",
+      "pass": true
+    },
+    {
+      "check": "pause: disabled with development badge: 世界の卵・追加要素",
+      "pass": true
+    },
+    {
+      "check": "pause: disabled with development badge: みんなで映画を見る",
+      "pass": true
+    },
+    {
+      "check": "pause: working destination remains enabled: 画質と操作",
+      "pass": true
+    },
+    {
+      "check": "pause: working destination remains enabled: 水辺の魚図鑑・釣りに行く",
+      "pass": true
+    },
+    {
+      "check": "pause: working destination remains enabled: 映画館へ行く",
+      "pass": true
+    },
+    {
+      "check": "pause: working destination remains enabled: 上層の客室を訪ねる",
+      "pass": true
+    },
+    {
+      "check": "pause: solo start remains enabled",
+      "pass": true
+    },
+    {
+      "check": "pause: return to exploration remains enabled",
+      "pass": true
+    },
+    {
+      "check": "pause: photo mode remains enabled",
+      "pass": true
+    },
+    {
+      "check": "pause: direct blocked menu 9 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "pause: direct blocked menu 8 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "pause: direct blocked menu 13 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "pause: direct blocked menu 14 preserves Main",
+      "pass": true
+    },
+    {
+      "check": "photo mode opens normally",
+      "pass": true
+    },
+    {
+      "check": "blocked menu 9 does not close active photo mode",
+      "pass": true
+    },
+    {
+      "check": "blocked menu 8 does not close active photo mode",
+      "pass": true
+    },
+    {
+      "check": "blocked menu 13 does not close active photo mode",
+      "pass": true
+    },
+    {
+      "check": "blocked menu 14 does not close active photo mode",
+      "pass": true
+    },
+    {
+      "check": "handheld terminal opens normally",
+      "pass": true
+    },
+    {
+      "check": "phone has its production Slate widget",
+      "pass": true
+    },
+    {
+      "check": "phone: Friends disabled with development badge",
+      "pass": true
+    },
+    {
+      "check": "phone: local app remains enabled: 観測",
+      "pass": true
+    },
+    {
+      "check": "phone: local app remains enabled: 地図",
+      "pass": true
+    },
+    {
+      "check": "phone: local app remains enabled: 記録",
+      "pass": true
+    },
+    {
+      "check": "phone: local app remains enabled: YouTube",
+      "pass": true
+    },
+    {
+      "check": "phone: local app remains enabled: カメラ",
+      "pass": true
+    },
+    {
+      "check": "direct Friends page request preserves phone home",
+      "pass": true
+    },
+    {
+      "check": "direct phone invite request preserves terminal",
+      "pass": true
+    },
+    {
+      "check": "local phone page 1 still opens",
+      "pass": true
+    },
+    {
+      "check": "local phone page 2 still opens",
+      "pass": true
+    },
+    {
+      "check": "local phone page 3 still opens",
+      "pass": true
+    },
+    {
+      "check": "local phone page 5 still opens",
+      "pass": true
+    },
+    {
+      "check": "EOS authentication, voice, and public city remain inactive",
+      "pass": true
+    },
+    {
+      "check": "cinema sharing remains inactive without a host or invite",
+      "pass": true
+    },
+    {
+      "check": "rendered screenshot exists: title",
+      "pass": true
+    },
+    {
+      "check": "rendered screenshot exists: pause",
+      "pass": true
+    },
+    {
+      "check": "rendered screenshot exists: phone-screen",
+      "pass": true
+    },
+    {
+      "check": "rendered screenshot exists: phone",
+      "pass": true
+    }
+  ],
+  "buttons": [
+    {
+      "surface": "title",
+      "label": "街を探す・街を開く　開発中",
+      "enabled": false
+    },
+    {
+      "surface": "title",
+      "label": "世界の卵・追加要素　開発中",
+      "enabled": false
+    },
+    {
+      "surface": "title",
+      "label": "散策を始める",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "中央広場へ戻る",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "過去の記録・場所コード",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "旅の図鑑",
+      "enabled": false
+    },
+    {
+      "surface": "title",
+      "label": "水辺の魚図鑑・釣りに行く",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "写真を撮る　F9",
+      "enabled": false
+    },
+    {
+      "surface": "title",
+      "label": "画質と操作",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "映画館へ行く",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "天空シアターへ行く",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "豪華飛行船に乗る　アウレリア空中港",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "上層の客室を訪ねる",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "街の寄り道案内　屋上プール・図書館・美術館",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "東の外縁へ　白塔の水都",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "みんなで映画を見る　開発中",
+      "enabled": false
+    },
+    {
+      "surface": "title",
+      "label": "時計広場駅へ　水都・ホテル・シアター・空港",
+      "enabled": true
+    },
+    {
+      "surface": "title",
+      "label": "終了",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "Q　記録端末を持ち上げる",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "街を探す・街を開く　開発中",
+      "enabled": false
+    },
+    {
+      "surface": "pause",
+      "label": "世界の卵・追加要素　開発中",
+      "enabled": false
+    },
+    {
+      "surface": "pause",
+      "label": "探索に戻る",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "続きから",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "中央広場へ戻る",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "過去の記録・場所コード",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "旅の図鑑",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "水辺の魚図鑑・釣りに行く",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "写真を撮る　F9",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "画質と操作",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "映画館へ行く",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "天空シアターへ行く",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "豪華飛行船に乗る　アウレリア空中港",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "上層の客室を訪ねる",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "街の寄り道案内　屋上プール・図書館・美術館",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "東の外縁へ　白塔の水都",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "みんなで映画を見る　開発中",
+      "enabled": false
+    },
+    {
+      "surface": "pause",
+      "label": "時計広場駅へ　水都・ホテル・シアター・空港",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "広場のモニター",
+      "enabled": true
+    },
+    {
+      "surface": "pause",
+      "label": "終了",
+      "enabled": true
+    },
+    {
+      "surface": "phone home",
+      "label": "観測",
+      "enabled": true
+    },
+    {
+      "surface": "phone home",
+      "label": "地図",
+      "enabled": true
+    },
+    {
+      "surface": "phone home",
+      "label": "記録",
+      "enabled": true
+    },
+    {
+      "surface": "phone home",
+      "label": "YouTube",
+      "enabled": true
+    },
+    {
+      "surface": "phone home",
+      "label": "友人 開発中",
+      "enabled": false
+    },
+    {
+      "surface": "phone home",
+      "label": "カメラ",
+      "enabled": true
+    },
+    {
+      "surface": "phone home",
+      "label": "",
+      "enabled": true
+    }
+  ],
+  "version": "v0.1.1"
+}

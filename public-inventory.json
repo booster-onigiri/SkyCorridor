@@ -60,8 +60,8 @@
     },
     {
       "file": "Docs/ASSETS.md",
-      "sha256": "932f2ec0fa91a4c56e908fb39d27aa1ba336798538e4ada262cbee2186359e4e",
-      "bytes": 5100,
+      "sha256": "4e04a7faa63bd8077b753599ba0f3d218a691d8c341906aea5d249618434a713",
+      "bytes": 5200,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -70,6 +70,14 @@
       "file": "Docs/END-USER-TERMS.md",
       "sha256": "8e1777d5c0702fe27ced399afbc57088fa946518d2a04614914b2c3136c2b3fa",
       "bytes": 5219,
+      "delivery": "git",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "origin": "Reviewed exported project source or notices"
+    },
+    {
+      "file": "Docs/MENU-VERIFICATION.json",
+      "sha256": "6229fa9a0ef8c853fe9f42225f8d761e9e618b11fad1cb30f08fe63ebfb66ffd",
+      "bytes": 10620,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -84,24 +92,24 @@
     },
     {
       "file": "Docs/ONLINE.md",
-      "sha256": "d1937cbb6a6e9550f97d8eaf985603a6a5c8532864190079619e3d5dbf7593a5",
-      "bytes": 4114,
+      "sha256": "0ad548969c3a429e7d8edc5d20e226464df59c8aa3fcca8ee715e97b6d26e8b5",
+      "bytes": 5280,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/PLAY-EN.md",
-      "sha256": "abf082e675338feca7229d8fb8f044271c16be45a020b5283566cb96b80ee9e2",
-      "bytes": 3675,
+      "sha256": "83ae09a75b51fed356ee71b3b35ed05dc7e23c5f4c2051020a346ae19d7ae61c",
+      "bytes": 3990,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/PLAY-JA.md",
-      "sha256": "c7bdc37c0870ebb05250dc7feccd01f13eb673db2d8f5faf6e55f359cae4a139",
-      "bytes": 3965,
+      "sha256": "7499eb77026296ff1c7655af2d4c8d1cef9126b622544f81f2ebebdc362322c4",
+      "bytes": 4215,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -116,24 +124,24 @@
     },
     {
       "file": "Docs/SETUP.ja.md",
-      "sha256": "c68b2c5879980bc45c6520b4782e2db3b968e2003c013b1e5f66832ce51494ef",
-      "bytes": 5759,
+      "sha256": "d043cfa14a47cbe900259448306387cb191d44945a6240203ad80be451922a62",
+      "bytes": 5882,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/SETUP.md",
-      "sha256": "e63e64169e539ad04380eac759b4034f72a808a129794c3ea0f92a43f051c525",
-      "bytes": 5212,
+      "sha256": "aa8312dd81f1f3e914713cf2165776dd70522b239cd5ac474295053c24f442f2",
+      "bytes": 5289,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/VERIFICATION.md",
-      "sha256": "7538bf24f182b73c373c46b0a95cb04c14202d2bc33d10a1d5479fc29c37c8d2",
-      "bytes": 11604,
+      "sha256": "fddb17b64045cbf5abc3fb7c419a9d170772edebf47e6872a9ce6c6fd12f0800",
+      "bytes": 14365,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -316,8 +324,8 @@
     },
     {
       "file": "Project/Config/DefaultGame.ini",
-      "sha256": "f1e6a51632b027ea8f73aacd85875d864de9b0c2029cf1a4240cbe63487afd89",
-      "bytes": 1349,
+      "sha256": "4f2eb47e838bbf6f8e07956bca48a5ccc377d668ae5b72bddd5079d51b9b9ce3",
+      "bytes": 1348,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -5388,8 +5396,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWConceptRuntime.cpp",
-      "sha256": "0cdb475f775af42c5dc858fbb37754fb204631dac04d0c9ea203e903fee557ef",
-      "bytes": 16746,
+      "sha256": "e4fac4483c001993bf60a748a33229181f7b6764ccf1b1136478ebab910922fb",
+      "bytes": 17037,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -5580,16 +5588,16 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWGameInstance.cpp",
-      "sha256": "1144b6b5d346dc55366f4653ba90902331c79ea8f564f374c46f0997e4cb5703",
-      "bytes": 51532,
+      "sha256": "0039320f949f0de19bfb8c193909763be9cff272ba3592034881a40261fc384d",
+      "bytes": 52631,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Project/Source/EndlessWorld/EWGameInstance.h",
-      "sha256": "9ec7648167e8b2d87e55465534d1ccf6304bb7178c19178fbe9f66e8814579c3",
-      "bytes": 6288,
+      "sha256": "5fd81fda599da89c3a30147b81709dab06a51fa458a71e31fcdf3f7aaa3b783d",
+      "bytes": 6334,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -5684,8 +5692,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWInterface.cpp",
-      "sha256": "2aabc66985d0dd54cd476a1916ead5d8bab2d0fa1edb72e9a10e35468cfe6cb1",
-      "bytes": 61290,
+      "sha256": "b656531e4e1e8eef84e4a7f5f1efe518891afbc6e0ba42339a4be6332de0e178",
+      "bytes": 61758,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -6006,6 +6014,22 @@
       "file": "Project/Source/EndlessWorld/EWPresentationAudit.h",
       "sha256": "f6f65e1b7ead574d7c65d46407fafdb0173ba88cc2a0f7d77f8f24f10e90baf9",
       "bytes": 857,
+      "delivery": "git",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "origin": "Reviewed exported project source or notices"
+    },
+    {
+      "file": "Project/Source/EndlessWorld/EWPublicMenuAudit.cpp",
+      "sha256": "b2293121cdb7d2fa20e917eef89737e972a90c28905cd5612c7340947733e175",
+      "bytes": 11506,
+      "delivery": "git",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "origin": "Reviewed exported project source or notices"
+    },
+    {
+      "file": "Project/Source/EndlessWorld/EWPublicMenuAudit.h",
+      "sha256": "8b6ea6ca27701ec3db973be2ec97d674314c3b218caa5d663b925cfd304b4552",
+      "bytes": 797,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -6340,8 +6364,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWTerminal.cpp",
-      "sha256": "b714231143610adfbf6ca8e4adb850e820b68badba6eb01f5704a220172152a6",
-      "bytes": 21253,
+      "sha256": "2d136f4e7bb34e6d3757de109ce4a8c6fa2d6a7efa387bf73252926cf35da601",
+      "bytes": 21684,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -6356,8 +6380,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWTerminalView.cpp",
-      "sha256": "190a82072ea1c8dc5d16bda2415c802bbf346ce68b7470bcb341ec3b33beffbc",
-      "bytes": 26385,
+      "sha256": "0c60f97b716157740b8eec828df3d3971dce782284b2d716f104b90f79800446",
+      "bytes": 27115,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -10388,16 +10412,16 @@
     },
     {
       "file": "README.ja.md",
-      "sha256": "fa601b54b2d1611cc6f7d73207ca5460b758182aa3ee392deea008007e17191a",
-      "bytes": 4728,
+      "sha256": "67e0853ef80a1db2699dc57b165081522d2902bb7e2779a50c2d2f9d52b685c2",
+      "bytes": 5092,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "README.md",
-      "sha256": "ae6b86026835f70f6c1deafc4e2f53bc937128ab908658f67b27c6843760d913",
-      "bytes": 4183,
+      "sha256": "dcfae84f5f2a1508742cec51bc6209cff06a326d69a0bd40fb1acd937b74529a",
+      "bytes": 4428,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -12124,8 +12148,8 @@
     },
     {
       "file": "Tools/package-release.py",
-      "sha256": "19d88e8165bcf835f0a2ad108ff9c61713e00a399b5b994b941cc1d341876efb",
-      "bytes": 4521,
+      "sha256": "b5233b45a06ea5d76675ce52b6e81bb314c4b36da8be4331e7aad1ca56e29728",
+      "bytes": 4728,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"

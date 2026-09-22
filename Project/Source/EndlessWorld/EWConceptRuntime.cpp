@@ -30,6 +30,8 @@ FString AEWConceptRuntime::Directory() const
 void AEWConceptRuntime::BeginPlay()
 {
     Super::BeginPlay();Surface=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/EndlessWorld/Materials/M_LifeSurface.M_LifeSurface"));
+    const auto* G=GetGameInstance<UEWGameInstance>();
+    if(!G || !G->IsMenuAvailable(EEWMenu::Workshop))return;
     if(Directory().IsEmpty())return;
     const FString Source=FPaths::ProjectDir()/TEXT("WorldWorkshop");
     for(const TCHAR* Kind:{TEXT("Eggs"),TEXT("Concepts")})
@@ -49,6 +51,7 @@ bool AEWConceptRuntime::Tell(bool OK,const FString& Text)
 bool AEWConceptRuntime::LocalOnly()
 {
     const auto* G=GetGameInstance<UEWGameInstance>();
+    if(!G || !G->IsMenuAvailable(EEWMenu::Workshop))return Tell(false,TEXT("世界の卵・追加要素は開発中です。通常の公開版では利用できません。"));
     if(!G || !G->Manager || G->Manager->IsTravelling())return Tell(false,TEXT("世界の読込みが終わるまでお待ちください。"));
     if((G->SocialSession && (G->SocialSession->Active() || G->SocialSession->Network().Busy())) || (G->CinemaSession && G->CinemaSession->Connected()))
         return Tell(false,TEXT("この実証は一人用の世界で利用できます。共有の街から退出してから開いてください。"));

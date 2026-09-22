@@ -28,12 +28,13 @@ than the packaged game.
 
 ## Restore the versioned assets
 
-Check out **v0.1.0** and use the asset archives for that same release. The repository
+Check out **v0.1.1** and use the asset archives pinned in its manifest.
+This menu-only update reuses the unchanged v0.1.0 development asset archives. The repository
 contains original source and generator scripts. Large Content/SourceArt files are
 listed in the root `release-assets.json` and delivered through GitHub Releases.
 
 ```powershell
-git clone --branch v0.1.0 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.1 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```

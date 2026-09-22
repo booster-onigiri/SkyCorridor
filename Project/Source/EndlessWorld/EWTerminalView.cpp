@@ -195,6 +195,8 @@ void SEWTerminalView::Rebuild()
 }
 void SEWTerminalView::Home(TSharedRef<SVerticalBox> Box)
 {
+    const auto* G=Owner->GetGameInstance<UEWGameInstance>();
+    const bool FriendsAvailable=G && G->IsMenuAvailable(EEWMenu::City);
     const TCHAR* Labels[]={TEXT("観測"),TEXT("地図"),TEXT("記録"),TEXT("YouTube"),TEXT("友人"),TEXT("カメラ")};
     const int Pages[]={5,1,2,3,4,-1};Box->AddSlot().FillHeight(.6);
     for(int Row=0;Row<3;++Row)
@@ -203,9 +205,12 @@ void SEWTerminalView::Home(TSharedRef<SVerticalBox> Box)
         for(int Col=0;Col<2;++Col)
         {
             const int I=Row*2+Col,Page=Pages[I];auto Tile=SNew(SVerticalBox);
-            Tile->AddSlot().AutoHeight().HAlign(HAlign_Center)[SNew(SBox).WidthOverride(188).HeightOverride(188)[Card(Icon(I,108),AppColor(I),FMargin(20))]];
-            Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,20,0,0)[Text(Labels[I],29,FLinearColor::White)];
-            auto B=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(FMargin(12,14)).OnClicked_Lambda([this,Page]
+            const bool Available=Page!=4 || FriendsAvailable;
+            const FLinearColor Foreground=Available?FLinearColor::White:FLinearColor(.60,.64,.66,1);
+            Tile->AddSlot().AutoHeight().HAlign(HAlign_Center)[SNew(SBox).WidthOverride(188).HeightOverride(188)[Card(Icon(I,108,Foreground),Available?AppColor(I):FLinearColor(.16,.19,.21,1),FMargin(20))]];
+            Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,20,0,0)[Text(Labels[I],29,Foreground)];
+            if(!Available)Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,5,0,0)[Text(TEXT("開発中"),22,Foreground)];
+            auto B=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(FMargin(12,14)).IsEnabled(Available).OnClicked_Lambda([this,Page]
             {if(Owner.IsValid()){RecordDetail=INDEX_NONE;if(Page>=0)Owner->ShowPage(Page);else if(auto* G=Owner->GetGameInstance<UEWGameInstance>()){Owner->Close();if(G->PhotoMode)G->PhotoMode->Open();}}return FReply::Handled();})[Tile];Buttons.Add(B);
             Line->AddSlot().FillWidth(1).HAlign(HAlign_Center)[B];
         }
@@ -290,12 +295,13 @@ void SEWTerminalView::Video(TSharedRef<SVerticalBox> Box)
 void SEWTerminalView::Friends(TSharedRef<SVerticalBox> Box)
 {
     auto* G=Owner->GetGameInstance<UEWGameInstance>();auto* S=G?G->SocialSession.Get():nullptr;auto Summary=SNew(SVerticalBox);
+    const bool Available=G && G->IsMenuAvailable(EEWMenu::City);
     Summary->AddSlot().AutoHeight().HAlign(HAlign_Center)[Icon(4,116,Accent)];
     Summary->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,18,0,12)[Text(S && S->Active()?TEXT("同じ街を歩いています"):TEXT("いまは、ひとりで散策中"),30,Ink)];
     if(S && S->Active())Summary->AddSlot().AutoHeight().HAlign(HAlign_Center)[Text(FString::Printf(TEXT("%d 人が滞在中"),S->Players().Num()),25,Muted)];
     Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Card(Summary)];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,18)[Button(TEXT("街を探す・開く"),[this]{Owner->InviteFriends();})];
-    if(S && !S->Invite().IsEmpty())
+    Box->AddSlot().AutoHeight().Padding(0,0,0,18)[Button(Available?TEXT("街を探す・開く"):TEXT("街を探す・開く　開発中"),[this]{Owner->InviteFriends();},Available)];
+    if(Available && S && !S->Invite().IsEmpty())
     {
         const auto Code=S->Invite();Box->AddSlot().AutoHeight().Padding(0,0,0,18)[Card(Text(Code,27,Ink))];
         Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Button(bCodeCopied?TEXT("コピーしました"):TEXT("招待コードをコピー"),[this,Code]{FPlatformApplicationMisc::ClipboardCopy(*Code);bCodeCopied=true;Rebuild();})];
@@ -306,7 +312,7 @@ void SEWTerminalView::Friends(TSharedRef<SVerticalBox> Box)
         Row->AddSlot().FillWidth(1).VAlign(VAlign_Center).Padding(18,0)[Text(Pair.Value.Name,28,Ink)];
         Box->AddSlot().AutoHeight().Padding(0,0,0,10)[Card(Row)];
     }
-    Box->AddSlot().AutoHeight().Padding(4,24,4,0)[Text(TEXT("友人には招待コードを共有。\n会話やマイクの設定は、街の参加画面から。"),26,Muted)];
+    Box->AddSlot().AutoHeight().Padding(4,24,4,0)[Text(Available?TEXT("友人には招待コードを共有。\n会話やマイクの設定は、街の参加画面から。"):TEXT("友人機能は開発中です。\nこの公開版では利用できません。"),26,Muted)];
 }
 void SEWTerminalView::Observe(TSharedRef<SVerticalBox> Box)
 {

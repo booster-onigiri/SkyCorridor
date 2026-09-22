@@ -1,4 +1,4 @@
-# Sky Corridor / 空の回廊 — playing v0.1.0
+# Sky Corridor / 空の回廊 — playing v0.1.1
 
 A free Windows exploration prototype. Walk an empty city above the clouds and use
 a small handheld device to collect traces of its former residents. The in-game
@@ -67,7 +67,7 @@ Solo exploration is the main experience. Online rooms are experimental and disab
 by default. External-network multiplayer and physical spatial audio still have
 unverified conditions. In-game English localization is not included.
 
-For problem reports, include **v0.1.0**, Windows/GPU details, the location, action,
+For problem reports, include **v0.1.1**, Windows/GPU details, the location, action,
 and time of day. Remove personal information from logs; do not publish your entire
 save folder or account data.
 
@@ -77,3 +77,10 @@ External videos and music retain their owners' rights. Keep
 **THIRD-PARTY-NOTICES.md** and **Licenses** with the distribution.
 The included **END-USER-TERMS.md** contains the product's Unreal technology terms
 and Epic disclaimer.
+
+## Unavailable features in v0.1.1
+
+City browsing/hosting, shared cinema, world eggs/add-ons and the phone Friends app
+are marked **開発中 (in development)** and cannot be selected in normal play.
+The T shortcut is also blocked. Solo YouTube viewing, fishing, journals, photos and
+hotel visits remain available.

@@ -63,6 +63,7 @@ public:
     void CopyPlace(const EW::PlaceBookmark& Place);
     void ExportRecords();
     void OpenSaveDirectory();
+    bool IsMenuAvailable(EEWMenu Menu) const;
     void SetMenu(EEWMenu Menu);
     void ToggleMenu();
     void ToggleJournal();

@@ -2,7 +2,7 @@
 
 ## English
 
-**v0.1.0 defaults to solo play.** The online room and EOS integration code is
+**v0.1.1 defaults to solo play.** The online room and EOS integration code is
 available for development experiments. It is not a promise of a hosted service or
 verified multiplayer across arbitrary networks.
 
@@ -40,7 +40,7 @@ configuration, browser cookies and user data are not public test artifacts.
 
 ## 日本語
 
-**v0.1.0の標準動作は一人用です。** オンラインルームとEOSのコードは開発者向けの実験用です。
+**v0.1.1の標準動作は一人用です。** オンラインルームとEOSのコードは開発者向けの実験用です。
 運営サービスの提供や、任意の回線での多人数接続を保証するものではありません。
 
 `Project/Config/EOS.template.json` は空欄の見本です。
@@ -62,3 +62,25 @@ configuration, browser cookies and user data are not public test artifacts.
 接続の検証では、版・構成、別端末と回線の条件、参加・退出・再接続、音声・画面の実際の結果を
 記録してください。同じPC内の接続だけで、別回線接続の成功とは扱いません。
 招待コード、設定、Cookie、ユーザーデータは公開せず、必要な診断情報を伏せ字にして共有してください。
+
+## Developer-only menu access / 開発者向けメニュー
+
+Since v0.1.1, online entry buttons and the Friends app are greyed out and marked
+開発中 unless `-EWEnableExperimentalOnline` is explicitly supplied. The same gate
+applies to the T shortcut and direct menu requests. The flag alone does not supply
+service configuration or establish working multiplayer.
+
+The separate local world-egg/chess proof of concept can be enabled with:
+
+```powershell
+.\PLAY.cmd -EWEnableExperimentalWorkshop
+```
+
+This enables only the existing fixed world generator and one local chess table.
+It does not enable arbitrary plug-ins or shared online add-ons.
+
+v0.1.1以降、通常起動ではオンラインの入口・端末の友人を「開発中」として無効化します。
+Tキー・直接メニュー呼出しにも同じ制限を適用します。開発者のオンライン実験では
+上記の明示的フラグと別途設定・依存関係が必要です。
+世界の卵・チェスの一人用実証には `-EWEnableExperimentalWorkshop` を指定します。
+任意プラグインやオンライン共有が完成したという意味ではありません。

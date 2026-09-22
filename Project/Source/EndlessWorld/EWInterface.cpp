@@ -245,14 +245,17 @@ TSharedRef<SWidget> SEWOverlay::LiftPanel()
 TSharedRef<SWidget> SEWOverlay::MainPanel()
 {
     auto* GI = Owner.Get();
+    const bool CityAvailable = GI->IsMenuAvailable(EEWMenu::City);
+    const bool WorkshopAvailable = GI->IsMenuAvailable(EEWMenu::Workshop);
+    const bool CinemaOnlineAvailable = GI->IsMenuAvailable(EEWMenu::Online);
     TSharedRef<SVerticalBox> Box = SNew(SVerticalBox);
     Box->AddSlot().AutoHeight()[Label(TEXT("空の回廊"), 36, Ink)];
     Box->AddSlot().AutoHeight().Padding(0, 6, 0, 18)[Label(TEXT("ENDLESS WORLD"), 14, Accent)];
     Box->AddSlot().AutoHeight().Padding(0, 0, 0, 22)
         [Label(TEXT("誰もいなくなった街で、水だけが流れ続ける。\n手元の端末に、かつての暮らしを残す旅。"), 17, Muted)];
     if(GI->Terminal && GI->SessionStarted())Box->AddSlot().AutoHeight().Padding(0,0,0,10)[Button(TEXT("Q　記録端末を持ち上げる"),[this]{if(Owner.IsValid() && Owner->Terminal)Owner->Terminal->Open();})];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,10)[Button(TEXT("街を探す・街を開く"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::City);})];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,8)[Button(TEXT("世界の卵・追加要素"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Workshop);})];
+    Box->AddSlot().AutoHeight().Padding(0,0,0,10)[Button(CityAvailable?TEXT("街を探す・街を開く"):TEXT("街を探す・街を開く　開発中"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::City);},CityAvailable)];
+    Box->AddSlot().AutoHeight().Padding(0,0,0,8)[Button(WorkshopAvailable?TEXT("世界の卵・追加要素"):TEXT("世界の卵・追加要素　開発中"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Workshop);},WorkshopAvailable)];
     if (GI->SessionStarted())
         Box->AddSlot().AutoHeight().Padding(0, 0, 0, 8)[Button(TEXT("探索に戻る"), [this] { if (Owner.IsValid()) Owner->SetMenu(EEWMenu::None); })];
     Box->AddSlot().AutoHeight().Padding(0, 0, 0, 8)
@@ -296,7 +299,7 @@ TSharedRef<SWidget> SEWOverlay::MainPanel()
         [Button(TEXT("街の寄り道案内　屋上プール・図書館・美術館"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Explore);})];
     Box->AddSlot().AutoHeight().Padding(0,0,0,8)[Button(TEXT("東の外縁へ　白塔の水都"),[this]{if(Owner.IsValid())Owner->VisitOuterWater();})];
     if(!GI->SocialSession || !GI->SocialSession->Active())Box->AddSlot().AutoHeight().Padding(0,0,0,8)
-        [Button(TEXT("みんなで映画を見る"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Online);})];
+        [Button(CinemaOnlineAvailable?TEXT("みんなで映画を見る"):TEXT("みんなで映画を見る　開発中"),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Online);},CinemaOnlineAvailable)];
     Box->AddSlot().AutoHeight().Padding(0,0,0,8)
         [Button(TEXT("時計広場駅へ　水都・ホテル・シアター・空港"),[this]{if(Owner.IsValid())Owner->VisitSkyrail();})];
     if(GI->SessionStarted() && GI->CinemaScreen && GI->CinemaScreen->ListenerInside())

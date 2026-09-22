@@ -40,6 +40,7 @@
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "EWMediaAudit.h"
+#include "EWPublicMenuAudit.h"
 #include "EWResidence.h"
 #include "EWInteriors.h"
 #include "EWNightLighting.h"
@@ -111,7 +112,10 @@ void UEWGameInstance::Init()
         FParse::Param(FCommandLine::Get(), TEXT("EWWaterCityRuntimeAudit")) ||
         FParse::Param(FCommandLine::Get(), TEXT("EWRRHDRRuntimeAudit")) || (FParse::Param(FCommandLine::Get(),TEXT("EWMediaAudit")) || (FParse::Param(FCommandLine::Get(),TEXT("EWCinemaAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWOnlineAudit"))));
     FString Root = FPaths::Combine(FPlatformProcess::UserSettingsDir(), TEXT("EndlessWorld"));
+    bScriptedWorldAudit |= FParse::Param(FCommandLine::Get(), TEXT("EWPublicMenuAudit"));
     const bool ExplicitRoot=FParse::Value(FCommandLine::Get(), TEXT("EWDataDir="), Root);
+    if (FParse::Param(FCommandLine::Get(), TEXT("EWPublicMenuAudit")) && !ExplicitRoot)
+        Root=FPaths::ProjectSavedDir()/TEXT("Verification")/FGuid::NewGuid().ToString(EGuidFormats::Digits)/TEXT("Data");
     if ((FParse::Param(FCommandLine::Get(),TEXT("EWCinematic95")) || FParse::Param(FCommandLine::Get(),TEXT("EWSky92Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWLighting91Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWPool90Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWMemory89Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWAero87Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWCascade86Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWExplore85Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWHighlight84Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWHotel83Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWQuality83Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWCity82Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWLifeAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWSkyrailAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWRuntimeAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWArtStudy")) ||
         FParse::Param(FCommandLine::Get(),TEXT("EWTraversalAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWGamepadAudit")) ||
         FParse::Param(FCommandLine::Get(),TEXT("EWGraphicsAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWPresentationAudit")) ||
@@ -255,6 +259,7 @@ void UEWGameInstance::AttachWorld()
     if(FParse::Param(FCommandLine::Get(),TEXT("EWWaterCityRuntimeAudit")))GetWorld()->SpawnActor<AEWWaterCityRuntimeAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWRRHDRRuntimeAudit")))GetWorld()->SpawnActor<AEWRRHDRRuntimeAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWMediaAudit")))GetWorld()->SpawnActor<AEWMediaAudit>();
+    if(FParse::Param(FCommandLine::Get(),TEXT("EWPublicMenuAudit")))GetWorld()->SpawnActor<AEWPublicMenuAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWCinemaAudit")))GetWorld()->SpawnActor<AEWCinemaAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWSkyrailAudit")))
     {if(FParse::Param(FCommandLine::Get(),TEXT("EWUpper88")))GetWorld()->SpawnActor<AEWUpperRailAudit>();else GetWorld()->SpawnActor<AEWSkyrailAudit>();}
@@ -507,8 +512,29 @@ void UEWGameInstance::ExportRecords()
 }
 void UEWGameInstance::OpenSaveDirectory() { if (Saves) FPlatformProcess::ExploreFolder(*Saves->Root()); }
 
+bool UEWGameInstance::IsMenuAvailable(EEWMenu Menu) const
+{
+    switch (Menu)
+    {
+    case EEWMenu::City:
+    case EEWMenu::Online:
+        return FParse::Param(FCommandLine::Get(), TEXT("EWEnableExperimentalOnline"));
+    case EEWMenu::Workshop:
+    case EEWMenu::Chess:
+        return FParse::Param(FCommandLine::Get(), TEXT("EWEnableExperimentalWorkshop"));
+    default:
+        return true;
+    }
+}
+
 void UEWGameInstance::SetMenu(EEWMenu Menu)
 {
+    // Gate every entry point before closing a working phone, photo or video UI.
+    if (!IsMenuAvailable(Menu))
+    {
+        Notify(TEXT("この機能は開発中です。通常の公開版では利用できません。"));
+        return;
+    }
     if(CurrentMenu==EEWMenu::Monitor && Menu!=EEWMenu::Monitor && ActiveMediaScreen)ActiveMediaScreen->CloseControls();
     if(PhotoMode && PhotoMode->Active() && Menu!=EEWMenu::Photo)PhotoMode->Close();
     if(CurrentMenu==EEWMenu::Terminal && Menu!=EEWMenu::Terminal && Terminal)Terminal->PauseVideo();

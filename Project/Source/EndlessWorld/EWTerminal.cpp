@@ -161,6 +161,12 @@ void AEWTerminal::Close(){if(auto* G=GetGameInstance<UEWGameInstance>())G->SetMe
 void AEWTerminal::ShowPage(int32 Value)
 {
     if(Value<0 || Value>5)return;
+    if(Value==4)
+    {
+        auto* G=GetGameInstance<UEWGameInstance>();
+        if(!G || !G->IsMenuAvailable(EEWMenu::City))
+        {if(G)G->Notify(TEXT("友人機能は開発中です。この公開版では利用できません。"));return;}
+    }
     if(Page==3 && Value!=3)PauseVideo();Page=Value;Refresh();FocusFirst();
 }
 void AEWTerminal::ToggleObservation()
@@ -201,7 +207,13 @@ void AEWTerminal::SearchVideo(const FString& Query)
 void AEWTerminal::StopVideo(){if(Surface)Surface->Stop();Audio->Stop();Wave->FlushSamples();bSoundPlaying=false;}
 void AEWTerminal::PauseVideo(){if(Surface)Surface->Pause(true);Audio->Stop();Wave->FlushSamples();bSoundPlaying=false;}
 bool AEWTerminal::MediaAudible() const{return bSoundPlaying && Audio && Audio->IsPlaying();}
-void AEWTerminal::InviteFriends(){StopVideo();if(auto* G=GetGameInstance<UEWGameInstance>())G->SetMenu(EEWMenu::City);}
+void AEWTerminal::InviteFriends()
+{
+    auto* G=GetGameInstance<UEWGameInstance>();if(!G)return;
+    if(!G->IsMenuAvailable(EEWMenu::City))
+    {G->Notify(TEXT("友人機能は開発中です。この公開版では利用できません。"));return;}
+    StopVideo();G->SetMenu(EEWMenu::City);
+}
 TSharedPtr<SWidget> AEWTerminal::FocusWidget() const{return View;}
 void AEWTerminal::FocusFirst(){if(View)View->FocusFirst();}
 TSharedRef<FJsonObject> AEWTerminal::Evidence() const

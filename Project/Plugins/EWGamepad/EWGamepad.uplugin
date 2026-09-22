@@ -1,0 +1,10 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0.0",
+  "FriendlyName": "Endless World DualSense Input",
+  "Description": "Native Sony gamepad input via SDL 3.4.16. Xbox controllers retain the engine XInput path.",
+  "Category": "Input",
+  "CanContainContent": false,
+  "Modules": [{"Name": "EWGamepad", "Type": "Runtime", "LoadingPhase": "PreDefault", "PlatformAllowList": ["Win64"]}]
+}

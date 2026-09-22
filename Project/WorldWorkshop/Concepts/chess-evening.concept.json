@@ -1,0 +1,17 @@
+{
+  "format": "ew.concept",
+  "version": 1,
+  "id": "chess-evening",
+  "title": "夕映えのチェス",
+  "runtime": "tabletop.v1",
+  "rules": {
+    "id": "chess.standard.v1"
+  },
+  "appearance": {
+    "size_cm": 160,
+    "light": "#F4DDCA",
+    "dark": "#442D43",
+    "accent": "#B99153",
+    "pieces": "classic.v1"
+  }
+}

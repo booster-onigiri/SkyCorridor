@@ -1,0 +1,92 @@
+# ソースから構築する
+
+[English](SETUP.md) · [プロジェクト](../README.ja.md)
+
+## 使用する環境
+
+| ツール | 版・用途 |
+|---|---|
+| Windows | 64bitの開発環境。公開ゲームはWin64 / DirectX 12用 |
+| Unreal Engine | **5.8.2**。Epicの条件に従い別途導入 |
+| Visual Studio | **2022**。C++によるゲーム開発とUnrealのC++ビルド環境 |
+| Windows SDK | **10.0.26100.0** |
+| MSVCツールセット | リリースのUATビルドで選択された **14.44.35227** |
+| Python | セットアップ・制作スクリプト用に **3.13**。セットアップは標準ライブラリーで動作 |
+| Blender | **4.5**。Blenderで制作した元素材を再生成するときに使用 |
+| NumPy | 独自音源用は **2.3.5** を `Tools/Audio/requirements.txt` から導入。任意のテクスチャ生成ではNumPyとPillowも使用。[素材の説明](ASSETS.md)を参照 |
+| FFmpeg / ffprobe | 音源・トレーラーの検証時に任意導入し、PATHへ登録 |
+
+SDKとMSVCは、リリースのUATビルドで実際に選択された版を再現用の推奨環境として記載しています。
+構築スクリプトによる固定指定はなく、Unrealが導入済みの環境から選択します。
+
+例にある `UE_5.8` フォルダーの中身は **5.8.2** が必要です。
+構築スクリプトは `Engine/Build/Build.version` の値を確認します。
+最低動作環境のCPU・メモリー・GPU要件は未確定です。素材の構築には配布版より多くの空き容量を使用します。
+
+## 同じ版の素材を準備する
+
+**v0.1.0** のソースと、同じReleaseの素材アーカイブを組み合わせます。
+リポジトリーには独自ソースと生成スクリプトを置き、大容量のContent/SourceArtは
+ルートの `release-assets.json` に記録してGitHub Releasesから配布します。
+
+```powershell
+git clone --branch v0.1.0 https://github.com/booster-onigiri/SkyCorridor.git
+cd SkyCorridor
+.\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
+```
+
+セットアップは対象アーカイブをGit管理外の `Downloads` へ取得し、アーカイブ全体と
+各ファイルのSHA-256を検証して `Project/Content` と `Project/SourceArt` を復元します。
+既にある同じファイルは再利用します。内容が異なるファイルは上書きせずエラーにするため、
+編集した素材は先にバックアップするか、別の作業フォルダーへ移してください。
+
+取得済みのアーカイブを使う場合は、マニフェストと同じファイル名で揃えたフォルダーを指定します。
+
+```powershell
+.\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -AssetsDirectory "D:\SkyCorridor-assets"
+```
+
+Unreal、Visual Studio、Python、ベンダーSDKを自動導入する処理ではありません。
+Pythonを明示する場合は `-Python` を指定します。`-SkipAssets` は素材を配置済みの環境用です。
+Releaseのアーカイブが未公開の場合は、準備済みのローカルアーカイブを `-AssetsDirectory` で
+指定するか、その版の公開を待ってください。異なる版の素材を混ぜないでください。
+
+## EditorとShippingの構築
+
+```powershell
+.\build.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -Target Editor
+.\build.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -Target Shipping
+```
+
+実行ごとに `Local/Editor-<日時>` または `Local/Shipping-<日時>` を作り、`build.log` を保存します。
+`-OutputRoot` を指定する場合、既にあるフォルダーは使用できません。
+`-ParallelActions` の標準値は4です。開発PCの余裕に応じて下げられます。
+処理の終了コードに加え、マテリアル・シェーダーの失敗メッセージも検査します。
+
+Editorのビルド後は、UE 5.8.2で `Project/EndlessWorld.uproject` を開きます。
+Shippingの出力先は作成したフォルダーの `Archive` で、`PLAY.cmd`、遊び方、権利表記、
+`Windows` が入ります。そこで `PLAY.cmd` を起動すると、隣の `PlayData` に保存します。
+
+YouTubeブラウザーはパッケージ版でのみ初期化します。Editor/PIEでは確認できません。
+ネットワークに接続したパッケージ版で確認してください。再生可否と画質候補は配信元にも依存します。
+
+## グラフィックス構成
+
+標準は `-Graphics baseline` で、プロジェクト設定の `EWGraphicsProfile` により
+TSRの構成を選択します。任意のSDKフォルダーが存在しても、自動でNVIDIA構成へ切り替わりません。
+
+公式SDKの任意導入と `nvidia` 構成は [NVIDIAの手順](NVIDIA.md) に従ってください。
+SDKのソースは公開リポジトリーに含めません。標準へ戻す場合は次を実行し、再ビルドします。
+
+```powershell
+python Tools/configure-graphics.py baseline
+```
+
+性能・互換性の報告には構成名を含めてください。任意機能によるFPS改善は最低動作環境の保証ではありません。
+
+## 変更と確認
+
+[素材の構成](ASSETS.md)、[コードの構成](ARCHITECTURE.md)、[実験用オンライン設定](ONLINE.md) を参照してください。
+変更内容に対応する確認項目は [公開前のチェックリスト](RELEASE-CHECKLIST.md) にまとめています。
+ソース、生成素材、ビルド結果、実機での動作確認を分けて記録し、PlayData、ブラウザーキャッシュ、
+実際の認証情報を公開しないでください。

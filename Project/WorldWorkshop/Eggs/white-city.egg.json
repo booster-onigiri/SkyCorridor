@@ -1,0 +1,17 @@
+{
+  "format": "ew.egg",
+  "version": 1,
+  "id": "white-city",
+  "title": "白い浮遊都市",
+  "generator": {
+    "id": "endless.v2",
+    "catalogue": 1,
+    "content": "city82",
+    "seed": "c286c8776ab548d9b0c1e4a9d2f18fce"
+  },
+  "arrival": {
+    "chunk_x": "0",
+    "chunk_y": "0",
+    "landmark": "hub"
+  }
+}

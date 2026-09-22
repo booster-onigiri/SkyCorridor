@@ -1,0 +1,81 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "id",
+    "title",
+    "generator",
+    "arrival"
+  ],
+  "properties": {
+    "format": {
+      "const": "ew.egg"
+    },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 48,
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "catalogue",
+        "content",
+        "seed"
+      ],
+      "properties": {
+        "id": {
+          "const": "endless.v2"
+        },
+        "catalogue": {
+          "const": 1
+        },
+        "content": {
+          "const": "city82"
+        },
+        "seed": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        }
+      }
+    },
+    "arrival": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chunk_x",
+        "chunk_y",
+        "landmark"
+      ],
+      "properties": {
+        "chunk_x": {
+          "type": "string",
+          "pattern": "^(0|-?[1-9][0-9]{0,12})$"
+        },
+        "chunk_y": {
+          "type": "string",
+          "pattern": "^(0|-?[1-9][0-9]{0,12})$"
+        },
+        "landmark": {
+          "const": "hub"
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Runtime additionally checks 32 KB input, chunk coordinate bounds, colour contrast, placement clearance and required assets."
+}

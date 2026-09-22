@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "success": true,
+  "recorded_samples_used": false,
+  "files": [
+    {
+      "file": "Project/SourceArt/Audio89/Masters-v1/CanalAfterglow.wav",
+      "sha256": "8b72bbd7ec1737469613c68f16a03a5465a61216de7c331fe849d04fda58ff07",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "Original score and mathematical waveform synthesis, with no recorded samples",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/SourceArt/Audio89/Masters-v1/LampOnTheWayHome.wav",
+      "sha256": "69411b67e5675da2c0deffc38ac532931b8a7ae4ddb1b98c753096107c97e38f",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "Original score and mathematical waveform synthesis, with no recorded samples",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/SourceArt/Audio89/Masters-v1/score-and-masters.json",
+      "sha256": "b18c8be77726b4fb6f9e80be806ddac3b446e091fc0ae0bb202cc77979f739f1",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "Original score and mathematical waveform synthesis, with no recorded samples",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/SourceArt/Audio89/Masters-v1/WindowWithoutVoices.wav",
+      "sha256": "3206497d367874e28d63e125eb5c35d8c188552f2257f02eeacebc4e6fe4aec1",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "Original score and mathematical waveform synthesis, with no recorded samples",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/SourceArt/Audio89/PROVENANCE.json",
+      "sha256": "939893118b35d182b59ab7a534a3a6de861e4cf67623fb2d231a5e8c34fe7cda",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "Original score and mathematical waveform synthesis, with no recorded samples",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/Content/EndlessWorld/Audio89/CanalAfterglow.uasset",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/import-public-audio.py",
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "SoundWave imported from sample-free procedural master",
+      "source_file": "Project/SourceArt/Audio89/Masters-v1/CanalAfterglow.wav",
+      "source_sha256": "8b72bbd7ec1737469613c68f16a03a5465a61216de7c331fe849d04fda58ff07",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/Content/EndlessWorld/Audio89/WindowWithoutVoices.uasset",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/import-public-audio.py",
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "SoundWave imported from sample-free procedural master",
+      "source_file": "Project/SourceArt/Audio89/Masters-v1/WindowWithoutVoices.wav",
+      "source_sha256": "3206497d367874e28d63e125eb5c35d8c188552f2257f02eeacebc4e6fe4aec1",
+      "license": "CC-BY-NC-4.0"
+    },
+    {
+      "file": "Project/Content/EndlessWorld/Audio89/LampOnTheWayHome.uasset",
+      "classification": "own-generated",
+      "generated_by": [
+        "Tools/import-public-audio.py",
+        "Tools/Audio/compose_music89.py"
+      ],
+      "origin": "SoundWave imported from sample-free procedural master",
+      "source_file": "Project/SourceArt/Audio89/Masters-v1/LampOnTheWayHome.wav",
+      "source_sha256": "69411b67e5675da2c0deffc38ac532931b8a7ae4ddb1b98c753096107c97e38f",
+      "license": "CC-BY-NC-4.0"
+    }
+  ],
+  "generator_sha256": "a1edc453ef1eb1bf3872c6f27827ee945c6c86154e440d9701f0b3cf8bca001d",
+  "audio_verification_sha256": "40b162cf67ecfacd77c861f3e8de27bae907dbe4ae0c12236dbf01e8e6ccc38d"
+}

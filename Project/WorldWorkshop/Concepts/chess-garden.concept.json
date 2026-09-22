@@ -1,0 +1,17 @@
+{
+  "format": "ew.concept",
+  "version": 1,
+  "id": "chess-garden",
+  "title": "水庭のチェス",
+  "runtime": "tabletop.v1",
+  "rules": {
+    "id": "chess.standard.v1"
+  },
+  "appearance": {
+    "size_cm": 160,
+    "light": "#ECE2C0",
+    "dark": "#183E3D",
+    "accent": "#AD854A",
+    "pieces": "classic.v1"
+  }
+}

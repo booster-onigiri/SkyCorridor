@@ -1,0 +1,1 @@
+{"FileVersion":3,"Version":76,"VersionName":"76","FriendlyName":"Endless World Lighting Preview","Description":"Bounded native MCP lighting previews for the editor only.","Category":"Editor","CanContainContent":true,"Installed":false,"Plugins":[{"Name":"PythonScriptPlugin","Enabled":true},{"Name":"ToolsetRegistry","Enabled":true}]}

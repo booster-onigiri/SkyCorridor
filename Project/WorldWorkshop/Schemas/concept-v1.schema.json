@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "id",
+    "title",
+    "runtime",
+    "rules",
+    "appearance"
+  ],
+  "properties": {
+    "format": {
+      "const": "ew.concept"
+    },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 48,
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "runtime": {
+      "const": "tabletop.v1"
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "const": "chess.standard.v1"
+        }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "size_cm",
+        "light",
+        "dark",
+        "accent",
+        "pieces"
+      ],
+      "properties": {
+        "size_cm": {
+          "type": "number",
+          "minimum": 120,
+          "maximum": 220
+        },
+        "light": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "dark": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "pieces": {
+          "const": "classic.v1"
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Runtime additionally checks 32 KB input, chunk coordinate bounds, colour contrast, placement clearance and required assets."
+}

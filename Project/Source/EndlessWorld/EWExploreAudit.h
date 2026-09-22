@@ -1,0 +1,25 @@
+#pragma once
+#include "EWHotelAudit.h"
+#include "EWExploreAudit.generated.h"
+UCLASS()
+class ENDLESSWORLD_API AEWExploreAudit:public AActor
+{
+    GENERATED_BODY()
+public:
+    AEWExploreAudit();
+    virtual void BeginPlay() override;
+    virtual void Tick(float Delta) override;
+private:
+    void Finish(const FString& Error=FString());
+    bool Check(bool Pass,const FString& Name);
+    FString Report;
+    TArray<TSharedPtr<class FJsonValue>> Checks,Captures;
+    TArray<EW::InteriorRoom> Rooms;
+    TArray<FVector> Route;
+    UPROPERTY() TObjectPtr<class ACameraActor> Camera;
+    UPROPERTY() TObjectPtr<class AEWLift> Lift;
+    int32 Phase=0,Index=0,Point=0,Photo=0,Falls=0,InitialRecords=0,From=0,To=0;
+    double Started=0,Stage=0,Progress=0,Best=DBL_MAX,Walked=0;
+    FVector Last;
+    bool Done=false,Resume=false;
+};

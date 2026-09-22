@@ -1,0 +1,17 @@
+{
+  "format": "ew.egg",
+  "version": 1,
+  "id": "another-sky",
+  "title": "もうひとつの空",
+  "generator": {
+    "id": "endless.v2",
+    "catalogue": 1,
+    "content": "city82",
+    "seed": "0123456789abcdef0123456789abcdef"
+  },
+  "arrival": {
+    "chunk_x": "0",
+    "chunk_y": "0",
+    "landmark": "hub"
+  }
+}

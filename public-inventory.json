@@ -4,16 +4,16 @@
   "files": [
     {
       "file": ".gitattributes",
-      "sha256": "45473be4d7d2b4e24d84e7aa5f02f7512508a6815fabcf9010f147a75299eb19",
-      "bytes": 165,
+      "sha256": "e42777ee78447b80e0fe5aa3adbe357e37fc130f4743f12259f47ce98d095344",
+      "bytes": 190,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": ".gitignore",
-      "sha256": "6463bf808de7d0fc1770330343433682657c493195f1ba6a7fda178231314b8c",
-      "bytes": 410,
+      "sha256": "d1de2204a5a1cf15a6b8a8d847b6bc41d6bea5288f331429d48ba97504a66f3a",
+      "bytes": 428,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -92,16 +92,16 @@
     },
     {
       "file": "Docs/PLAY-EN.md",
-      "sha256": "2ab6a93a55744b78afc5bfae6512736dd666dece185435b02347f45cf673a3fc",
-      "bytes": 3336,
+      "sha256": "abf082e675338feca7229d8fb8f044271c16be45a020b5283566cb96b80ee9e2",
+      "bytes": 3675,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/PLAY-JA.md",
-      "sha256": "e901ecea199e807f8f7f67f988197aa540efdca856a5de0bdeddd8f5f65ea42d",
-      "bytes": 3550,
+      "sha256": "c7bdc37c0870ebb05250dc7feccd01f13eb673db2d8f5faf6e55f359cae4a139",
+      "bytes": 3965,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -132,16 +132,16 @@
     },
     {
       "file": "Docs/VERIFICATION.md",
-      "sha256": "4017a0b77350ad1c7a1b663119e7123dd21bbc80a942593926ce85eb022a96ed",
-      "bytes": 7440,
+      "sha256": "7538bf24f182b73c373c46b0a95cb04c14202d2bc33d10a1d5479fc29c37c8d2",
+      "bytes": 11604,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/YOUTUBE-JA.md",
-      "sha256": "afdfc15db9eba697bd8931ff794b4f7135b7628e2825c55fef8dc140a8ac111a",
-      "bytes": 4030,
+      "sha256": "de97262bd44122b94a7402a6fec653a3ee9f3e520f2f823f19217df55b3c4523",
+      "bytes": 4114,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -12156,8 +12156,8 @@
     },
     {
       "file": "Tools/verify-runtime.py",
-      "sha256": "647a9d011b17bab63844f3d254e302f0cbd612674d40c0fd19cbd313fb03e041",
-      "bytes": 6561,
+      "sha256": "e229a94954149b23f96364eb32d93456e32562def093149ac8fac3537228d371",
+      "bytes": 6582,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"

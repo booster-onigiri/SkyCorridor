@@ -11,6 +11,12 @@ the **Windows** folder. Do not run it inside the archive. Unreal Editor is not
 required. This is a 64-bit Windows / DirectX 12 build; minimum hardware requirements
 have not been established.
 
+If the first launch prompts you to install the Microsoft Visual C++ runtime,
+review the prompt and complete the installation. If a missing-runtime error prevents
+startup without showing that prompt, run the bundled
+**Windows\Engine\Extras\Redist\en-us\vc_redist.x64.exe**, follow its installation
+screens, then launch **PLAY.cmd** again.
+
 Progress is saved in **PlayData beside PLAY.cmd**. Close the game and back up that
 whole folder before updating. Extract an update into a new folder, copy your
 backed-up PlayData, and keep the previous version until your progress loads.

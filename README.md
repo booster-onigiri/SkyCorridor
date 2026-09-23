@@ -1,6 +1,6 @@
 # Sky Corridor / 空の回廊
 
-[日本語](README.ja.md) · **v0.1.1** · Free Windows exploration prototype · Japanese in-game interface
+[日本語](README.ja.md) · **v0.1.2** · Free Windows exploration prototype · English / Japanese in-game interface
 
 An empty city floats above the clouds. Its water still flows and its trains still
 run. Walk its canals, ride to the upper districts, and use a small handheld device
@@ -16,14 +16,13 @@ the **Windows** folder. The Unreal Editor is not required. Progress is stored in
 **PlayData** beside the launcher; back up that folder before updating.
 
 Start with **WASD** to walk, **mouse** to look, **E** to interact, and **Q** to open
-the handheld device. At Clock Plaza, choose **Q → 観測 → 観測を始める** to begin
+the handheld device. At Clock Plaza, choose **Q → Observe → Begin observing** to begin
 looking for a memory. See the complete [English player guide](Docs/PLAY-EN.md) or
 [日本語の遊び方](Docs/PLAY-JA.md).
 
 The public release focuses on solo exploration on 64-bit Windows with DirectX 12.
-Minimum GPU/CPU/RAM requirements have not been established. The interface is
-Japanese; the English guide explains the controls. Online city browsing, shared cinema, world eggs/add-ons and the phone Friends app
-are labelled **開発中 (in development)** and disabled by default, including the T shortcut.
+Minimum GPU/CPU/RAM requirements have not been established. The interface supports English and Japanese. Use the language button on the title screen or in Graphics & Controls. Your choice is saved in PlayData/language.txt. On first launch, Japanese Windows defaults to Japanese; other system languages default to English. Online city browsing, shared cinema, world eggs/add-ons and the phone Friends app
+are labelled **In development** / **開発中** and disabled by default, including the T shortcut.
 Solo exploration, YouTube, fishing and photography remain available. YouTube screens require an internet connection and run
 in the packaged game; Editor/PIE playback is unsupported.
 
@@ -36,7 +35,7 @@ uses Python's standard library; procedural music regeneration additionally uses
 the pinned NumPy dependency in `Tools/Audio/requirements.txt`.
 
 ```powershell
-git clone --branch v0.1.1 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.2 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 .\build.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -Target Editor
@@ -45,7 +44,7 @@ cd SkyCorridor
 Large `Project/Content` and `Project/SourceArt` files are distributed as matching
 Release archives. Setup downloads and verifies them using `release-assets.json`;
 the GitHub source ZIP alone is not a complete project. Already-downloaded archives
-can be supplied with `-AssetsDirectory`. Use the assets pinned by this source tag's manifest. v0.1.1 reuses the unchanged v0.1.0 development assets. See [setup/build instructions](Docs/SETUP.md) and the [asset workflow](Docs/ASSETS.md).
+can be supplied with `-AssetsDirectory`. Use the assets pinned by this source tag's manifest. v0.1.2 reuses the unchanged v0.1.0 development assets. See [setup/build instructions](Docs/SETUP.md) and the [asset workflow](Docs/ASSETS.md).
 
 The default graphics profile is **baseline**, using Unreal's **TSR**. NVIDIA SDK
 plugins are optional and are not included in the public source checkout. Their

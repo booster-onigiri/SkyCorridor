@@ -1,4 +1,5 @@
 #include "EWGameInstance.h"
+#include "EWLocalization.h"
 #include "EWTerminal.h"
 #include "EWMusic.h"
 #include "EWMemoryAudit.h"
@@ -41,6 +42,7 @@
 #include "Camera/CameraComponent.h"
 #include "EWMediaAudit.h"
 #include "EWPublicMenuAudit.h"
+#include "EWLocalizationAudit.h"
 #include "EWResidence.h"
 #include "EWInteriors.h"
 #include "EWNightLighting.h"
@@ -112,9 +114,9 @@ void UEWGameInstance::Init()
         FParse::Param(FCommandLine::Get(), TEXT("EWWaterCityRuntimeAudit")) ||
         FParse::Param(FCommandLine::Get(), TEXT("EWRRHDRRuntimeAudit")) || (FParse::Param(FCommandLine::Get(),TEXT("EWMediaAudit")) || (FParse::Param(FCommandLine::Get(),TEXT("EWCinemaAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWOnlineAudit"))));
     FString Root = FPaths::Combine(FPlatformProcess::UserSettingsDir(), TEXT("EndlessWorld"));
-    bScriptedWorldAudit |= FParse::Param(FCommandLine::Get(), TEXT("EWPublicMenuAudit"));
+    bScriptedWorldAudit |= FParse::Param(FCommandLine::Get(), TEXT("EWPublicMenuAudit")) || FParse::Param(FCommandLine::Get(), TEXT("EWLocalizationAudit"));
     const bool ExplicitRoot=FParse::Value(FCommandLine::Get(), TEXT("EWDataDir="), Root);
-    if (FParse::Param(FCommandLine::Get(), TEXT("EWPublicMenuAudit")) && !ExplicitRoot)
+    if ((FParse::Param(FCommandLine::Get(), TEXT("EWPublicMenuAudit")) || FParse::Param(FCommandLine::Get(), TEXT("EWLocalizationAudit"))) && !ExplicitRoot)
         Root=FPaths::ProjectSavedDir()/TEXT("Verification")/FGuid::NewGuid().ToString(EGuidFormats::Digits)/TEXT("Data");
     if ((FParse::Param(FCommandLine::Get(),TEXT("EWCinematic95")) || FParse::Param(FCommandLine::Get(),TEXT("EWSky92Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWLighting91Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWPool90Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWMemory89Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWAero87Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWCascade86Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWExplore85Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWHighlight84Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWHotel83Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWQuality83Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWCity82Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWLifeAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWSkyrailAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWRuntimeAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWArtStudy")) ||
         FParse::Param(FCommandLine::Get(),TEXT("EWTraversalAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWGamepadAudit")) ||
@@ -125,6 +127,7 @@ void UEWGameInstance::Init()
         FParse::Param(FCommandLine::Get(),TEXT("EWRRHDRRuntimeAudit")) || (FParse::Param(FCommandLine::Get(),TEXT("EWMediaAudit")) || (FParse::Param(FCommandLine::Get(),TEXT("EWCinemaAudit")) || FParse::Param(FCommandLine::Get(),TEXT("EWOnlineAudit"))))) && !ExplicitRoot)
         Root=FPaths::ProjectSavedDir()/TEXT("Verification")/FGuid::NewGuid().ToString(EGuidFormats::Digits)/TEXT("Data");
     FParse::Value(FCommandLine::Get(),TEXT("EWInputEvidence="),InputEvidencePath);
+    EWL::Initialize(Root);
     Saves = MakeUnique<FEWSaveStore>();
     if (!Saves->Open(Root)) Notify(Saves->Error(), 86400);
     else if (!Saves->Notice().IsEmpty()) Notify(Saves->Notice(), 30);
@@ -260,6 +263,7 @@ void UEWGameInstance::AttachWorld()
     if(FParse::Param(FCommandLine::Get(),TEXT("EWRRHDRRuntimeAudit")))GetWorld()->SpawnActor<AEWRRHDRRuntimeAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWMediaAudit")))GetWorld()->SpawnActor<AEWMediaAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWPublicMenuAudit")))GetWorld()->SpawnActor<AEWPublicMenuAudit>();
+    if(FParse::Param(FCommandLine::Get(),TEXT("EWLocalizationAudit")))GetWorld()->SpawnActor<AEWLocalizationAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWCinemaAudit")))GetWorld()->SpawnActor<AEWCinemaAudit>();
     if(FParse::Param(FCommandLine::Get(),TEXT("EWSkyrailAudit")))
     {if(FParse::Param(FCommandLine::Get(),TEXT("EWUpper88")))GetWorld()->SpawnActor<AEWUpperRailAudit>();else GetWorld()->SpawnActor<AEWSkyrailAudit>();}
@@ -312,10 +316,10 @@ void UEWGameInstance::Interact()
         auto* P=Cast<AEWCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));int32 Stop;bool OnCar;
         if(L->Nearby(P,Stop,OnCar))
         {
-            if(L->IsMoving())Notify(TEXT("展望昇降機が移動しています。"));
+            if(L->IsMoving())Notify(EWL::Pick(TEXT("展望昇降機が移動しています。"), TEXT("The panoramic lift is moving.")));
             else if(OnCar){ActiveLift=L;SetMenu(EEWMenu::Lift);}
-            else if(L->FloorIndex()==Stop)Notify(TEXT("昇降機のかごの中央へ進み、行き先を選んでください。"));
-            else if(L->Call(Stop))Notify(TEXT("この階へ昇降機を呼びました。"));
+            else if(L->FloorIndex()==Stop)Notify(EWL::Pick(TEXT("昇降機のかごの中央へ進み、行き先を選んでください。"), TEXT("Step into the center of the lift, then choose a destination.")));
+            else if(L->Call(Stop))Notify(EWL::Pick(TEXT("この階へ昇降機を呼びました。"), TEXT("The lift has been called to this floor.")));
             return;
         }
     }
@@ -325,7 +329,7 @@ void UEWGameInstance::Interact()
         if (Action == EEWResidenceAction::Valve)
         { FString Result; Residence->ToggleWater(Result); Notify(Result); }
         else if (Action == EEWResidenceAction::Seat && Player)
-        { if (Player->SitAt(Residence)) Notify(TEXT("雨継ぎの窓辺　水音を聞きながら、出発した広場を眺められます。")); }
+        { if (Player->SitAt(Residence)) Notify(EWL::Pick(TEXT("雨継ぎの窓辺　水音を聞きながら、出発した広場を眺められます。"), TEXT("Raincatcher Window — listen to the water and look back at the plaza where you began."))); }
         return;
     }
     if(SkyTheatre && SkyTheatre->Nearby()){SkyTheatre->OpenControls();return;}
@@ -335,8 +339,8 @@ void UEWGameInstance::Interact()
 void UEWGameInstance::SelectLiftFloor(int32 Stop)
 {
     auto* L=ActiveLift.Get();auto* P=Cast<AEWCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
-    if(L && L->Ride(P,Stop)){SetMenu(EEWMenu::None);Notify(TEXT("展望昇降機：")+L->Spec.Stops[Stop].Label+TEXT("へ移動します。"));}
-    else {SetMenu(EEWMenu::None);Notify(TEXT("かごの中央に立ってから、もう一度行き先を選んでください。"));}
+    if(L && L->Ride(P,Stop)){SetMenu(EEWMenu::None);Notify(EWL::Pick(TEXT("展望昇降機："), TEXT("Panoramic elevator: "))+EWL::Translate(L->Spec.Stops[Stop].Label)+EWL::Pick(TEXT("へ移動します。"), TEXT(" — departing.")));}
+    else {SetMenu(EEWMenu::None);Notify(EWL::Pick(TEXT("かごの中央に立ってから、もう一度行き先を選んでください。"), TEXT("Stand in the center of the lift, then choose your destination again.")));}
 }
 
 void UEWGameInstance::TravelFinished()
@@ -351,7 +355,7 @@ void UEWGameInstance::Start(const EW::WorldDescriptor& W, const EW::PlaceBookmar
     if (!Manager || Manager->IsTravelling()) return;
     if(ActiveMediaScreen)ActiveMediaScreen->CloseControls();
     if(SocialSession && SocialSession->Active())
-    {Notify(TEXT("公開の街では徒歩で移動できます。場所コードでの移動は街を退出してから利用してください。"));return;}
+    {Notify(EWL::Pick(TEXT("公開の街では徒歩で移動できます。場所コードでの移動は街を退出してから利用してください。"), TEXT("Walk to explore a public city. Leave the city before using a location code.")));return;}
     if(Skyrail)Skyrail->ReleaseRider();
     if(SkyrailUpper)SkyrailUpper->ReleaseRider();
     if (bSessionStarted && !SaveNow()) return;
@@ -484,9 +488,9 @@ void UEWGameInstance::RecordNearest()
 {
     if (!Manager || !bSessionStarted || Manager->IsTravelling() || !Saves) return;
     const auto Place = Manager->NearestPlace(2200);
-    if (!Place) { Notify(TEXT("発見地点の案内標へ近づくと、旅の図鑑へ記録できます。")); return; }
-    if (Saves->HasRecord(Place->WorldCode, Place->Id)) { Notify(TEXT("この場所は図鑑に記録されています。")); return; }
-    if (Saves->Record(*Place)) Notify(TEXT("発見を記録しました：") + Place->Name);
+    if (!Place) { Notify(EWL::Pick(TEXT("発見地点の案内標へ近づくと、旅の図鑑へ記録できます。"), TEXT("Approach a discovery marker to add this place to your journal."))); return; }
+    if (Saves->HasRecord(Place->WorldCode, Place->Id)) { Notify(EWL::Pick(TEXT("この場所は図鑑に記録されています。"), TEXT("This place is already in your journal."))); return; }
+    if (Saves->Record(*Place)) Notify(EWL::Pick(TEXT("発見を記録しました："), TEXT("Discovery recorded: ")) + EWL::Translate(Place->Name));
     else Notify(Saves->Error(), 15);
 }
 void UEWGameInstance::Favourite(const EW::PlaceBookmark& P)
@@ -497,17 +501,17 @@ void UEWGameInstance::Favourite(const EW::PlaceBookmark& P)
 }
 void UEWGameInstance::CopyWorld()
 {
-    if (Manager) { FPlatformApplicationMisc::ClipboardCopy(*Manager->Descriptor().Code()); Notify(TEXT("世界コードをコピーしました。")); }
+    if (Manager) { FPlatformApplicationMisc::ClipboardCopy(*Manager->Descriptor().Code()); Notify(EWL::Pick(TEXT("世界コードをコピーしました。"), TEXT("World code copied."))); }
 }
 void UEWGameInstance::CopyPlace(const EW::PlaceBookmark& P)
 {
-    FPlatformApplicationMisc::ClipboardCopy(*P.Code()); Notify(TEXT("場所コードをコピーしました。同じ版のゲームでこの場所を訪れられます。"));
+    FPlatformApplicationMisc::ClipboardCopy(*P.Code()); Notify(EWL::Pick(TEXT("場所コードをコピーしました。同じ版のゲームでこの場所を訪れられます。"), TEXT("Location code copied. Use the same game version to visit this place.")));
 }
 void UEWGameInstance::ExportRecords()
 {
     FString Path;
     if (Saves && Manager && Saves->Export(Manager->Descriptor().Code(), Path))
-        Notify(TEXT("発見記録を書き出しました。保存フォルダーの Exports にあります。"), 15);
+        Notify(EWL::Pick(TEXT("発見記録を書き出しました。保存フォルダーの Exports にあります。"), TEXT("Discoveries exported to Exports in your save folder.")), 15);
     else if (Saves) Notify(Saves->Error(), 15);
 }
 void UEWGameInstance::OpenSaveDirectory() { if (Saves) FPlatformProcess::ExploreFolder(*Saves->Root()); }
@@ -532,7 +536,7 @@ void UEWGameInstance::SetMenu(EEWMenu Menu)
     // Gate every entry point before closing a working phone, photo or video UI.
     if (!IsMenuAvailable(Menu))
     {
-        Notify(TEXT("この機能は開発中です。通常の公開版では利用できません。"));
+        Notify(EWL::Pick(TEXT("この機能は開発中です。通常の公開版では利用できません。"), TEXT("This feature is in development and unavailable in the public build.")));
         return;
     }
     if(CurrentMenu==EEWMenu::Monitor && Menu!=EEWMenu::Monitor && ActiveMediaScreen)ActiveMediaScreen->CloseControls();
@@ -567,7 +571,7 @@ void UEWGameInstance::UpdatePresentationState()
 }
 void UEWGameInstance::Notify(const FString& Text, double Seconds)
 {
-    Message = Text; MessageUntil = FPlatformTime::Seconds() + Seconds;
+    Message = EWL::Translate(Text); MessageUntil = FPlatformTime::Seconds() + Seconds;
     UE_LOG(LogTemp, Display, TEXT("EW_NOTICE %s"), *Text);
 }
 
@@ -595,8 +599,8 @@ bool UEWGameInstance::SaveNow()
     if(Fishing && !Fishing->FlushPending()){Notify(Fishing->SaveError(),15);return false;}
     if (!bWorldEnding && (!IsValid(Manager) || Manager->IsTravelling())) return true;
     CacheCurrentPosition();
-    if (!LastKnownPosition.IsSet()) { Notify(TEXT("現在地を取得できないため、保存を見送りました。"),15); return false; }
-    if (!Saves || !Saves->IsOpen()) { Notify(TEXT("保存場所を開けないため、現在地を保存できません。"), 15); return false; }
+    if (!LastKnownPosition.IsSet()) { Notify(EWL::Pick(TEXT("現在地を取得できないため、保存を見送りました。"), TEXT("Your position could not be read, so it was not saved.")),15); return false; }
+    if (!Saves || !Saves->IsOpen()) { Notify(EWL::Pick(TEXT("保存場所を開けないため、現在地を保存できません。"), TEXT("Your position could not be saved because the save folder could not be opened.")), 15); return false; }
     const EW::PlaceBookmark& P = LastKnownPosition.GetValue();
     if (!Saves->SaveCurrent(P)) { Notify(Saves->Error(), 15); return false; }
     LastSaved = P; LastSaveTime = FPlatformTime::Seconds(); return true;
@@ -703,7 +707,17 @@ void UEWGameInstance::Capture()
     IFileManager::Get().MakeDirectory(*Dir, true);
     const FString Path = FPaths::Combine(Dir, TEXT("空の回廊-") + FDateTime::Now().ToString(TEXT("%Y%m%d-%H%M%S")) + TEXT(".png"));
     FScreenshotRequest::RequestScreenshot(Path, false, true);
-    Notify(TEXT("撮影しました。保存フォルダーの Screenshots から開けます。"));
+    Notify(EWL::Pick(TEXT("撮影しました。保存フォルダーの Screenshots から開けます。"), TEXT("Photo saved. Find it in Screenshots in your save folder.")));
+}
+bool UEWGameInstance::SetLanguage(const FString& Language)
+{
+    if (!EWL::SetLanguage(Language)) return false;
+    const bool Saved = EWL::SavePreference();
+    Message.Empty(); MessageUntil = 0;
+    if (Terminal) Terminal->RefreshLanguage();
+    RefreshUI();
+    if (!Saved) Notify(EWL::Pick(TEXT("言語を切り替えましたが、設定を保存できませんでした。"), TEXT("Language changed, but the preference could not be saved.")));
+    return Saved;
 }
 void UEWGameInstance::SetQuality(bool High)
 {
@@ -763,7 +777,7 @@ void UEWGameInstance::MoveToPrimaryDisplay()
     GConfig->Flush(false,GGameUserSettingsIni);
     if (auto* P=IConsoleManager::Get().FindConsoleVariable(TEXT("r.SecondaryScreenPercentage.GameViewport"))) P->Set(100.f,ECVF_SetByConsole);
     DisplayTopology = MonitorTopology(Metrics); PendingDisplayRestore = -1; ++DisplayRestoreCount;
-    Notify(FString::Printf(TEXT("メインディスプレイ %d × %d に表示しました。"), Native.X, Native.Y));
+    Notify(EWL::Format(TEXT("メインディスプレイ %d × %d に表示しました。"), TEXT("Moved to the primary display at %d × %d."), Native.X, Native.Y));
     RefreshUI();
 }
 void UEWGameInstance::DisplayMetricsChanged(const FDisplayMetrics& Metrics)
@@ -781,7 +795,7 @@ FString UEWGameInstance::ResolutionText() const
     const FIntPoint Size=GEngine->GameViewport->Viewport->GetSizeXY();
     const auto* Percentage=IConsoleManager::Get().FindConsoleVariable(TEXT("r.ScreenPercentage"));
     const double Scale=Percentage ? Percentage->GetFloat() : 100;
-    return FString::Printf(TEXT("現在の表示　%d × %d ／ 描画 %.0f%%"),Size.X,Size.Y,Scale);
+    return EWL::Format(TEXT("現在の表示　%d × %d ／ 描画 %.0f%%"), TEXT("Display: %d × %d / Render scale: %.0f%%"),Size.X,Size.Y,Scale);
 }
 bool UEWGameInstance::CanContinue() const { EW::PlaceBookmark P; return Saves && Saves->LoadWorldPosition(EW::WorldDescriptor::ReferenceWorld().Code(),P); }
 void UEWGameInstance::SetSoftStyle(bool Value)
@@ -807,38 +821,38 @@ bool UEWGameInstance::IsRecorded(const EW::PlaceBookmark& P) const { return Save
 
 FString UEWGameInstance::RegionText() const
 {
-    if (!Manager || !Manager->bHasWorld) return TEXT("空の回廊");
-    if(EWOuterWater::Contains(Manager->Descriptor(),Manager->PlayerCoord()))return TEXT("白塔の水都");
-    return EW::RegionName(EW::RegionAt(Manager->Descriptor(), Manager->PlayerCoord()));
+    if (!Manager || !Manager->bHasWorld) return EWL::Pick(TEXT("空の回廊"), TEXT("Sky Corridor"));
+    if(EWOuterWater::Contains(Manager->Descriptor(),Manager->PlayerCoord()))return EWL::Pick(TEXT("白塔の水都"), TEXT("White Tower Water City"));
+    return EWL::Translate(EW::RegionName(EW::RegionAt(Manager->Descriptor(), Manager->PlayerCoord())));
 }
 FString UEWGameInstance::NearbyText() const
 {
     if (!Manager || CurrentMenu != EEWMenu::None) return {};
     for(const auto* Screen:{MediaScreen.Get(),CinemaScreen.Get(),SkyTheatre.Get()})
-        if(Screen && Screen->Nearby())return Screen->Title()+TEXT("の光る端末　")+InputHint(TEXT("E 操作"),TEXT("X 操作"),TEXT("□ 操作"));
+        if(Screen && Screen->Nearby())return Screen->Title()+EWL::Pick(TEXT("の光る端末　"), TEXT(" control tablet — "))+InputHint(EWL::Pick(TEXT("E 操作"), TEXT("E Interact")),EWL::Pick(TEXT("X 操作"), TEXT("X Interact")),EWL::Pick(TEXT("□ 操作"), TEXT("□ Interact")));
     if(Terminal){const FString H=Terminal->Hint();if(!H.IsEmpty())return H;}
     const auto PublicHint=EWExplorationPlan::Hint(this);if(!PublicHint.IsEmpty())return PublicHint;
-    if(Concepts && Concepts->Nearby())return TEXT("チェスの卓　遊ぶ　E");
+    if(Concepts && Concepts->Nearby())return EWL::Pick(TEXT("チェスの卓　遊ぶ　E"), TEXT("Chess table — Play — E"));
     if(Fishing){const auto Hint=Fishing->Hint();if(!Hint.IsEmpty())return Hint;}
     if (auto* Player = Cast<AEWCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
     {
         if(const auto* Ship=YachtFor(Player))return Ship->Hint(Player);
-        if(Skyport && FVector::DistSquared(Player->GetActorLocation(),Skyport->GetActorLocation())<FMath::Square(1900.))return TEXT("アウレリア空中港　正面の発着案内へ / 寄港中は橋を歩いて乗船");
+        if(Skyport && FVector::DistSquared(Player->GetActorLocation(),Skyport->GetActorLocation())<FMath::Square(1900.))return EWL::Pick(TEXT("アウレリア空中港　正面の発着案内へ / 寄港中は橋を歩いて乗船"), TEXT("Aurelia Skyport — departures ahead / Walk across the bridge while docked"));
         if(SkyrailUpper){const FString H=SkyrailUpper->Hint(Player);if(!H.IsEmpty())return H;}
         if(Skyrail){const FString H=Skyrail->Hint(Player);if(!H.IsEmpty())return H;}
-        if (Player->IsSeated()) return (SkyTheatre && SkyTheatre->ListenerInside()?TEXT("天空シアター　"):CinemaScreen && CinemaScreen->ListenerInside()?TEXT("水鏡の映写室　"):TEXT("雨継ぎの窓辺　")) + InputHint(TEXT("E / WASD 立ち上がる　マウス 見回す"),
-            TEXT("X / 左スティック 立ち上がる　右スティック 見回す"), TEXT("□ / 左スティック 立ち上がる　右スティック 見回す"));
+        if (Player->IsSeated()) return (SkyTheatre && SkyTheatre->ListenerInside()?EWL::Pick(TEXT("天空シアター　"), TEXT("Sky Theatre — ")):CinemaScreen && CinemaScreen->ListenerInside()?EWL::Pick(TEXT("水鏡の映写室　"), TEXT("Mirrorwater Cinema — ")):EWL::Pick(TEXT("雨継ぎの窓辺　"), TEXT("Raincatcher Window — "))) + InputHint(EWL::Pick(TEXT("E / WASD 立ち上がる　マウス 見回す"), TEXT("E / WASD Stand up   Mouse Look")),
+            EWL::Pick(TEXT("X / 左スティック 立ち上がる　右スティック 見回す"), TEXT("X / Left stick Stand up   Right stick Look")), EWL::Pick(TEXT("□ / 左スティック 立ち上がる　右スティック 見回す"), TEXT("□ / Left stick Stand up   Right stick Look")));
     }
     if(auto* L=Manager->NearestLift())
         return L->Hint(Cast<AEWCharacter>(UGameplayStatics::GetPlayerCharacter(this,0)))+TEXT("　")+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
     EEWResidenceAction Action = EEWResidenceAction::None;
     if (auto* Residence = Manager->NearestResidence(Action))
         return Residence->Hint(Action) + TEXT("　") + InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
-    if(SkyTheatre && SkyTheatre->SeatNearby()>=0)return TEXT("天空シアターの客席　座る　")+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
-    if(SkyTheatre && SkyTheatre->Nearby())return TEXT("天空シアター　検索・再生　")+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
-    if(CinemaScreen && CinemaScreen->SeatNearby()>=0)return TEXT("映画館の客席　座る　")+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
-    if(CinemaScreen && CinemaScreen->Nearby())return TEXT("水鏡の映写室　検索・再生　")+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
-    if(MediaScreen && MediaScreen->Nearby())return TEXT("広場のモニター　検索・再生　")+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
+    if(SkyTheatre && SkyTheatre->SeatNearby()>=0)return EWL::Pick(TEXT("天空シアターの客席　座る　"), TEXT("Sky Theatre seating — Sit — "))+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
+    if(SkyTheatre && SkyTheatre->Nearby())return EWL::Pick(TEXT("天空シアター　検索・再生　"), TEXT("Sky Theatre — Search / Play — "))+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
+    if(CinemaScreen && CinemaScreen->SeatNearby()>=0)return EWL::Pick(TEXT("映画館の客席　座る　"), TEXT("Cinema seating — Sit — "))+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
+    if(CinemaScreen && CinemaScreen->Nearby())return EWL::Pick(TEXT("水鏡の映写室　検索・再生　"), TEXT("Mirrorwater Cinema — Search / Play — "))+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
+    if(MediaScreen && MediaScreen->Nearby())return EWL::Pick(TEXT("広場のモニター　検索・再生　"), TEXT("Plaza Screen — Search / Play — "))+InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
     if(const auto* Player=UGameplayStatics::GetPlayerCharacter(this,0))
         if(const auto Recipe=Manager->RecipeAt(Manager->PlayerCoord()))
         {
@@ -846,23 +860,23 @@ FString UEWGameInstance::NearbyText() const
             if(!RoomText.IsEmpty())return RoomText;
         }
     const auto Place = Manager->NearestPlace(2200);
-    if (!Place) return InputHint(TEXT("WASD 歩く　Shift 走る　Space 2段ジャンプ　Tab 図鑑　Esc メニュー"),
-        TEXT("左スティック 移動　LB 走る　A 2段ジャンプ　Y 図鑑　Menu メニュー"),
-        TEXT("左スティック 移動　L1 走る　× 2段ジャンプ　△ 図鑑　Options メニュー"));
-    return Place->Name + (IsRecorded(*Place) ? TEXT("　記録済み ／ ") + InputHint(TEXT("Tab"), TEXT("Y"), TEXT("△")) + TEXT(" 図鑑") :
-        TEXT("　") + InputHint(TEXT("E"), TEXT("X"), TEXT("□")) + TEXT(" 発見を記録する"));
+    if (!Place) return InputHint(EWL::Pick(TEXT("WASD 歩く　Shift 走る　Space 2段ジャンプ　Tab 図鑑　Esc メニュー"), TEXT("WASD Walk   Shift Run   Space Double jump   Tab Journal   Esc Menu")),
+        EWL::Pick(TEXT("左スティック 移動　LB 走る　A 2段ジャンプ　Y 図鑑　Menu メニュー"), TEXT("Left stick Move   LB Run   A Double jump   Y Journal   Menu Menu")),
+        EWL::Pick(TEXT("左スティック 移動　L1 走る　× 2段ジャンプ　△ 図鑑　Options メニュー"), TEXT("Left stick Move   L1 Run   × Double jump   △ Journal   Options Menu")));
+    return EWL::Translate(Place->Name) + (IsRecorded(*Place) ? EWL::Pick(TEXT("　記録済み ／ "), TEXT("Recorded / ")) + InputHint(TEXT("Tab"), TEXT("Y"), TEXT("△")) + EWL::Pick(TEXT(" 図鑑"), TEXT(" Journal")) :
+        TEXT("　") + InputHint(TEXT("E"), TEXT("X"), TEXT("□")) + EWL::Pick(TEXT(" 発見を記録する"), TEXT(" Record discovery")));
 }
 FString UEWGameInstance::StatusText() const
 {
     if (FPlatformTime::Seconds() <= MessageUntil) return Message;
-    if (Manager && Manager->IsTravelling()) return TEXT("周囲の景色と道を準備しています…");
+    if (Manager && Manager->IsTravelling()) return EWL::Pick(TEXT("周囲の景色と道を準備しています…"), TEXT("Preparing the surrounding scenery and paths…"));
     return {};
 }
 FString UEWGameInstance::DiagnosticsText() const
 {
     if (!bDiagnostics || !Manager) return {};
     const auto M = FPlatformMemory::GetStats();
-    return FString::Printf(TEXT("区画 %d/49　生成 %d/2　待機 %d/8　原点移動 %d\n描画個数 %d　当たり判定 %d　反映 %.2f ms　RAM %.2f GB\n%s"),
+    return EWL::Format(TEXT("区画 %d/49　生成 %d/2　待機 %d/8　原点移動 %d\n描画個数 %d　当たり判定 %d　反映 %.2f ms　RAM %.2f GB\n%s"), TEXT("Districts %d/49   Generating %d/2   Queued %d/8   Origin shifts %d\nInstances %d   Colliders %d   Apply %.2f ms   RAM %.2f GB\n%s"),
         Manager->ResidentCount(), Manager->JobCount(), Manager->QueueCount(), Manager->RebaseCount,
         Manager->InstanceCount(), Manager->ColliderCount(), Manager->LastApplyMilliseconds, M.UsedPhysical / 1073741824.,
         *Manager->PlayerCoord().Text());

@@ -1,4 +1,5 @@
 #include "EWMediaScreen.h"
+#include "EWLocalization.h"
 #include "EWMediaTabletView.h"
 #include "EWTerminal.h"
 #include "Camera/CameraActor.h"
@@ -64,6 +65,8 @@ public:
     {FScopeLock Lock(&Mutex);auto O=MakeShared<FJsonObject>();O->SetNumberField(TEXT("left_rms"),LastLeft);O->SetNumberField(TEXT("right_rms"),LastRight);O->SetNumberField(TEXT("channels"),Channels);O->SetNumberField(TEXT("frames"),double(Total));return O;}
 };
 
+FString AEWMediaScreen::Title() const
+{return EWL::Translate(bSkyTheatre?TEXT("天空シアター"):bCinema?TEXT("水鏡の映写室"):TEXT("広場のモニター"));}
 AEWMediaScreen::AEWMediaScreen()
 {
     PrimaryActorTick.bCanEverTick=true;
@@ -158,7 +161,7 @@ void AEWMediaScreen::BeginPlay()
         +SOverlay::Slot()[SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
             .BorderBackgroundColor(FLinearColor(.015,.045,.055,1)).HAlign(HAlign_Center).VAlign(VAlign_Center)
             .Visibility_Lambda([this]{return Surface.IsValid() && Surface->HasPage()?EVisibility::Collapsed:EVisibility::Visible;})
-            [SNew(STextBlock).Text(FText::FromString(bSkyTheatre?TEXT("天空シアター\n\n入口の光る端末で上映を選ぶ"):bCinema?TEXT("水鏡の映写室\n\nロビーの光る端末で上映を選ぶ"):TEXT("空の回廊 シネマ\n\n広場の光る端末で YouTubeを探す")))
+            [SNew(STextBlock).Text_Lambda([this]{return FText::FromString(bSkyTheatre?EWL::Pick(TEXT("天空シアター\n\n入口の光る端末で上映を選ぶ"), TEXT("SKY THEATRE\n\nChoose a film at the glowing tablet by the entrance")):bCinema?EWL::Pick(TEXT("水鏡の映写室\n\nロビーの光る端末で上映を選ぶ"), TEXT("MIRRORWATER CINEMA\n\nChoose a film at the glowing tablet in the lobby")):EWL::Pick(TEXT("空の回廊 シネマ\n\n広場の光る端末で YouTubeを探す"), TEXT("SKY CORRIDOR CINEMA\n\nFind YouTube videos at the glowing tablet in the plaza")));})
                 .Justification(ETextJustify::Center).Font(Font).ColorAndOpacity(FLinearColor(.7,.9,.85,1))]];};
     Panel->SetSlateWidget(Display());if(!IsTheatre())BackPanel->SetSlateWidget(Display());
     Wave=NewObject<UEWBrowserAudioWave>(this);Wave->SetSampleRate(48000);Wave->NumChannels=1;
@@ -202,7 +205,7 @@ void AEWMediaScreen::OpenControls()
 {
     auto* G=GetGameInstance<UEWGameInstance>();auto* PC=UGameplayStatics::GetPlayerController(this,0);
     if(!G || !PC || !TabletView || bTabletOpen)return;
-    if(!Nearby()){G->Notify(Title()+TEXT("の光る端末に近づいて操作してください。"));return;}
+    if(!Nearby()){G->Notify(Title()+EWL::Pick(TEXT("の光る端末に近づいて操作してください。"), TEXT(": move closer to its glowing tablet to use it.")));return;}
     if(G->ActiveMediaScreen && G->ActiveMediaScreen!=this)G->ActiveMediaScreen->CloseControls();
     PreviousView=PC->GetViewTarget();PreviousLook=PC->GetControlRotation();
     if(!TabletCamera){TabletCamera=GetWorld()->SpawnActor<ACameraActor>();TabletCamera->GetCameraComponent()->SetFieldOfView(66);}

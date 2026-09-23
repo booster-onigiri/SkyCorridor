@@ -1,4 +1,5 @@
 #include "EWOuterWater.h"
+#include "EWLocalization.h"
 #include "EWSky92Plan.h"
 
 namespace EWOuterWater
@@ -188,6 +189,6 @@ TArray<FVector> Lamps(const EW::ChunkRecipe& R)
 FString Name(int32 Kind)
 {if(Kind>=17 && Kind<=19)return EWSky92Plan::Name(Kind-17);return Kind==16?TEXT("白塔の水都・滝見の回廊"):TEXT("白塔の水都・水鏡の聖堂");}
 FString Description(int32 Kind)
-{if(Kind>=17 && Kind<=19)return EWSky92Plan::Directions(Kind-17);return Kind==16?TEXT("蔦の絡む石の回廊を上がると、重なる水面、白い尖塔と滝が見渡せる。東へ向かうほど水盤は一段ずつ低くなる。"):
-    TEXT("都市の東の外縁に広がる水の街。開いた石の聖堂を抜け、橋の下の柱や水底の遺構を探してみよう。");}
+{if(Kind>=17 && Kind<=19)return EWSky92Plan::Directions(Kind-17);return EWL::Translate(Kind==16?TEXT("蔦の絡む石の回廊を上がると、重なる水面、白い尖塔と滝が見渡せる。東へ向かうほど水盤は一段ずつ低くなる。"):
+    TEXT("都市の東の外縁に広がる水の街。開いた石の聖堂を抜け、橋の下の柱や水底の遺構を探してみよう。"));}
 }

@@ -1,4 +1,5 @@
 #include "EWFishing.h"
+#include "EWLocalization.h"
 #include "EWGameInstance.h"
 #include "EWChunkManager.h"
 #include "EWCharacter.h"
@@ -95,9 +96,9 @@ void AEWFishing::BuildScene()
         Sign->SetTwoSided(true);Sign->SetRelativeScale3D(FVector(.15));Sign->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         Sign->SetSlateWidget(SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(Teal).Padding(15)
             [SNew(SVerticalBox)
-                +SVerticalBox::Slot().AutoHeight()[SNew(STextBlock).Text(FText::FromString(S.Name)).Font(FSlateFontInfo(FPaths::ProjectContentDir()/TEXT("Fonts/DroidSansFallback.ttf"),40)).ColorAndOpacity(Ivory)]
-                +SVerticalBox::Slot().AutoHeight().Padding(0,20)[SNew(STextBlock).Text(FText::FromString(TEXT("FISHING  /  釣り場"))).Font(FSlateFontInfo(FPaths::ProjectContentDir()/TEXT("Fonts/DroidSansFallback.ttf"),29)).ColorAndOpacity(Ivory)]
-                +SVerticalBox::Slot().AutoHeight()[SNew(STextBlock).Text(FText::FromString(TEXT("水を眺めて、ひと休み。"))).Font(FSlateFontInfo(FPaths::ProjectContentDir()/TEXT("Fonts/DroidSansFallback.ttf"),26)).ColorAndOpacity(Ivory)]]);
+                +SVerticalBox::Slot().AutoHeight()[SNew(STextBlock).Text_Lambda([I]{return FText::FromString(EWL::Translate(EWFishing::Spots()[I].Name));}).Font(FSlateFontInfo(FPaths::ProjectContentDir()/TEXT("Fonts/DroidSansFallback.ttf"),40)).ColorAndOpacity(Ivory)]
+                +SVerticalBox::Slot().AutoHeight().Padding(0,20)[SNew(STextBlock).Text_Lambda([]{return FText::FromString(EWL::Pick(TEXT("FISHING  /  釣り場"), TEXT("FISHING SPOT")));}).Font(FSlateFontInfo(FPaths::ProjectContentDir()/TEXT("Fonts/DroidSansFallback.ttf"),29)).ColorAndOpacity(Ivory)]
+                +SVerticalBox::Slot().AutoHeight()[SNew(STextBlock).Text_Lambda([]{return FText::FromString(EWL::Pick(TEXT("水を眺めて、ひと休み。"), TEXT("Watch the water. Stay a while.")));}).Font(FSlateFontInfo(FPaths::ProjectContentDir()/TEXT("Fonts/DroidSansFallback.ttf"),26)).ColorAndOpacity(Ivory)]]);
         Sign->RegisterComponent();Signs.Add(Sign);
         auto* Lamp=NewObject<UPointLightComponent>(this);Lamp->SetupAttachment(Site);Lamp->SetRelativeLocation({-15,-82,165});
         Lamp->SetIntensityUnits(ELightUnits::Lumens);Lamp->SetIntensity(3500);Lamp->SetLightColor(FLinearColor(1,.68,.35,1));
@@ -160,10 +161,10 @@ bool AEWFishing::Interact()
     if(FishingCast.Active()){FishingCast.Press(FPlatformTime::Seconds());return true;}
     if(FishingCast.Phase()==EWFishing::EPhase::Landed){G->SetMenu(EEWMenu::Catch);return true;}
     const int32 Site=Nearby();if(Site<0)return false;
-    if(G->SocialSession && G->SocialSession->Active()){G->Notify(TEXT("釣りは一人での散策で遊べます。街での釣りは接続確認後に対応します。"));return true;}
+    if(G->SocialSession && G->SocialSession->Active()){G->Notify(EWL::Pick(TEXT("釣りは一人での散策で遊べます。街での釣りは接続確認後に対応します。"), TEXT("Fishing is available in solo exploration. Online fishing is still in development.")));return true;}
     if(!bReady){G->Notify(SaveError());return true;}
     if(FishingCast.Begin(Site,GameHour(),FPlatformTime::Seconds(),bPatient,Random))
-    {ActiveSite=Site;bSaved=bNewSpecies=bNewRecord=false;G->Notify(TEXT("浮きが沈んだら、もう一度 ")+G->InputHint(TEXT("E"),TEXT("X"),TEXT("□"))+TEXT("。連打は不要です。"),5);}
+    {ActiveSite=Site;bSaved=bNewSpecies=bNewRecord=false;G->Notify(EWL::Pick(TEXT("浮きが沈んだら、もう一度 "), TEXT("When the float sinks, press "))+G->InputHint(TEXT("E"),TEXT("X"),TEXT("□"))+EWL::Pick(TEXT("。連打は不要です。"), TEXT(" once more. No rapid tapping needed.")),5);}
     return true;
 }
 FString AEWFishing::Hint() const
@@ -172,13 +173,13 @@ FString AEWFishing::Hint() const
     const FString E=G->InputHint(TEXT("E"),TEXT("X"),TEXT("□"));
     switch(FishingCast.Phase())
     {
-    case EWFishing::EPhase::Waiting:return TEXT("水面を眺めながら、魚を待つ…　歩くと中断");
-    case EWFishing::EPhase::Bite:return TEXT("浮きが沈んだ！　")+E+TEXT(" を一度押して引き上げる");
-    case EWFishing::EPhase::Reeling:return TEXT("魚をゆっくり引き寄せています…");
-    case EWFishing::EPhase::Landed:return TEXT("釣果を見る　")+E;
+    case EWFishing::EPhase::Waiting:return EWL::Pick(TEXT("水面を眺めながら、魚を待つ…　歩くと中断"), TEXT("Watching the water, waiting for a fish…  Move to cancel"));
+    case EWFishing::EPhase::Bite:return EWL::Pick(TEXT("浮きが沈んだ！　"), TEXT("The float sank!  "))+E+EWL::Pick(TEXT(" を一度押して引き上げる"), TEXT(": press once to reel in"));
+    case EWFishing::EPhase::Reeling:return EWL::Pick(TEXT("魚をゆっくり引き寄せています…"), TEXT("Gently reeling in the fish…"));
+    case EWFishing::EPhase::Landed:return EWL::Pick(TEXT("釣果を見る　"), TEXT("View catch  "))+E;
     default:break;
     }
-    const int32 I=Nearby();return I<0?FString():EWFishing::Spots()[I].Name+TEXT("　釣りをする　")+E;
+    const int32 I=Nearby();return I<0?FString():EWL::Translate(EWFishing::Spots()[I].Name)+EWL::Pick(TEXT("　釣りをする　"), TEXT("  Fish  "))+E;
 }
 void AEWFishing::Cancel()
 {
@@ -243,8 +244,8 @@ void AEWFishing::Tick(float Delta)
             !P->GetCharacterMovement()->IsMovingOnGround() || FVector::DistSquared(P->GetActorLocation(),At)>240.*240.){Cancel();return;}
         const auto Before=FishingCast.Phase();FishingCast.Tick(Now);
         if(FishingCast.Phase()==EWFishing::EPhase::Landed){SaveLanded();Tackle->SetVisibility(false,true);return;}
-        if(FishingCast.Phase()==EWFishing::EPhase::Escaped){Cancel();G->Notify(TEXT("魚は水へ戻っていきました。また竿を出せます。"));return;}
-        if(Before!=FishingCast.Phase() && FishingCast.Phase()==EWFishing::EPhase::Bite)G->Notify(TEXT("浮きが沈みました！　一度だけ ")+G->InputHint(TEXT("E"),TEXT("X"),TEXT("□"))+TEXT(" を押してください。"),6);
+        if(FishingCast.Phase()==EWFishing::EPhase::Escaped){Cancel();G->Notify(EWL::Pick(TEXT("魚は水へ戻っていきました。また竿を出せます。"), TEXT("The fish slipped back into the water. You can cast again.")));return;}
+        if(Before!=FishingCast.Phase() && FishingCast.Phase()==EWFishing::EPhase::Bite)G->Notify(EWL::Pick(TEXT("浮きが沈みました！　一度だけ "), TEXT("The float sank! Press "))+G->InputHint(TEXT("E"),TEXT("X"),TEXT("□"))+EWL::Pick(TEXT(" を押してください。"), TEXT(" once.")),6);
         Tackle->SetVisibility(true,true);
         const FVector Eye=M->ToLocal({0,0},P->Camera->GetComponentLocation());
         const FVector Aim=(S.Float-Eye).GetSafeNormal();const FVector Side=FVector::CrossProduct(Aim,FVector::UpVector).GetSafeNormal();

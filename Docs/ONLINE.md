@@ -2,7 +2,7 @@
 
 ## English
 
-**v0.1.1 defaults to solo play.** The online room and EOS integration code is
+**v0.1.2 defaults to solo play.** The online room and EOS integration code is
 available for development experiments. It is not a promise of a hosted service or
 verified multiplayer across arbitrary networks.
 
@@ -40,7 +40,7 @@ configuration, browser cookies and user data are not public test artifacts.
 
 ## 日本語
 
-**v0.1.1の標準動作は一人用です。** オンラインルームとEOSのコードは開発者向けの実験用です。
+**v0.1.2の標準動作は一人用です。** オンラインルームとEOSのコードは開発者向けの実験用です。
 運営サービスの提供や、任意の回線での多人数接続を保証するものではありません。
 
 `Project/Config/EOS.template.json` は空欄の見本です。

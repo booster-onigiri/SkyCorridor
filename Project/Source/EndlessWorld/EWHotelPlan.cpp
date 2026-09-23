@@ -1,5 +1,6 @@
 #include "EWHotelPlan.h"
 #include "EWHotel83Data.h"
+#include "EWLocalization.h"
 
 FString EWHotelPlan::Name(int32 I)
 {
@@ -17,7 +18,7 @@ FString EWHotelPlan::Description(int32 I)
         TEXT("濃い木、本棚、暖炉。都市の夜景と読書を楽しむ部屋。"),
         TEXT("立体的な窓枠と鮮やかな織物。光とアートのロフト。"),
         TEXT("梁のある天井、石の暖炉、雲を望む山荘のリビング。")};
-    return I>=0 && I<8?N[I]:FString();
+    return I>=0 && I<8?EWL::Translate(N[I]):FString();
 }
 const EW::InteriorRoom* EWHotelPlan::Find(const EW::ChunkRecipe& R,int32 I)
 {return R.Interiors.FindByPredicate([I](const EW::InteriorRoom& V){return V.Kind==11+I;});}

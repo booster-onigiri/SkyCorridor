@@ -3,6 +3,7 @@
 #include "EWGameInstance.h"
 #include "EWChunkManager.h"
 #include "EWCharacter.h"
+#include "EWLocalization.h"
 #include "Kismet/GameplayStatics.h"
 
 FString EWExplorationPlan::Name(int32 I)
@@ -19,14 +20,14 @@ FString EWExplorationPlan::Description(int32 I)
         TEXT("まだ名のない島々の模型と、大きな地図のある書斎。都市を小さく見つめ直す場所。"),
         TEXT("白い展示壁を巡り、色の風景画や金属の彫刻に出会う。街の光も展示の一部になる美術館。"),
         TEXT("ステンレスの斜めの柱と大きなガラス壁。緑と水、都市の風景を重ねる空中植物園。")};
-    return I>=0 && I<6?N[I]:FString();
+    return I>=0 && I<6?EWL::Translate(N[I]):FString();
 }
 FString EWExplorationPlan::Directions(int32 I)
 {
     static const TCHAR* N[]={TEXT("時計広場から南西の塔へ・広場と同じ階"),TEXT("カフェの塔の昇降機で、カフェから1つ上の停車階へ"),
         TEXT("広場の南東の塔・昇降機の「空の大図書館」へ"),TEXT("大図書館の塔で、さらに1つ上の停車階へ"),
         TEXT("映画館の塔・昇降機の「光の美術館」へ"),TEXT("美術館の塔で、さらに1つ上の停車階へ")};
-    return I>=0 && I<6?N[I]:FString();
+    return I>=0 && I<6?EWL::Translate(N[I]):FString();
 }
 const EW::InteriorRoom* EWExplorationPlan::Find(const EW::ChunkRecipe& R,int32 I)
 {return R.Interiors.FindByPredicate([I](const auto& Room){return Room.Kind==19+I;});}
@@ -85,13 +86,14 @@ FString EWExplorationPlan::Hint(const UEWGameInstance* G)
 {
     FVector Local;const auto* Room=Current(G,Local);if(!Room)return {};
     const auto* P=Cast<AEWCharacter>(UGameplayStatics::GetPlayerCharacter(G,0));
-    if(P && P->IsSeated())return Name(Room->Kind-19)+TEXT("　E / WASD 立ち上がる　マウス 見回す");
-    if(FVector::Dist(Local,FVector(600,-1450,90))<190)return Name(Room->Kind-19)+TEXT("　窓辺でひと休み　E 座る");
+    const FString DisplayName=EWL::Translate(Name(Room->Kind-19));
+    if(P && P->IsSeated())return DisplayName+EWL::Pick(TEXT("　E / WASD 立ち上がる　マウス 見回す"),TEXT("  E / WASD Stand up  Mouse Look around"));
+    if(FVector::Dist(Local,FVector(600,-1450,90))<190)return DisplayName+EWL::Pick(TEXT("　窓辺でひと休み　E 座る"),TEXT("  Rest by the window  E Sit"));
     const auto R=G->Manager->RecipeAt(G->Manager->PlayerCoord());
     const auto Place=Bookmark(*R,*Room);
     if(FVector::Dist(Local,FVector(0,500,100))<450)
-        return Name(Room->Kind-19)+(G->IsRecorded(Place)?TEXT("　発見済み　Tab 図鑑"):TEXT("　E 発見を記録する"));
-    return Name(Room->Kind-19)+(Local.Y<-1800?TEXT("　このまま歩いて入れます"):TEXT("　館内の案内台を探してみよう"));
+        return DisplayName+(G->IsRecorded(Place)?EWL::Pick(TEXT("　発見済み　Tab 図鑑"),TEXT("  Recorded  Tab Journal")):EWL::Pick(TEXT("　E 発見を記録する"),TEXT("  E Record discovery")));
+    return DisplayName+(Local.Y<-1800?EWL::Pick(TEXT("　このまま歩いて入れます"),TEXT("  Walk inside to enter")):EWL::Pick(TEXT("　館内の案内台を探してみよう"),TEXT("  Look for the information stand inside")));
 }
 bool EWExplorationPlan::Sit(UEWGameInstance* G)
 {

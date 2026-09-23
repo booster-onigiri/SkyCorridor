@@ -1,4 +1,5 @@
 #include "EWTerminalView.h"
+#include "EWLocalization.h"
 #include "EWTerminal.h"
 #include "EWGameInstance.h"
 #include "EWBrowserSurface.h"
@@ -130,13 +131,13 @@ public:
         for(int Y=20;Y<500;Y+=70)Line({0,double(Y)},{620,double(Y)},FLinearColor(.72,.81,.82,1),1);
         Line(At(7),At(11),FLinearColor(.67,.40,.10,1),6);Line(At(8),At(9),Accent,6);Line(At(8),At(10),Muted,3);
         for(auto P:{FIntPoint(0,1),FIntPoint(0,3),FIntPoint(3,5),FIntPoint(1,2),FIntPoint(3,4),FIntPoint(5,6),FIntPoint(0,8),FIntPoint(9,12),FIntPoint(12,13),FIntPoint(13,14)})Line(At(P.X),At(P.Y),FLinearColor(.39,.54,.53,1),3);
-        const TCHAR* Labels[]={TEXT("広場"),TEXT("カフェ"),TEXT("ラウンジ"),TEXT("図書館"),TEXT("地図室"),TEXT("美術館"),TEXT("植物園"),TEXT("ホテル"),TEXT("出発駅"),TEXT("水都駅"),TEXT("シアター"),TEXT("空中港"),TEXT("商店塔"),TEXT("回廊院"),TEXT("浮遊城")};
+        const TCHAR* Labels[]={EWL::Pick(TEXT("広場"), TEXT("Plaza")),EWL::Pick(TEXT("カフェ"), TEXT("Café")),EWL::Pick(TEXT("ラウンジ"), TEXT("Lounge")),EWL::Pick(TEXT("図書館"), TEXT("Library")),EWL::Pick(TEXT("地図室"), TEXT("Map Room")),EWL::Pick(TEXT("美術館"), TEXT("Museum")),EWL::Pick(TEXT("植物園"), TEXT("Garden")),EWL::Pick(TEXT("ホテル"), TEXT("Hotel")),EWL::Pick(TEXT("出発駅"), TEXT("Departure")),EWL::Pick(TEXT("水都駅"), TEXT("Water City")),EWL::Pick(TEXT("シアター"), TEXT("Theater")),EWL::Pick(TEXT("空中港"), TEXT("Skyport")),EWL::Pick(TEXT("商店塔"), TEXT("Market")),EWL::Pick(TEXT("回廊院"), TEXT("Cloister")),EWL::Pick(TEXT("浮遊城"), TEXT("Castle"))};
         const int32 Count=Owner.IsValid()?FMath::Min(15,Owner->Places().Num()):0;
         for(int I=0;I<Count;++I)
         {
             const bool Active=Owner->TargetIndex()==I;const FLinearColor C=Active?FLinearColor(.77,.31,.08,1):Accent;
             FSlateDrawElement::MakeBox(O,L+1,G.ToPaintGeometry(FVector2D(Active?28:18)*K,FSlateLayoutTransform((At(I)-FVector2D(Active?14:9))*K)),&Pill,ESlateDrawEffect::None,C);
-            FSlateDrawElement::MakeText(O,L+2,G.ToPaintGeometry(FVector2D(130,32),FSlateLayoutTransform((At(I)+FVector2D(I>=12?-34:-44,-40))*K)),Labels[I],TerminalFont(I>=12?18:21),ESlateDrawEffect::None,Ink);
+            FSlateDrawElement::MakeText(O,L+2,G.ToPaintGeometry(FVector2D(130,32),FSlateLayoutTransform((At(I)+FVector2D(I>=12?-34:-44,-40))*K)),Labels[I],TerminalFont(EWL::IsEnglish()?17:I>=12?18:21),ESlateDrawEffect::None,Ink);
         }
         return L+2;
     }
@@ -153,7 +154,7 @@ private:TWeakObjectPtr<AEWTerminal> Owner;
 
 void SEWTerminalView::Construct(const FArguments& A){Owner=A._Owner;Rebuild();}
 TSharedRef<SWidget> SEWTerminalView::Text(const FString& V,int32 Size,FLinearColor C)
-{return SNew(STextBlock).Text(FText::FromString(V)).Font(TerminalFont(Size)).ColorAndOpacity(C).AutoWrapText(true);}
+{return SNew(STextBlock).Text(FText::FromString(EWL::Translate(V))).Font(TerminalFont(Size)).ColorAndOpacity(C).AutoWrapText(true);}
 TSharedRef<SWidget> SEWTerminalView::Button(const FString& Label,TFunction<void()> Action,bool Enabled)
 {
     auto B=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(FMargin(18,18)).IsEnabled(Enabled)
@@ -174,7 +175,7 @@ void SEWTerminalView::Rebuild()
         +SHorizontalBox::Slot().FillWidth(1).HAlign(HAlign_Right).VAlign(VAlign_Center)[Text(TEXT("MEMORIA"),18,Foreground)]];
     if(!HomePage)
     {
-        const TCHAR* Names[]={TEXT(""),TEXT("地図"),TEXT("記録"),TEXT("YouTube"),TEXT("友人"),TEXT("観測")};
+        const TCHAR* Names[]={TEXT(""),EWL::Pick(TEXT("地図"), TEXT("Map")),EWL::Pick(TEXT("記録"), TEXT("Records")),TEXT("YouTube"),EWL::Pick(TEXT("友人"), TEXT("Friends")),EWL::Pick(TEXT("観測"), TEXT("Observe"))};
         auto BackButton=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(8).OnClicked_Lambda([this]{Back();return FReply::Handled();})[Icon(6,38,Accent)];Buttons.Add(BackButton);
         Stack->AddSlot().AutoHeight().Padding(2,14,8,26)[SNew(SHorizontalBox)
             +SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)[BackButton]
@@ -197,7 +198,7 @@ void SEWTerminalView::Home(TSharedRef<SVerticalBox> Box)
 {
     const auto* G=Owner->GetGameInstance<UEWGameInstance>();
     const bool FriendsAvailable=G && G->IsMenuAvailable(EEWMenu::City);
-    const TCHAR* Labels[]={TEXT("観測"),TEXT("地図"),TEXT("記録"),TEXT("YouTube"),TEXT("友人"),TEXT("カメラ")};
+    const TCHAR* Labels[]={EWL::Pick(TEXT("観測"), TEXT("Observe")),EWL::Pick(TEXT("地図"), TEXT("Map")),EWL::Pick(TEXT("記録"), TEXT("Records")),TEXT("YouTube"),EWL::Pick(TEXT("友人"), TEXT("Friends")),EWL::Pick(TEXT("カメラ"), TEXT("Camera"))};
     const int Pages[]={5,1,2,3,4,-1};Box->AddSlot().FillHeight(.6);
     for(int Row=0;Row<3;++Row)
     {
@@ -209,7 +210,7 @@ void SEWTerminalView::Home(TSharedRef<SVerticalBox> Box)
             const FLinearColor Foreground=Available?FLinearColor::White:FLinearColor(.60,.64,.66,1);
             Tile->AddSlot().AutoHeight().HAlign(HAlign_Center)[SNew(SBox).WidthOverride(188).HeightOverride(188)[Card(Icon(I,108,Foreground),Available?AppColor(I):FLinearColor(.16,.19,.21,1),FMargin(20))]];
             Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,20,0,0)[Text(Labels[I],29,Foreground)];
-            if(!Available)Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,5,0,0)[Text(TEXT("開発中"),22,Foreground)];
+            if(!Available)Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,5,0,0)[Text(EWL::Pick(TEXT("開発中"), TEXT("In development")),22,Foreground)];
             auto B=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(FMargin(12,14)).IsEnabled(Available).OnClicked_Lambda([this,Page]
             {if(Owner.IsValid()){RecordDetail=INDEX_NONE;if(Page>=0)Owner->ShowPage(Page);else if(auto* G=Owner->GetGameInstance<UEWGameInstance>()){Owner->Close();if(G->PhotoMode)G->PhotoMode->Open();}}return FReply::Handled();})[Tile];Buttons.Add(B);
             Line->AddSlot().FillWidth(1).HAlign(HAlign_Center)[B];
@@ -221,16 +222,16 @@ void SEWTerminalView::Map(TSharedRef<SVerticalBox> Box)
 {
     auto* T=Owner.Get();const int Target=T->TargetIndex();
     Box->AddSlot().AutoHeight()[Card(SNew(SBox).HeightOverride(500)[SNew(SMemoryCityMap).Owner(T)],FLinearColor(.76,.85,.85,1),FMargin(8))];
-    Box->AddSlot().AutoHeight().Padding(6,15,0,22)[Text(TEXT("上層線  ━   水都線  ━   徒歩・昇降機  ─"),21,Muted)];
+    Box->AddSlot().AutoHeight().Padding(6,15,0,22)[Text(EWL::Pick(TEXT("上層線  ━   水都線  ━   徒歩・昇降機  ─"), TEXT("Upper Line ━  Water City Line ━  Walk / Elevator ─")),21,Muted)];
     if(T->Places().IsValidIndex(Target))
     {
-        auto Guide=SNew(SVerticalBox);Guide->AddSlot().AutoHeight()[Text(TEXT("目的地"),23,Muted)];
+        auto Guide=SNew(SVerticalBox);Guide->AddSlot().AutoHeight()[Text(EWL::Pick(TEXT("目的地"), TEXT("Destination")),23,Muted)];
         Guide->AddSlot().AutoHeight().Padding(0,8,0,14)[Text(T->Places()[Target].Area,34,Ink)];
         Guide->AddSlot().AutoHeight()[Text(T->RouteText(Target),27,Muted)];
-        Guide->AddSlot().AutoHeight().Padding(0,22,0,0)[Button(TEXT("案内を見ながら歩く"),[this]{Owner->Close();})];
+        Guide->AddSlot().AutoHeight().Padding(0,22,0,0)[Button(EWL::Pick(TEXT("案内を見ながら歩く"), TEXT("Walk with guidance")),[this]{Owner->Close();})];
         Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Card(Guide)];
     }
-    Box->AddSlot().AutoHeight().Padding(4,0,0,18)[Text(TEXT("行き先を選ぶ"),30,Ink)];
+    Box->AddSlot().AutoHeight().Padding(4,0,0,18)[Text(EWL::Pick(TEXT("行き先を選ぶ"), TEXT("Choose a destination")),30,Ink)];
     for(int I=0;I<T->Places().Num();++I)
     {
         auto Row=SNew(SHorizontalBox);Row->AddSlot().AutoWidth().VAlign(VAlign_Center)[Icon(I==Target?8:T->Recorded(I)?7:1,42,Accent)];
@@ -249,10 +250,10 @@ void SEWTerminalView::Records(TSharedRef<SVerticalBox> Box)
         Box->AddSlot().AutoHeight().Padding(4,30,4,10)[Text(P.Area,25,Muted)];
         Box->AddSlot().AutoHeight().Padding(4,0,4,28)[Text(P.Place.Name,41,Ink)];
         Box->AddSlot().AutoHeight().Padding(4,0,4,34)[Text(P.Record,32,Ink)];
-        Box->AddSlot().AutoHeight()[Button(TEXT("この場所を地図で見る"),[this]{Owner->SelectTarget(RecordDetail);Owner->ShowPage(1);})];return;
+        Box->AddSlot().AutoHeight()[Button(EWL::Pick(TEXT("この場所を地図で見る"), TEXT("Show this place on the map")),[this]{Owner->SelectTarget(RecordDetail);Owner->ShowPage(1);})];return;
     }
-    Box->AddSlot().AutoHeight().Padding(4,0,0,22)[Text(FString::Printf(TEXT("見つけた時間   %d / %d"),T->RecordCount(),T->Places().Num()),27,Muted)];
-    if(!T->RecordCount())Box->AddSlot().AutoHeight().Padding(0,0,0,25)[Card(Text(TEXT("「観測」で街に残る気配を探すと、ここに記録が届きます。"),27,Muted))];
+    Box->AddSlot().AutoHeight().Padding(4,0,0,22)[Text(EWL::Format(TEXT("見つけた時間   %d / %d"), TEXT("Moments found   %d / %d"),T->RecordCount(),T->Places().Num()),27,Muted)];
+    if(!T->RecordCount())Box->AddSlot().AutoHeight().Padding(0,0,0,25)[Card(Text(EWL::Pick(TEXT("「観測」で街に残る気配を探すと、ここに記録が届きます。"), TEXT("Use Observe to seek traces of the past. The moments you record will appear here.")),27,Muted))];
     for(int R=0;R<T->Places().Num();R+=2)
     {
         auto Row=SNew(SHorizontalBox);
@@ -261,7 +262,7 @@ void SEWTerminalView::Records(TSharedRef<SVerticalBox> Box)
             int I=R+C;if(!T->Places().IsValidIndex(I)){Row->AddSlot().FillWidth(1);continue;}
             bool Found=T->Recorded(I);auto Cover=SNew(SVerticalBox);
             Cover->AddSlot().AutoHeight()[SNew(SBox).HeightOverride(160)[Card(Icon(Found?MemorySymbol(I):0,82,Found?FLinearColor(.9,.94,.91,1):FLinearColor(.44,.56,.6,1)),Found?MemoryColor(I):FLinearColor(.64,.71,.73,1),FMargin(0))]];
-            Cover->AddSlot().AutoHeight().Padding(2,14,2,6)[Text(Found?T->Places()[I].Place.Name:TEXT("まだ見ぬ時間"),27,Ink)];
+            Cover->AddSlot().AutoHeight().Padding(2,14,2,6)[Text(Found?T->Places()[I].Place.Name:EWL::Pick(TEXT("まだ見ぬ時間"), TEXT("An unseen moment")),27,Ink)];
             Cover->AddSlot().AutoHeight().Padding(2,0,2,6)[Text(T->Places()[I].Area,22,Muted)];
             auto B=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(12).OnClicked_Lambda([this,I,Found]{if(Found){RecordDetail=I;Rebuild();}else{Owner->SelectTarget(I);Owner->ShowPage(1);}return FReply::Handled();})[Cover];Buttons.Add(B);
             Row->AddSlot().FillWidth(1).Padding(C?8:0,0,C?0:8,0)[Card(B,FLinearColor(.97,.98,.98,1),FMargin(0))];
@@ -277,34 +278,34 @@ void SEWTerminalView::Video(TSharedRef<SVerticalBox> Box)
         .SetBackgroundImageHovered(FSlateRoundedBoxBrush(FLinearColor::White,14.f))
         .SetBackgroundImageFocused(FSlateRoundedBoxBrush(FLinearColor::White,14.f,Accent,2.f))
         .SetForegroundColor(Ink).SetFocusedForegroundColor(Ink);
-    Query=SNew(SEditableTextBox).Style(&SearchStyle).Font(TerminalFont(28)).Text(FText::FromString(SearchText)).ForegroundColor(Ink).BackgroundColor(FLinearColor::White).HintText(FText::FromString(TEXT("動画名・YouTube URL")))
+    Query=SNew(SEditableTextBox).Style(&SearchStyle).Font(TerminalFont(28)).Text(FText::FromString(SearchText)).ForegroundColor(Ink).BackgroundColor(FLinearColor::White).HintText(FText::FromString(EWL::Pick(TEXT("動画名・YouTube URL"), TEXT("Video title / YouTube URL"))))
         .Padding(FMargin(14,18)).OnTextCommitted_Lambda([this](const FText& V,ETextCommit::Type How){if(How==ETextCommit::OnEnter)Owner->SearchVideo(V.ToString());});
     Box->AddSlot().AutoHeight().Padding(0,0,0,15)[Query.ToSharedRef()];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,28)[Button(TEXT("検索"),[this]{if(Query)Owner->SearchVideo(Query->GetText().ToString());})];
+    Box->AddSlot().AutoHeight().Padding(0,0,0,28)[Button(EWL::Pick(TEXT("検索"), TEXT("Search")),[this]{if(Query)Owner->SearchVideo(Query->GetText().ToString());})];
     auto Player=SNew(SOverlay);
     Player->AddSlot()[SNew(SBorder).BorderImage(&SmallRound).BorderBackgroundColor(FLinearColor(.006,.009,.014,1))];
     Player->AddSlot().HAlign(HAlign_Center).VAlign(VAlign_Center)[Icon(3,96,FLinearColor(.70,.75,.77,1))];
     Player->AddSlot()[SNew(SEWBrowserView).Browser(Browser)];
     // Keep the 16:9 surface aspect ratio within the portrait screen.
     Box->AddSlot().AutoHeight()[SNew(SBox).HeightOverride(362)[Player]];
-    Box->AddSlot().AutoHeight().Padding(4,20,4,20)[SNew(STextBlock).Text_Lambda([Browser]{return FText::FromString(Browser && Browser->HasPage()?Browser->Status():TEXT("見たい動画を探そう"));}).Font(TerminalFont(25)).ColorAndOpacity(Muted).AutoWrapText(true)];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,12)[Button(TEXT("映像のみ / ページ表示"),[Browser]{if(Browser)Browser->SetVideoFullscreen(!Browser->IsVideoFullscreen());})];
-    Box->AddSlot().AutoHeight()[Button(TEXT("再生を止める"),[this]{Owner->StopVideo();})];
-    Box->AddSlot().AutoHeight().Padding(4,32,4,0)[Text(TEXT("端末をしまうと一時停止"),24,Muted)];
+    Box->AddSlot().AutoHeight().Padding(4,20,4,20)[SNew(STextBlock).Text_Lambda([Browser]{return FText::FromString(Browser && Browser->HasPage()?EWL::Translate(Browser->Status()):EWL::Pick(TEXT("見たい動画を探そう"), TEXT("Find something to watch")));}).Font(TerminalFont(25)).ColorAndOpacity(Muted).AutoWrapText(true)];
+    Box->AddSlot().AutoHeight().Padding(0,0,0,12)[Button(EWL::Pick(TEXT("映像のみ / ページ表示"), TEXT("Video only / Full page")),[Browser]{if(Browser)Browser->SetVideoFullscreen(!Browser->IsVideoFullscreen());})];
+    Box->AddSlot().AutoHeight()[Button(EWL::Pick(TEXT("再生を止める"), TEXT("Stop playback")),[this]{Owner->StopVideo();})];
+    Box->AddSlot().AutoHeight().Padding(4,32,4,0)[Text(EWL::Pick(TEXT("端末をしまうと一時停止"), TEXT("Playback pauses when you put the device away")),24,Muted)];
 }
 void SEWTerminalView::Friends(TSharedRef<SVerticalBox> Box)
 {
     auto* G=Owner->GetGameInstance<UEWGameInstance>();auto* S=G?G->SocialSession.Get():nullptr;auto Summary=SNew(SVerticalBox);
     const bool Available=G && G->IsMenuAvailable(EEWMenu::City);
     Summary->AddSlot().AutoHeight().HAlign(HAlign_Center)[Icon(4,116,Accent)];
-    Summary->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,18,0,12)[Text(S && S->Active()?TEXT("同じ街を歩いています"):TEXT("いまは、ひとりで散策中"),30,Ink)];
-    if(S && S->Active())Summary->AddSlot().AutoHeight().HAlign(HAlign_Center)[Text(FString::Printf(TEXT("%d 人が滞在中"),S->Players().Num()),25,Muted)];
+    Summary->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,18,0,12)[Text(S && S->Active()?EWL::Pick(TEXT("同じ街を歩いています"), TEXT("Walking in the same city")):EWL::Pick(TEXT("いまは、ひとりで散策中"), TEXT("Exploring on your own")),30,Ink)];
+    if(S && S->Active())Summary->AddSlot().AutoHeight().HAlign(HAlign_Center)[Text(EWL::Format(TEXT("%d 人が滞在中"), TEXT("%d people are here"),S->Players().Num()),25,Muted)];
     Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Card(Summary)];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,18)[Button(Available?TEXT("街を探す・開く"):TEXT("街を探す・開く　開発中"),[this]{Owner->InviteFriends();},Available)];
+    Box->AddSlot().AutoHeight().Padding(0,0,0,18)[Button(Available?EWL::Pick(TEXT("街を探す・開く"), TEXT("Find / Host a city")):EWL::Pick(TEXT("街を探す・開く　開発中"), TEXT("Find / Host a city — In development")),[this]{Owner->InviteFriends();},Available)];
     if(Available && S && !S->Invite().IsEmpty())
     {
         const auto Code=S->Invite();Box->AddSlot().AutoHeight().Padding(0,0,0,18)[Card(Text(Code,27,Ink))];
-        Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Button(bCodeCopied?TEXT("コピーしました"):TEXT("招待コードをコピー"),[this,Code]{FPlatformApplicationMisc::ClipboardCopy(*Code);bCodeCopied=true;Rebuild();})];
+        Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Button(bCodeCopied?EWL::Pick(TEXT("コピーしました"), TEXT("Copied")):EWL::Pick(TEXT("招待コードをコピー"), TEXT("Copy invite code")),[this,Code]{FPlatformApplicationMisc::ClipboardCopy(*Code);bCodeCopied=true;Rebuild();})];
     }
     if(S && S->Active())for(const auto& Pair:S->Players())
     {
@@ -312,21 +313,21 @@ void SEWTerminalView::Friends(TSharedRef<SVerticalBox> Box)
         Row->AddSlot().FillWidth(1).VAlign(VAlign_Center).Padding(18,0)[Text(Pair.Value.Name,28,Ink)];
         Box->AddSlot().AutoHeight().Padding(0,0,0,10)[Card(Row)];
     }
-    Box->AddSlot().AutoHeight().Padding(4,24,4,0)[Text(Available?TEXT("友人には招待コードを共有。\n会話やマイクの設定は、街の参加画面から。"):TEXT("友人機能は開発中です。\nこの公開版では利用できません。"),26,Muted)];
+    Box->AddSlot().AutoHeight().Padding(4,24,4,0)[Text(Available?EWL::Pick(TEXT("友人には招待コードを共有。\n会話やマイクの設定は、街の参加画面から。"), TEXT("Share your invite code with friends.\nChat and microphone settings are on the city screen.")):EWL::Pick(TEXT("友人機能は開発中です。\nこの公開版では利用できません。"), TEXT("Friends is in development.\nIt is unavailable in this public build.")),26,Muted)];
 }
 void SEWTerminalView::Observe(TSharedRef<SVerticalBox> Box)
 {
     auto* T=Owner.Get();auto Hero=SNew(SVerticalBox);
     Hero->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,34)[Icon(0,180,FLinearColor(.72,.9,.92,1))];
-    Hero->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,0,0,30)[Text(T->Observing()?TEXT("観測中"):TEXT("過去の気配を探す"),36,FLinearColor::White)];
+    Hero->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,0,0,30)[Text(T->Observing()?EWL::Pick(TEXT("観測中"), TEXT("Observing")):EWL::Pick(TEXT("過去の気配を探す"), TEXT("Seek traces of the past")),36,FLinearColor::White)];
     Box->AddSlot().AutoHeight().Padding(0,0,0,24)[Card(Hero,AppColor(0))];
-    Box->AddSlot().AutoHeight().Padding(4,8,4,30)[Text(TEXT("端末を下ろすと、街のどこかに薄い人影。\n近くで眺め、E でその時間を記録する。"),29,Muted)];
-    Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Button(T->Observing()?TEXT("観測を終える"):TEXT("観測を始める"),[this]{Owner->ToggleObservation();})];
+    Box->AddSlot().AutoHeight().Padding(4,8,4,30)[Text(EWL::Pick(TEXT("端末を下ろすと、街のどこかに薄い人影。\n近くで眺め、E でその時間を記録する。"), TEXT("Lower the device to glimpse faint figures around the city.\nWatch from nearby, then press E to record a moment.")),29,Muted)];
+    Box->AddSlot().AutoHeight().Padding(0,0,0,26)[Button(T->Observing()?EWL::Pick(TEXT("観測を終える"), TEXT("Stop observing")):EWL::Pick(TEXT("観測を始める"), TEXT("Begin observing")),[this]{Owner->ToggleObservation();})];
     if(T->Places().IsValidIndex(T->TargetIndex()))
     {
-        auto Next=SNew(SVerticalBox);Next->AddSlot().AutoHeight()[Text(TEXT("次に訪ねる場所"),24,Muted)];
+        auto Next=SNew(SVerticalBox);Next->AddSlot().AutoHeight()[Text(EWL::Pick(TEXT("次に訪ねる場所"), TEXT("Next place to visit")),24,Muted)];
         Next->AddSlot().AutoHeight().Padding(0,12,0,22)[Text(T->Places()[T->TargetIndex()].Area,34,Ink)];
-        Next->AddSlot().AutoHeight()[Button(TEXT("地図で見る"),[this]{Owner->ShowPage(1);})];Box->AddSlot().AutoHeight()[Card(Next)];
+        Next->AddSlot().AutoHeight()[Button(EWL::Pick(TEXT("地図で見る"), TEXT("View map")),[this]{Owner->ShowPage(1);})];Box->AddSlot().AutoHeight()[Card(Next)];
     }
 }
 void SEWTerminalView::Back(){if(Owner.IsValid()){if(Owner->PageIndex()==2 && RecordDetail!=INDEX_NONE){RecordDetail=INDEX_NONE;Rebuild();}else Owner->ShowPage(0);}}

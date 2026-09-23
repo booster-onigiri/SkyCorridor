@@ -36,7 +36,7 @@ public:
     bool SitNearest();
     bool SitSeat(int32 Index);
     FTransform RoomFrame() const{return Auditorium;}
-    FString Title() const{return bSkyTheatre?TEXT("天空シアター"):bCinema?TEXT("水鏡の映写室"):TEXT("広場のモニター");}
+    FString Title() const;
     bool Available() const;
     void OpenControls();
     void CloseControls();

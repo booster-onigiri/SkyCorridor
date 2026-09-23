@@ -1,4 +1,5 @@
 #include "EWBrowserSurface.h"
+#include "EWLocalization.h"
 #include "EWYouTubeQuality.h"
 #include "EWShutdownTrace.h"
 #include "Misc/FileHelper.h"
@@ -216,7 +217,8 @@ bool FEWBrowserSurface::Start()
     CefString(&Settings.browser_subprocess_path)=TCHAR_TO_WCHAR(*Helper);
     CefString(&Settings.resources_dir_path)=TCHAR_TO_WCHAR(*Runtime);
     CefString(&Settings.locales_dir_path)=TCHAR_TO_WCHAR(*(Runtime/TEXT("Resources/locales")));
-    CefString(&Settings.locale)="ja";
+    CefString(&Settings.locale)=EWL::IsEnglish()?"en-US":"ja";
+    CefString(&Settings.accept_language_list)=EWL::IsEnglish()?"en-US,en":"ja,en-US,en";
     // Dedicated per-run profile; it never reads the user's Chrome/Edge profile.
     const FString Cache=FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()/TEXT("MonitorBrowser")/FGuid::NewGuid().ToString(EGuidFormats::Digits));
     IFileManager::Get().MakeDirectory(*Cache,true);
@@ -283,7 +285,7 @@ void FEWBrowserSurface::Search(const FString& Input)
     FString URL;
     if(Query.StartsWith(TEXT("https://")) || Query.StartsWith(TEXT("http://")))
     {if(!AllowedAddress(Query)){FScopeLock Lock(&Impl->Data->Mutex);Impl->Data->Message=TEXT("YouTubeのURLを入力してください。");return;}URL=Query;}
-    else URL=TEXT("https://www.youtube.com/results?search_query=")+FGenericPlatformHttp::UrlEncode(Query);
+    else URL=FString(TEXT("https://www.youtube.com/results?hl="))+EWL::Pick(TEXT("ja"),TEXT("en"))+TEXT("&search_query=")+FGenericPlatformHttp::UrlEncode(Query);
     Impl->Client->bTestPage=false;
     {FScopeLock Lock(&Impl->Data->Mutex);Impl->Data->Page=true;}
     Impl->Browser->GetMainFrame()->LoadURL(TCHAR_TO_WCHAR(*URL));
@@ -362,12 +364,12 @@ FString FEWBrowserSurface::Status()const
     FScopeLock Lock(&Impl->Data->Mutex);
     if(Impl->Data->Page && Impl->Data->Video)
     {
-        if(Impl->Data->VideoMuted || Impl->Data->VideoVolume<=0)return TEXT("動画が消音になっています。「音声を有効にする」で解除できます。");
-        if(Impl->Data->VideoPaused)return TEXT("動画は一時停止中です。");
-        if(Impl->Data->AudioActive && FPlatformTime::Seconds()-Impl->Data->LastAudioAt<1)return TEXT("動画と音声を再生中です。音は部屋のモニターから聞こえます。");
-        return TEXT("映像を再生中です。音が聞こえない場合は「音声を有効にする」を押してください。");
+        if(Impl->Data->VideoMuted || Impl->Data->VideoVolume<=0)return EWL::Translate(TEXT("動画が消音になっています。「音声を有効にする」で解除できます。"));
+        if(Impl->Data->VideoPaused)return EWL::Translate(TEXT("動画は一時停止中です。"));
+        if(Impl->Data->AudioActive && FPlatformTime::Seconds()-Impl->Data->LastAudioAt<1)return EWL::Translate(TEXT("動画と音声を再生中です。音は部屋のモニターから聞こえます。"));
+        return EWL::Translate(TEXT("映像を再生中です。音が聞こえない場合は「音声を有効にする」を押してください。"));
     }
-    return Impl->Data->Message;
+    return EWL::Translate(Impl->Data->Message);
 }
 bool FEWBrowserSurface::HasPage()const{FScopeLock Lock(&Impl->Data->Mutex);return Impl->Data->Page;}
 bool FEWBrowserSurface::HasAudio()const{FScopeLock Lock(&Impl->Data->Mutex);return Impl->Data->Page && Impl->Data->AudioActive;}

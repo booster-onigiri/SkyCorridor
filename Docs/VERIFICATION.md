@@ -4,6 +4,24 @@ Results as of **2026-09-23 JST**. The checks listed below passed within their st
 
 **2026年9月23日時点の検証結果です。** 以下の確認は記載した範囲で通過しました。自動テストの合格を、すべての機能・機器・外部サービスの動作保証とはしていません。
 
+## v0.1.2 English/Japanese update / 日本語・英語対応の確認
+
+The standard Editor and Shipping targets compiled with UE 5.8.2, followed by a fresh cook/package. The final Shipping executable passed **256 localization checks**, **17 fresh-process language preference checks**, and **55 public-menu regression checks**, all with isolated saves.
+
+Coverage includes the real title/settings language buttons, phone home/map/records, all 15 memory texts and directions, hotels, rail and loaded elevator destinations, fishing descriptions, live language switching on the three persistent media tablets, and recording the first memory through the normal observation/save path. Rendered title, settings, phone and tablet images were reviewed. The English selection survived restart without a command-line language override. Experimental online/voice features remained inactive.
+
+UE 5.8.2の標準構成でEditor・Shippingをビルドし、新たにCook・梱包しました。最終実行版で**言語表示256項目・別プロセス再起動17項目・公開メニュー回帰55項目**が通過しました。検証用セーブは既存データから隔離しています。
+
+タイトルと設定の実際の言語ボタン、スマホのホーム・地図・記録、痕跡15件の本文と案内、ホテル、電車、読込み済み昇降機の行き先、釣り、常設の再生端末3台の日英切替を確認しました。最初の痕跡は通常の観察・記録処理を通して保存しています。描画画像を目視確認し、言語の起動引数を使わない再起動でも英語設定が保持されました。オンラインと音声は起動していません。
+
+All 328 distribution files passed the stage/hash audit. Cooked content matched all 495 approved game packages, with no unknown/missing package or DevValidation building. No new creative asset was added; the development asset archives remain pinned to v0.1.0. See [the localization receipt](LOCALIZATION-VERIFICATION.json).
+
+配布328ファイルとCook済み資産495件の台帳・ハッシュ照合が通過しました。不明・欠落資産、検証用建物の混入はありません。新しい創作素材は追加せず、開発用素材はv0.1.0を継続使用します。
+
+The broader gameplay and optional NVIDIA results below belong to earlier releases and were not rerun in full. Physical input, live online/voice and external-video playback are not covered by the localization checks. External YouTube content and experimental developer tools are outside the translation scope.
+
+下記の広範なゲームプレイ・任意NVIDIA構成の検証は過去の版の結果です。今回の言語検証で全項目を再実行したものではありません。物理入力、オンライン・音声、外部動画の実再生は対象外です。外部YouTubeコンテンツと開発用実験機能は翻訳範囲に含みません。
+
 ## v0.1.1 menu update / メニュー更新の確認
 
 The baseline Editor and Shipping targets compiled and linked, followed by a fresh

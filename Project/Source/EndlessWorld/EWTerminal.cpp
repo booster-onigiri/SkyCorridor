@@ -1,4 +1,5 @@
 #include "EWTerminal.h"
+#include "EWLocalization.h"
 #include "EWTerminalView.h"
 #include "EWSky92Plan.h"
 #include "Camera/CameraActor.h"
@@ -112,7 +113,7 @@ void AEWTerminal::Tick(float Delta)
     bHadOpen=Opened;
     const bool Ready=G->SessionStarted() && !M->IsTravelling() && M->Descriptor().Seed==EW::WorldDescriptor::ReferenceWorld().Seed;
     if(Ready && !bIntroShown && !Memories.IsEmpty())
-    {bIntroShown=true;G->Notify(TEXT("水は、まだ流れている。　Q / 右スティック押込み：記録端末を持ち上げる"),18);}
+    {bIntroShown=true;G->Notify(EWL::Pick(TEXT("水は、まだ流れている。　Q / 右スティック押込み：記録端末を持ち上げる"), TEXT("The water still flows.  Q / Press right stick: raise your memory device")),18);}
     Scan=FMath::FInterpTo(Scan,Ready && bObserving && !Opened?1.f:0.f,Delta,2.5f);Observation->BlendWeight=Scan;
     Near=INDEX_NONE;double Best=600;
     const FVector Eye=P->Camera->GetComponentLocation();
@@ -165,23 +166,23 @@ void AEWTerminal::ShowPage(int32 Value)
     {
         auto* G=GetGameInstance<UEWGameInstance>();
         if(!G || !G->IsMenuAvailable(EEWMenu::City))
-        {if(G)G->Notify(TEXT("友人機能は開発中です。この公開版では利用できません。"));return;}
+        {if(G)G->Notify(EWL::Pick(TEXT("友人機能は開発中です。この公開版では利用できません。"), TEXT("Friends is in development and unavailable in this public build.")));return;}
     }
     if(Page==3 && Value!=3)PauseVideo();Page=Value;Refresh();FocusFirst();
 }
 void AEWTerminal::ToggleObservation()
 {
     bObserving=!bObserving;Close();
-    if(auto* G=GetGameInstance<UEWGameInstance>())G->Notify(bObserving?TEXT("観測中　近づいて静かに眺め、E で記録する。Q で端末。") : TEXT("観測を終えました。"),7);
+    if(auto* G=GetGameInstance<UEWGameInstance>())G->Notify(bObserving?EWL::Pick(TEXT("観測中　近づいて静かに眺め、E で記録する。Q で端末。"), TEXT("Observing  Approach and watch quietly. E: record. Q: device.")) : EWL::Pick(TEXT("観測を終えました。"), TEXT("Observation ended.")),7);
 }
 bool AEWTerminal::RecordNearby()
 {
     if(!bObserving || Near==INDEX_NONE || !Memories.IsValidIndex(Near))return false;
     auto* G=GetGameInstance<UEWGameInstance>();if(!G)return false;
-    if(ObservedSeconds<2){G->Notify(TEXT("もう少しそばで、静かに眺めてみる。"),3);return true;}
-    if(Found.Contains(Near)){G->Notify(Memories[Near].Moment);return true;}
-    if(!Journal || !Journal->Record(Memories[Near].Place)){G->Notify(Journal?Journal->Error():TEXT("記録を保存できません。"),20);return true;}
-    Found.Add(Near);G->Notify(TEXT("端末に残しました　「")+Memories[Near].Place.Name+TEXT("」　Q で読む"),9);
+    if(ObservedSeconds<2){G->Notify(EWL::Pick(TEXT("もう少しそばで、静かに眺めてみる。"), TEXT("Stay nearby and watch quietly for a moment longer.")),3);return true;}
+    if(Found.Contains(Near)){G->Notify(EWL::Translate(Memories[Near].Moment));return true;}
+    if(!Journal || !Journal->Record(Memories[Near].Place)){G->Notify(Journal?Journal->Error():EWL::Pick(TEXT("記録を保存できません。"), TEXT("Unable to save this memory.")),20);return true;}
+    Found.Add(Near);G->Notify(EWL::Pick(TEXT("端末に残しました　「"), TEXT("Saved to your device: “"))+EWL::Translate(Memories[Near].Place.Name)+EWL::Pick(TEXT("」　Q で読む"), TEXT("”  Q: read")),9);
     if(Target==Near)for(int32 I=0;I<Memories.Num();++I)if(!Found.Contains(I)){Target=I;break;}
     Refresh();return true;
 }
@@ -190,17 +191,17 @@ FString AEWTerminal::Hint() const
 {
     if(!bObserving || Near==INDEX_NONE || !Memories.IsValidIndex(Near))return {};
     const auto& P=Memories[Near];
-    return P.Moment+(ObservedSeconds>=2?(Found.Contains(Near)?TEXT("　Q 記録を読む"):TEXT("　E 端末に記録する")):TEXT("　そばで、少し眺めてみる"));
+    return EWL::Translate(P.Moment)+(ObservedSeconds>=2?(Found.Contains(Near)?EWL::Pick(TEXT("　Q 記録を読む"), TEXT("  Q: read memory")):EWL::Pick(TEXT("　E 端末に記録する"), TEXT("  E: record on device"))):EWL::Pick(TEXT("　そばで、少し眺めてみる"), TEXT("  Stay nearby and watch for a moment")));
 }
 FString AEWTerminal::RouteText(int32 Index) const
 {
     if(!Memories.IsValidIndex(Index))return {};
     const auto& P=Memories[Index];auto* G=GetGameInstance<UEWGameInstance>();auto* M=G?G->Manager.Get():nullptr;
-    const auto* Player=UGameplayStatics::GetPlayerPawn(this,0);if(!M || !Player)return P.Direction;
+    const auto* Player=UGameplayStatics::GetPlayerPawn(this,0);if(!M || !Player)return EWL::Translate(P.Direction);
     const FVector D=M->ToRender(P.Place.Coord,P.Place.LocalPosition)-Player->GetActorLocation();
     const double Angle=FMath::FindDeltaAngleDegrees(Player->GetActorRotation().Yaw,D.Rotation().Yaw);
-    const TCHAR* Bearing=FMath::Abs(Angle)<40?TEXT("正面"):FMath::Abs(Angle)>140?TEXT("後方"):Angle>0?TEXT("右手"):TEXT("左手");
-    return FString::Printf(TEXT("%s　直線で約 %.0f m\n%s\n\n%s"),Bearing,D.Size2D()/100.,D.Z>400?TEXT("今いる場所より上の階です。昇降機を利用してください。"):D.Z<-400?TEXT("今いる場所より下の階です。"):TEXT("ほぼ同じ高さにあります。"),*P.Direction);
+    const TCHAR* Bearing=FMath::Abs(Angle)<40?EWL::Pick(TEXT("正面"), TEXT("Ahead")):FMath::Abs(Angle)>140?EWL::Pick(TEXT("後方"), TEXT("Behind you")):Angle>0?EWL::Pick(TEXT("右手"), TEXT("To your right")):EWL::Pick(TEXT("左手"), TEXT("To your left"));
+    return EWL::Format(TEXT("%s　直線で約 %.0f m\n%s\n\n%s"), TEXT("%s  About %.0f m in a straight line\n%s\n\n%s"),Bearing,D.Size2D()/100.,D.Z>400?EWL::Pick(TEXT("今いる場所より上の階です。昇降機を利用してください。"), TEXT("On a higher floor. Use an elevator.")):D.Z<-400?EWL::Pick(TEXT("今いる場所より下の階です。"), TEXT("On a lower floor.")):EWL::Pick(TEXT("ほぼ同じ高さにあります。"), TEXT("At roughly the same height.")),*EWL::Translate(P.Direction));
 }
 void AEWTerminal::SearchVideo(const FString& Query)
 {if(Surface && !Query.TrimStartAndEnd().IsEmpty()){Surface->Search(Query);Surface->EnableSound();}}
@@ -211,7 +212,7 @@ void AEWTerminal::InviteFriends()
 {
     auto* G=GetGameInstance<UEWGameInstance>();if(!G)return;
     if(!G->IsMenuAvailable(EEWMenu::City))
-    {G->Notify(TEXT("友人機能は開発中です。この公開版では利用できません。"));return;}
+    {G->Notify(EWL::Pick(TEXT("友人機能は開発中です。この公開版では利用できません。"), TEXT("Friends is in development and unavailable in this public build.")));return;}
     StopVideo();G->SetMenu(EEWMenu::City);
 }
 TSharedPtr<SWidget> AEWTerminal::FocusWidget() const{return View;}

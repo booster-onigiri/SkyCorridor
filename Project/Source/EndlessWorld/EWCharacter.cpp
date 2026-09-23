@@ -1,4 +1,5 @@
 #include "EWCharacter.h"
+#include "EWLocalization.h"
 #include "EWTerminal.h"
 #include "EWMediaScreen.h"
 #include "EWGameInstance.h"
@@ -201,7 +202,7 @@ bool AEWCharacter::LeaveSeat()
     {
         Position = LastSafe;
         if (!GetWorld()->FindTeleportSpot(this, Position, Rotation))
-        { GetCapsuleComponent()->SetCapsuleHalfHeight(42, false); if (auto* GI = GetGameInstance<UEWGameInstance>()) GI->Notify(TEXT("立つ場所を確認できませんでした。もう一度お試しください。")); return false; }
+        { GetCapsuleComponent()->SetCapsuleHalfHeight(42, false); if (auto* GI = GetGameInstance<UEWGameInstance>()) GI->Notify(EWL::Pick(TEXT("立つ場所を確認できませんでした。もう一度お試しください。"), TEXT("Could not find a safe place to stand. Please try again."))); return false; }
     }
     bSeated = false; bTransitSeatLocked=false; SeatOwner.Reset();
     Camera->SetRelativeLocation(FVector(0, 0, 74));
@@ -250,7 +251,7 @@ void AEWCharacter::Tick(float Delta)
         const FVector Safe=LastSafeMovingBase.IsValid()?LastSafeMovingBase->GetActorTransform().TransformPosition(LastSafeOnBase):LastSafe;
         SetActorLocation(Safe + FVector(0, 0, 10), false, nullptr, ETeleportType::TeleportPhysics);
         GetCharacterMovement()->StopMovementImmediately(); ++FallRecoveries;
-        if (auto* GI = GetGameInstance<UEWGameInstance>()) GI->Notify(TEXT("最後の足場へ戻りました。"));
+        if (auto* GI = GetGameInstance<UEWGameInstance>()) GI->Notify(EWL::Pick(TEXT("最後の足場へ戻りました。"), TEXT("Returned to the last safe footing.")));
     }
     if (bTestMovement && !bStreamingHold && !bSeated) AddMovementInput(TestDirection, 1);
 }

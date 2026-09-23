@@ -1,4 +1,5 @@
 #include "EWResidence.h"
+#include "EWLocalization.h"
 #include "EWCharacter.h"
 #include "EWGameInstance.h"
 #include "Camera/CameraComponent.h"
@@ -95,7 +96,7 @@ bool AEWResidence::Initialize(const EW::ResidenceSpec& InSpec,const FString& InW
     bStateReady=GI && GI->Store() && GI->Store()->LoadResidenceState(WorldCode,Spec.Id,Spec.Revision,Mode);
     if(!bStateReady)
     {
-        StateError=GI && GI->Store()?GI->Store()->Error():TEXT("窓辺の保存場所を開けません。水の選択は変更していません。");
+        StateError=GI && GI->Store()?GI->Store()->Error():EWL::Pick(TEXT("窓辺の保存場所を開けません。水の選択は変更していません。"), TEXT("Cannot open the window's save folder. The water setting has not changed."));
         if(GI)GI->Notify(StateError,15);
     }
     EavesSound=CreateWaterSound(FVector(-225,-2490,-30),false);
@@ -178,18 +179,18 @@ EEWResidenceAction AEWResidence::Nearby(const AEWCharacter* P,double& DistanceSq
 }
 FString AEWResidence::Hint(EEWResidenceAction Action) const
 {
-    if(Action==EEWResidenceAction::Seat)return TEXT("雨継ぎの窓辺　座って街を眺める");
-    if(Action==EEWResidenceAction::Valve)return Mode==0?TEXT("分水器　水を窓辺へ流す"):TEXT("分水器　水を外樋へ戻す");
+    if(Action==EEWResidenceAction::Seat)return EWL::Pick(TEXT("雨継ぎの窓辺　座って街を眺める"), TEXT("Raincatcher Window — Sit and watch the city"));
+    if(Action==EEWResidenceAction::Valve)return Mode==0?EWL::Pick(TEXT("分水器　水を窓辺へ流す"), TEXT("Water valve — Direct water to the window")):EWL::Pick(TEXT("分水器　水を外樋へ戻す"), TEXT("Water valve — Return water to the outer gutter"));
     return {};
 }
 bool AEWResidence::ToggleWater(FString& Message)
 {
     auto* GI=GetGameInstance<UEWGameInstance>();
-    if(!GI || !GI->Store()){Message=TEXT("水の選択を保存できません。以前の流れを保っています。");return false;}
+    if(!GI || !GI->Store()){Message=EWL::Pick(TEXT("水の選択を保存できません。以前の流れを保っています。"), TEXT("Cannot save the water setting. Keeping the previous flow."));return false;}
     if(!GI->Store()->SaveResidenceState(WorldCode,Spec.Id,Spec.Revision,1-Mode))
     {Message=GI->Store()->Error();return false;}
     Mode=1-Mode;bStateReady=true;StateError.Empty();ApplyState(true);
-    Message=Mode==1?TEXT("水が窓辺へ流れ始めました。この流れを覚えておきます。"):TEXT("水を外樋へ戻しました。この流れを覚えておきます。");
+    Message=Mode==1?EWL::Pick(TEXT("水が窓辺へ流れ始めました。この流れを覚えておきます。"), TEXT("Water is flowing by the window. This setting will be remembered.")):EWL::Pick(TEXT("水を外樋へ戻しました。この流れを覚えておきます。"), TEXT("Water returned to the outer gutter. This setting will be remembered."));
     UE_LOG(LogTemp,Display,TEXT("EW_RESIDENCE_FLOW id=%s mode=%d saved=1"),*Spec.Id,Mode);return true;
 }
 FTransform AEWResidence::SeatTransform() const

@@ -24,7 +24,7 @@
 namespace
 {
 bool TabletAuditAllowed(const UWorld* W)
-{return W && (W->IsPlayInEditor() || FParse::Param(FCommandLine::Get(),TEXT("EWTablet94Audit")));}
+{return W && (W->IsPlayInEditor() || FParse::Param(FCommandLine::Get(),TEXT("EWTablet94Audit")) || FParse::Param(FCommandLine::Get(),TEXT("EWLocalizationAudit")));}
 }
 FString AEWMediaScreen::TabletPreview(const FString& Action)
 {

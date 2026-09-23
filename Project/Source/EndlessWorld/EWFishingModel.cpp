@@ -1,4 +1,5 @@
 #include "EWFishingModel.h"
+#include "EWLocalization.h"
 
 namespace EWFishing
 {
@@ -38,14 +39,14 @@ uint8 HourBand(double Hour)
 }
 FString TimeDescription(uint8 Bands)
 {
-    if(Bands==15)return TEXT("いつでも");TArray<FString> Text;
-    if(Bands&1)Text.Add(TEXT("朝"));if(Bands&2)Text.Add(TEXT("昼"));if(Bands&4)Text.Add(TEXT("夕"));if(Bands&8)Text.Add(TEXT("夜"));
-    return FString::Join(Text,TEXT("・"));
+    if(Bands==15)return EWL::Pick(TEXT("いつでも"), TEXT("Any time"));TArray<FString> Text;
+    if(Bands&1)Text.Add(EWL::Pick(TEXT("朝"), TEXT("Morning")));if(Bands&2)Text.Add(EWL::Pick(TEXT("昼"), TEXT("Day")));if(Bands&4)Text.Add(EWL::Pick(TEXT("夕"), TEXT("Evening")));if(Bands&8)Text.Add(EWL::Pick(TEXT("夜"), TEXT("Night")));
+    return FString::Join(Text,EWL::Pick(TEXT("・"), TEXT(" / ")));
 }
 FString SiteDescription(uint8 Sites)
 {
-    if(Sites==7)return TEXT("すべての水辺");TArray<FString> Text;
-    for(int32 I=0;I<Spots().Num();++I)if(Sites&(1<<I))Text.Add(Spots()[I].Name);
+    if(Sites==7)return EWL::Pick(TEXT("すべての水辺"), TEXT("All fishing spots"));TArray<FString> Text;
+    for(int32 I=0;I<Spots().Num();++I)if(Sites&(1<<I))Text.Add(EWL::Translate(Spots()[I].Name));
     return FString::Join(Text,TEXT(" / "));
 }
 bool Available(const FSpecies& Fish,int32 Site,double Hour)

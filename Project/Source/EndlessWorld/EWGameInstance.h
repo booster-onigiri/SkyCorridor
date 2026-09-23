@@ -73,6 +73,7 @@ public:
     void QuitWithoutSaving();
     void Capture();
     void SetQuality(bool High);
+    bool SetLanguage(const FString& Language);
     void SetNativeResolution();
     void MoveToPrimaryDisplay();
     void SetSoftStyle(bool Value);

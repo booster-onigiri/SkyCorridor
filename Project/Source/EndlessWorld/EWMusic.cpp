@@ -1,4 +1,5 @@
 #include "EWMusic.h"
+#include "EWLocalization.h"
 #include "EWGameInstance.h"
 #include "EWChunkManager.h"
 #include "EWMediaScreen.h"
@@ -81,7 +82,7 @@ void AEWMusic::Tick(float Delta)
 FString AEWMusic::Title() const
 {
     const TCHAR* Names[]={TEXT("水路のあと"),TEXT("声のない窓"),TEXT("帰り道の灯")};
-    return Current>=0 && Current<3?Names[Current]:TEXT("水と風の時間");
+    return EWL::Translate(Current>=0 && Current<3?Names[Current]:TEXT("水と風の時間"));
 }
 TSharedRef<FJsonObject> AEWMusic::Evidence() const
 {

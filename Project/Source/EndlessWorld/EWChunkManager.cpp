@@ -1,4 +1,5 @@
 #include "EWChunkManager.h"
+#include "EWLocalization.h"
 #include "EWCharacter.h"
 #include "EWLift.h"
 #include "EWResidence.h"
@@ -67,7 +68,7 @@ bool AEWChunkActor::ApplyUntil(double Deadline)
                 UE_LOG(LogTemp, Error, TEXT("EW_MISSING_ASSET %s"), *Path);
                 bAssetFailed = true;
                 if (auto* GI = GetGameInstance<UEWGameInstance>())
-                    GI->Notify(TEXT("必要な素材を読み込めません。配布ファイルを展開し直してください。"), 86400);
+                    GI->Notify(EWL::Pick(TEXT("必要な素材を読み込めません。配布ファイルを展開し直してください。"), TEXT("Required assets could not be loaded. Extract the distribution files again.")), 86400);
                 continue;
             }
             Group = NewObject<UInstancedStaticMeshComponent>(this);
@@ -134,7 +135,7 @@ bool AEWChunkActor::ApplyUntil(double Deadline)
                     if(!Home->Initialize(Recipe->Residences[ResidenceCursor],Recipe->World.Code()))
                     {
                         bAssetFailed=true;
-                        if(auto* GI=GetGameInstance<UEWGameInstance>())GI->Notify(TEXT("窓辺の素材を読み込めません。配布ファイルを確認してください。"),86400);
+                        if(auto* GI=GetGameInstance<UEWGameInstance>())GI->Notify(EWL::Pick(TEXT("窓辺の素材を読み込めません。配布ファイルを確認してください。"), TEXT("Window assets could not be loaded. Check the distribution files.")),86400);
                     }
                     Residences.Add(Home);
                 }
@@ -153,7 +154,7 @@ bool AEWChunkActor::ApplyUntil(double Deadline)
                 }
                 else bAssetFailed=true;
                 if(bAssetFailed && GetGameInstance<UEWGameInstance>())
-                    GetGameInstance<UEWGameInstance>()->Notify(TEXT("水都の素材を読み込めません。配布ファイルを確認してください。"),86400);
+                    GetGameInstance<UEWGameInstance>()->Notify(EWL::Pick(TEXT("水都の素材を読み込めません。配布ファイルを確認してください。"), TEXT("Water City assets could not be loaded. Check the distribution files.")),86400);
             }
         }
     }

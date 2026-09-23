@@ -1,4 +1,5 @@
 #include "EWSkyrail.h"
+#include "EWLocalization.h"
 #include "EWSkyrailPlan.h"
 #include "EWCharacter.h"
 #include "EWChunkManager.h"
@@ -138,20 +139,20 @@ FString AEWSkyrail::StationText(int32 I) const
     for(int32 Next=(Phase+1)%EWSkyrailPlan::PhaseCount(Line),Count=0;!Here && Count<EWSkyrailPlan::PhaseCount(Line);++Count,Next=(Next+1)%EWSkyrailPlan::PhaseCount(Line))
     {if(Next%2==0 && EWSkyrailPlan::Departure(Next,Line)==I)break;Seconds+=EWSkyrailPlan::Duration(Next,Line);}
     const int32 Wait=FMath::CeilToInt(Seconds);
-    const FString Guide=Line?(I==0?TEXT("101–108号室 → 右の昇降機で客室階へ"):I==1?TEXT("右の昇降機：上へ 天空シアター / 下へ 時計広場・水都線"):TEXT("右奥の昇降機 → 最上階・豪華飛行船の搭乗口")):
-        (I==0?TEXT("右の昇降機 → 上層線（ホテル・シアター・空港）"):TEXT("右の昇降機 → 水鏡の聖堂・水辺の広場"));
-    return EWSkyrailPlan::Name(I,Line)+TEXT("駅　")+EWSkyrailPlan::LineName(Line)+TEXT("\n")+
-        (Here?FString::Printf(TEXT("次は %s　発車まで %d 秒"),*EWSkyrailPlan::Name(Destination(),Line),FMath::Max(0,Wait)):
-              FString::Printf(TEXT("次の電車まで %d 秒"),FMath::Max(0,Wait)))+TEXT("\n")+Guide;
+    const FString Guide=Line?(I==0?EWL::Pick(TEXT("101–108号室 → 右の昇降機で客室階へ"), TEXT("Rooms 101–108 → Elevator on the right to guest rooms")):I==1?EWL::Pick(TEXT("右の昇降機：上へ 天空シアター / 下へ 時計広場・水都線"), TEXT("Right elevator: up to Sky Theatre / down to Clock Plaza and Water City Line")):EWL::Pick(TEXT("右奥の昇降機 → 最上階・豪華飛行船の搭乗口"), TEXT("Elevator at the rear right → Rooftop and sky yacht boarding"))):
+        (I==0?EWL::Pick(TEXT("右の昇降機 → 上層線（ホテル・シアター・空港）"), TEXT("Right elevator → Upper Line (Hotel · Theatre · Skyport)")):EWL::Pick(TEXT("右の昇降機 → 水鏡の聖堂・水辺の広場"), TEXT("Right elevator → Mirrorwater Sanctuary and Waterfront Plaza")));
+    return EWL::Translate(EWSkyrailPlan::Name(I,Line))+EWL::Pick(TEXT("駅　"), TEXT(" Station  "))+EWL::Translate(EWSkyrailPlan::LineName(Line))+TEXT("\n")+
+        (Here?EWL::Format(TEXT("次は %s　発車まで %d 秒"), TEXT("Next: %s · Departure in %d s"),*EWL::Translate(EWSkyrailPlan::Name(Destination(),Line)),FMath::Max(0,Wait)):
+              EWL::Format(TEXT("次の電車まで %d 秒"), TEXT("Next train in %d s"),FMath::Max(0,Wait)))+TEXT("\n")+Guide;
 }
 FString AEWSkyrail::Hint(const AEWCharacter* P) const
 {
     if(IsRider(P))return AtStation()!=INDEX_NONE && DoorOpen>.95?
-        EWSkyrailPlan::Name(AtStation(),Line)+TEXT("駅　E / WASD 降りる　マウス 見回す"):
-        TEXT("空中電車　次は ")+EWSkyrailPlan::Name(Destination(),Line)+TEXT("　マウスで車窓を眺める");
+        EWL::Translate(EWSkyrailPlan::Name(AtStation(),Line))+EWL::Pick(TEXT("駅　E / WASD 降りる　マウス 見回す"), TEXT(" Station  E / WASD: leave train · Mouse: look around")):
+        EWL::Pick(TEXT("空中電車　次は "), TEXT("Skyrail  Next: "))+EWL::Translate(EWSkyrailPlan::Name(Destination(),Line))+EWL::Pick(TEXT("　マウスで車窓を眺める"), TEXT("  Mouse: enjoy the view"));
     const int32 I=NearbyStation(P);if(I==INDEX_NONE)return {};
-    return AtStation()==I && DoorOpen>.95?EWSkyrailPlan::Name(I,Line)+TEXT("駅　空中電車に乗る　E"):
-        EWSkyrailPlan::Name(I,Line)+TEXT("駅　電車を待つ（発車案内はホームの表示板へ）");
+    return AtStation()==I && DoorOpen>.95?EWL::Translate(EWSkyrailPlan::Name(I,Line))+EWL::Pick(TEXT("駅　空中電車に乗る　E"), TEXT(" Station  E: board skyrail")):
+        EWL::Translate(EWSkyrailPlan::Name(I,Line))+EWL::Pick(TEXT("駅　電車を待つ（発車案内はホームの表示板へ）"), TEXT(" Station  Wait for the train (see the platform departure board)"));
 }
 bool AEWSkyrail::Interact(AEWCharacter* P)
 {
@@ -159,14 +160,14 @@ bool AEWSkyrail::Interact(AEWCharacter* P)
     if(IsRider(P))
     {
         if(AtStation()!=INDEX_NONE && DoorOpen>.95){P->UpdateTransitSeat(this,P->GetActorLocation(),StandAt(AtStation()),false);if(P->LeaveSeat()){Rider.Reset();++Alightings;}}
-        else if(G)G->Notify(TEXT("走行中です。駅に停車してから降りられます。"));
+        else if(G)G->Notify(EWL::Pick(TEXT("走行中です。駅に停車してから降りられます。"), TEXT("The train is moving. You can leave once it stops at a station.")));
         return true;
     }
     const int32 I=NearbyStation(P);if(I==INDEX_NONE)return false;
-    if(AtStation()!=I || DoorOpen<.95){if(G)G->Notify(TEXT("電車が到着するまでホームでお待ちください。"));return true;}
+    if(AtStation()!=I || DoorOpen<.95){if(G)G->Notify(EWL::Pick(TEXT("電車が到着するまでホームでお待ちください。"), TEXT("Please wait on the platform for the train to arrive.")));return true;}
     RiderCar=P->GetActorLocation().X>RenderOffset.X+EWSkyrailPlan::StopX(I,Line)?1:0;
     if(P->SitAtTransform(this,FTransform(FRotator(0,270,0),CarFrames[RiderCar]->GetComponentTransform().TransformPosition(FVector(-260,82,103))),StandAt(I)))
-    {Rider=P;BoardedAt=I;++Boardings;Elapsed=FMath::Min(Elapsed,EWSkyrailPlan::Dwell-6);if(G)G->Notify(TEXT("次は ")+EWSkyrailPlan::Name(Destination(),Line)+TEXT("。まもなく出発します。"));}
+    {Rider=P;BoardedAt=I;++Boardings;Elapsed=FMath::Min(Elapsed,EWSkyrailPlan::Dwell-6);if(G)G->Notify(EWL::Pick(TEXT("次は "), TEXT("Next: "))+EWL::Translate(EWSkyrailPlan::Name(Destination(),Line))+EWL::Pick(TEXT("。まもなく出発します。"), TEXT(". Departing shortly.")));}
     return true;
 }
 void AEWSkyrail::ReleaseRider()
@@ -272,7 +273,7 @@ void AEWSkyrail::BuildGuides()
         W->SetDrawSize(FVector2D(900,240));W->SetPivot(FVector2D(.5,.5));W->SetTwoSided(true);W->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         W->SetRelativeRotation(FRotator(0,Yaw,0));W->SetRelativeScale3D(FVector(.3));W->SetTickWhenOffscreen(false);W->RegisterComponent();
         W->SetSlateWidget(SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(.008,.03,.032,1)).Padding(18)
-            [SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular",32)).AutoWrapText(true).ColorAndOpacity(FLinearColor(.85,.93,.86)).Text(FText::FromString(Text))]);
+            [SNew(STextBlock).Font(FCoreStyle::GetDefaultFontStyle("Regular",32)).AutoWrapText(true).ColorAndOpacity(FLinearColor(.85,.93,.86)).Text_Lambda([Text]{return FText::FromString(EWL::Translate(Text));})]);
         Guides.Add(W);GuidePositions.Add(P);
     };
     if(Line==0)

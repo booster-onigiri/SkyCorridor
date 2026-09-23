@@ -1,4 +1,5 @@
 #include "EWPhotoMode.h"
+#include "EWLocalization.h"
 #include "EWGameInstance.h"
 #include "EWCharacter.h"
 #include "EWChunkManager.h"
@@ -98,18 +99,18 @@ void AEWPhotoMode::Tick(float Delta)
         if(FScreenshotRequest::GetFilename()==PendingPath)FScreenshotRequest::Reset();
         PendingPath.Reset();UGameViewportClient::OnScreenshotCaptured().Remove(CaptureHandle);CaptureHandle.Reset();
         UGameViewportClient::OnHDRScreenshotCaptured().Remove(HDRCaptureHandle);HDRCaptureHandle.Reset();
-        Message=TEXT("撮影が完了しませんでした。もう一度お試しください。");
+        Message=EWL::Pick(TEXT("撮影が完了しませんでした。もう一度お試しください。"), TEXT("The photo could not be completed. Please try again."));
     }
     if(CaptureAt<=0 || Now<CaptureAt)return;CaptureAt=0;
     if(FScreenshotRequest::IsScreenshotRequested() || UGameViewportClient::OnScreenshotCaptured().IsBound() || UGameViewportClient::OnHDRScreenshotCaptured().IsBound())
-    {Message=TEXT("別の撮影が進行中です。少し待ってからお試しください。");return;}
-    if(!G->Store()){Message=TEXT("写真の保存先を開けません。");return;}
+    {Message=EWL::Pick(TEXT("別の撮影が進行中です。少し待ってからお試しください。"), TEXT("Another photo is being taken. Please wait and try again."));return;}
+    if(!G->Store()){Message=EWL::Pick(TEXT("写真の保存先を開けません。"), TEXT("Unable to open the photo folder."));return;}
     const FString Directory=G->Store()->Root()/TEXT("Screenshots");
-    if(!IFileManager::Get().MakeDirectory(*Directory,true)){Message=TEXT("写真の保存先を作成できません。");return;}
+    if(!IFileManager::Get().MakeDirectory(*Directory,true)){Message=EWL::Pick(TEXT("写真の保存先を作成できません。"), TEXT("Unable to create the photo folder."));return;}
     PendingPath=Directory/(TEXT("空の回廊-")+FDateTime::Now().ToString(TEXT("%Y%m%d-%H%M%S-"))+FGuid::NewGuid().ToString(EGuidFormats::Digits).Left(8)+TEXT(".png"));
     RequestedAt=Now;CaptureHandle=UGameViewportClient::OnScreenshotCaptured().AddUObject(this,&AEWPhotoMode::ReceiveScreenshot);
     HDRCaptureHandle=UGameViewportClient::OnHDRScreenshotCaptured().AddUObject(this,&AEWPhotoMode::ReceiveHDRScreenshot);
-    FScreenshotRequest::RequestScreenshot(PendingPath,false,false,false);Message=TEXT("写真を保存しています…");
+    FScreenshotRequest::RequestScreenshot(PendingPath,false,false,false);Message=EWL::Pick(TEXT("写真を保存しています…"), TEXT("Saving photo…"));
 }
 void AEWPhotoMode::Shoot(){if(bActive && !Busy()){CaptureAt=FPlatformTime::Seconds()+TimerSeconds+.15;Message.Reset();}}
 void AEWPhotoMode::ReceiveHDRScreenshot(int32 Width,int32 Height,const TArray<FLinearColor>& Pixels)
@@ -144,9 +145,9 @@ void AEWPhotoMode::ReceiveScreenshot(int32 Width,int32 Height,const TArray<FColo
         const auto* G=GetGameInstance<UEWGameInstance>();
         if(G && G->Manager){const auto Place=G->Manager->CurrentPosition();Metadata->SetStringField(TEXT("place_code"),Place.Code());}
         const bool MetaOK=FFileHelper::SaveStringToFile(EWSocial::Encode(Metadata),*FPaths::ChangeExtension(LastPath,TEXT("json")),FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
-        Message=MetaOK?TEXT("写真を保存しました。Screenshots フォルダーから開けます。"):TEXT("写真は保存済みです。撮影場所の記録は保存できませんでした。");
+        Message=MetaOK?EWL::Pick(TEXT("写真を保存しました。Screenshots フォルダーから開けます。"), TEXT("Photo saved. Open it from the Screenshots folder.")):EWL::Pick(TEXT("写真は保存済みです。撮影場所の記録は保存できませんでした。"), TEXT("Photo saved, but its location could not be recorded."));
     }
-    else Message=TEXT("写真を保存できませんでした。空き容量を確認してください。");
+    else Message=EWL::Pick(TEXT("写真を保存できませんでした。空き容量を確認してください。"), TEXT("Unable to save the photo. Check your free disk space."));
     PendingPath.Reset();UGameViewportClient::OnScreenshotCaptured().Remove(CaptureHandle);CaptureHandle.Reset();
     UGameViewportClient::OnHDRScreenshotCaptured().Remove(HDRCaptureHandle);HDRCaptureHandle.Reset();
 }
@@ -158,7 +159,7 @@ void AEWPhotoMode::SetFieldOfView(float Value){if(!Busy() && FMath::IsFinite(Val
 void AEWPhotoMode::Turn(float Degrees){if(!Busy() && FMath::IsFinite(Degrees))CameraYaw=FRotator::NormalizeAxis(CameraYaw+FMath::Clamp(Degrees,-45.f,45.f));}
 void AEWPhotoMode::Tilt(float Degrees){if(!Busy() && FMath::IsFinite(Degrees))CameraPitch=FMath::Clamp(CameraPitch+FMath::Clamp(Degrees,-30.f,30.f),-70.f,70.f);}
 FString AEWPhotoMode::Status() const
-{return CaptureAt>0?FString::Printf(TEXT("%d 秒後に撮影"),FMath::Clamp(FMath::CeilToInt(CaptureAt-FPlatformTime::Seconds()),1,FMath::Max(1,TimerSeconds))):Message;}
+{return CaptureAt>0?EWL::Format(TEXT("%d 秒後に撮影"), TEXT("Photo in %d s"),FMath::Clamp(FMath::CeilToInt(CaptureAt-FPlatformTime::Seconds()),1,FMath::Max(1,TimerSeconds))):Message;}
 void AEWPhotoMode::EndPlay(const EEndPlayReason::Type Reason){Close();if(Camera)Camera->Destroy();if(SelfAvatar)SelfAvatar->Destroy();Super::EndPlay(Reason);}
 FString AEWPhotoMode::PhotoEvidence() const
 {

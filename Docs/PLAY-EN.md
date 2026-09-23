@@ -1,8 +1,8 @@
-# Sky Corridor / 空の回廊 — playing v0.1.1
+# Sky Corridor / 空の回廊 — playing v0.1.2
 
 A free Windows exploration prototype. Walk an empty city above the clouds and use
 a small handheld device to collect traces of its former residents. The in-game
-interface is Japanese.
+interface supports English and Japanese.
 
 ## Start and save
 
@@ -25,10 +25,10 @@ Allow additional disk space for saves and browser cache.
 ## Your first memory
 
 1. Start at the water beside Clock Plaza (**時計広場**).
-2. Press **Q**. Select the top-left eye icon, **観測** (Observe).
-3. Select **観測を始める** (Start observing), then close the device with **Q / Esc**.
+2. Press **Q**. Select the top-left eye icon, **Observe**.
+3. Select **Begin observing**, then close the device with **Q / Esc**.
 4. Approach the faint pale trace by the water. Watch briefly and press **E** when prompted.
-5. Open **Q → 記録** (Records, the book icon) to read it. **地図** (Map, top-right) helps you choose another location.
+5. Open **Q → Records** (the book icon) to read it. **Map** (top-right) helps you choose another location.
 
 ## Controls
 
@@ -65,9 +65,9 @@ Browser playback is a packaged-game feature.
 
 Solo exploration is the main experience. Online rooms are experimental and disabled
 by default. External-network multiplayer and physical spatial audio still have
-unverified conditions. In-game English localization is not included.
+unverified conditions. Built-in menus, handheld apps, memories, destination names, transit guidance and fishing descriptions support English. Online experimental tools and external YouTube content are outside the translation scope.
 
-For problem reports, include **v0.1.1**, Windows/GPU details, the location, action,
+For problem reports, include **v0.1.2**, Windows/GPU details, the location, action,
 and time of day. Remove personal information from logs; do not publish your entire
 save folder or account data.
 
@@ -78,9 +78,13 @@ External videos and music retain their owners' rights. Keep
 The included **END-USER-TERMS.md** contains the product's Unreal technology terms
 and Epic disclaimer.
 
-## Unavailable features in v0.1.1
+## Unavailable features in v0.1.2
 
 City browsing/hosting, shared cinema, world eggs/add-ons and the phone Friends app
-are marked **開発中 (in development)** and cannot be selected in normal play.
+are marked **In development** (English) or **開発中** (Japanese) and cannot be selected in normal play.
 The T shortcut is also blocked. Solo YouTube viewing, fishing, journals, photos and
 hotel visits remain available.
+
+## Language
+
+Use **Language / 言語: English → 日本語** on the title screen or in **Graphics & Controls** to switch immediately. In Japanese, choose **Language / 言語: 日本語 → English**. The choice persists in `PlayData/language.txt`, separately from world and discovery data. First launch selects Japanese for a Japanese Windows language, otherwise English. For testing, `-EWLanguage=en` or `-EWLanguage=ja` overrides startup without changing the saved preference.

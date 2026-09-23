@@ -1,6 +1,6 @@
 # 空の回廊 / Sky Corridor
 
-[English](README.md) · **v0.1.1** · 無料のWindows探索ゲーム試作版 · ゲーム内表示は日本語
+[English](README.md) · **v0.1.2** · 無料のWindows探索ゲーム試作版 · ゲーム内表示は日本語・英語
 
 誰もいなくなった天空都市。水は流れ、列車は今も走っています。
 水路を歩き、上層の街へ移動し、小さな端末でかつての暮らしの痕跡を集めます。
@@ -19,7 +19,7 @@ ZIP全体を書き込みできるフォルダーへ展開してください。**
 詳しくは [遊び方](Docs/PLAY-JA.md) と [英語の操作案内](Docs/PLAY-EN.md) を参照してください。
 
 公開版の中心は、64bit Windows・DirectX 12環境での一人の探索です。
-最低GPU・CPU・メモリー要件は未確定です。ゲーム内の英語表示には未対応です。
+最低GPU・CPU・メモリー要件は未確定です。タイトル画面または「画質と操作」で日本語・英語を切り替えられます。選択は PlayData/language.txt に保存されます。初回は日本語Windowsなら日本語、それ以外なら英語です。
 「街を探す・街を開く」「みんなで映画を見る」「世界の卵・追加要素」と端末の「友人」は
 **開発中**と表示し、標準では選択できません。Tキーからも開きません。
 一人用の探索・YouTube・釣り・撮影は引き続き利用できます。YouTubeにはインターネット接続が必要で、
@@ -34,7 +34,7 @@ Blenderで制作した素材を再生成するときは **Blender 4.5** も使�
 `Tools/Audio/requirements.txt` の固定版NumPyを追加で使用します。
 
 ```powershell
-git clone --branch v0.1.1 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.2 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 .\build.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -Target Editor
@@ -44,7 +44,7 @@ cd SkyCorridor
 セットアップが `release-assets.json` に従ってダウンロードし、ハッシュを検証します。
 GitHubのソースZIPだけでは素材が揃いません。取得済みのアーカイブを使う場合は
 `-AssetsDirectory` を指定してください。素材はこのソースの `release-assets.json` が指定するものを使用します。
-v0.1.1は素材を変更していないため、v0.1.0の素材アーカイブを再利用します。
+v0.1.2は素材を変更していないため、v0.1.0の素材アーカイブを再利用します。
 [構築手順](Docs/SETUP.ja.md) と [素材の構成](Docs/ASSETS.md) に詳細があります。
 
 標準のグラフィックス構成は **baseline / TSR** です。NVIDIA SDKプラグインは任意導入で、

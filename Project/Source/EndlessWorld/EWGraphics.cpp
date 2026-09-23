@@ -1,4 +1,5 @@
 #include "EWGraphics.h"
+#include "EWLocalization.h"
 #if EW_WITH_NVIDIA
 #include "DLSSLibrary.h"
 #include "StreamlineLibraryDLSSG.h"
@@ -108,12 +109,12 @@ FString SRReason(UDLSSSupport Support)
 {
     switch (Support)
     {
-    case UDLSSSupport::Supported: return TEXT("利用できます");
-    case UDLSSSupport::NotSupportedIncompatibleHardware: return TEXT("GeForce RTXなどの対応GPUが必要です");
-    case UDLSSSupport::NotSupportedDriverOutOfDate: return TEXT("NVIDIAドライバーの更新が必要です");
-    case UDLSSSupport::NotSupportedOperatingSystemOutOfDate: return TEXT("Windowsの更新が必要です");
-    case UDLSSSupport::NotSupportedIncompatibleAPICaptureToolActive: return TEXT("描画キャプチャーツールとの併用に対応していません");
-    default: return TEXT("この環境では利用できません");
+    case UDLSSSupport::Supported: return EWL::Pick(TEXT("利用できます"), TEXT("Available"));
+    case UDLSSSupport::NotSupportedIncompatibleHardware: return EWL::Pick(TEXT("GeForce RTXなどの対応GPUが必要です"), TEXT("Requires a supported GPU, such as GeForce RTX"));
+    case UDLSSSupport::NotSupportedDriverOutOfDate: return EWL::Pick(TEXT("NVIDIAドライバーの更新が必要です"), TEXT("Update your NVIDIA driver"));
+    case UDLSSSupport::NotSupportedOperatingSystemOutOfDate: return EWL::Pick(TEXT("Windowsの更新が必要です"), TEXT("Update Windows"));
+    case UDLSSSupport::NotSupportedIncompatibleAPICaptureToolActive: return EWL::Pick(TEXT("描画キャプチャーツールとの併用に対応していません"), TEXT("Not compatible with an active graphics capture tool"));
+    default: return EWL::Pick(TEXT("この環境では利用できません"), TEXT("Unavailable on this system"));
     }
 }
 #endif
@@ -241,8 +242,8 @@ void FEWGraphics::Initialize()
 
 TArray<FEWGraphicsOption> FEWGraphics::SuperResolutionOptions() const
 {
-    const TCHAR* Names[] = {TEXT("ネイティブ / TSR"), TEXT("DLAA / 描画100%"), TEXT("DLSS クオリティ"),
-        TEXT("DLSS バランス"), TEXT("DLSS パフォーマンス"), TEXT("DLSS ウルトラパフォーマンス")};
+    const TCHAR* Names[] = {EWL::Pick(TEXT("ネイティブ / TSR"), TEXT("Native / TSR")), EWL::Pick(TEXT("DLAA / 描画100%"), TEXT("DLAA / 100% rendering")), EWL::Pick(TEXT("DLSS クオリティ"), TEXT("DLSS Quality")),
+        EWL::Pick(TEXT("DLSS バランス"), TEXT("DLSS Balanced")), EWL::Pick(TEXT("DLSS パフォーマンス"), TEXT("DLSS Performance")), EWL::Pick(TEXT("DLSS ウルトラパフォーマンス"), TEXT("DLSS Ultra Performance"))};
     TArray<FEWGraphicsOption> Result;
     for (int32 I = 0; I < 6; ++I)
     {
@@ -265,8 +266,8 @@ TArray<FEWGraphicsOption> FEWGraphics::FrameGenerationOptions() const
             (!VSync || (I != 10 && UStreamlineLibraryDLSSG::GetDLSSGIsVsyncSupportAvailable())) &&
             (I != 10 || NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")));
 #endif
-        Result.Add({I, I == 0 ? TEXT("フレーム生成なし") : I == 10 ? TEXT("動的マルチフレーム生成") :
-            FString::Printf(TEXT("フレーム生成 %d倍"), I), Supported});
+        Result.Add({I, I == 0 ? EWL::Pick(TEXT("フレーム生成なし"), TEXT("Frame generation off")) : I == 10 ? EWL::Pick(TEXT("動的マルチフレーム生成"), TEXT("Dynamic multi-frame generation")) :
+            EWL::Format(TEXT("フレーム生成 %d倍"), TEXT("Frame generation %dx"), I), Supported});
     }
     return Result;
 }
@@ -477,35 +478,35 @@ void FEWGraphics::UpdateHDROutput()
 
 FString FEWGraphics::RayReconstructionStatus() const
 {
-    if (!bInitialized) return TEXT("対応状況を確認しています…");
+    if (!bInitialized) return EWL::Pick(TEXT("対応状況を確認しています…"), TEXT("Checking support…"));
 #if EW_WITH_NVIDIA
-    if (!UDLSSLibrary::IsDLSSRRSupported()) return TEXT("この環境ではレイ再構成を利用できません。") + SRReason(UDLSSLibrary::QueryDLSSRRSupport());
-    if (!CanReconstructRays()) return TEXT("レイ再構成にはハードウェアレイトレーシングが必要です。");
-    if (!RayReconstruction) return TEXT("反射や間接光のノイズをAIで再構成します。オンにするとDLSSまたはDLAAと併用します。");
-    if (bRRRuntimeFailure) return TEXT("レイ再構成を開始できなかったため、通常の描画へ戻しました。設定を入れ直すと再試行します。");
-    if (SuperResolution == 0) return TEXT("設定はオンです。DLSSまたはDLAAを選ぶと再開します。");
+    if (!UDLSSLibrary::IsDLSSRRSupported()) return EWL::Pick(TEXT("この環境ではレイ再構成を利用できません。"), TEXT("Ray reconstruction is unavailable on this system. ")) + SRReason(UDLSSLibrary::QueryDLSSRRSupport());
+    if (!CanReconstructRays()) return EWL::Pick(TEXT("レイ再構成にはハードウェアレイトレーシングが必要です。"), TEXT("Ray reconstruction requires hardware ray tracing."));
+    if (!RayReconstruction) return EWL::Pick(TEXT("反射や間接光のノイズをAIで再構成します。オンにするとDLSSまたはDLAAと併用します。"), TEXT("Uses AI to reconstruct reflections and indirect lighting. Requires DLSS or DLAA."));
+    if (bRRRuntimeFailure) return EWL::Pick(TEXT("レイ再構成を開始できなかったため、通常の描画へ戻しました。設定を入れ直すと再試行します。"), TEXT("Ray reconstruction could not start. Standard rendering restored. Toggle the setting to retry."));
+    if (SuperResolution == 0) return EWL::Pick(TEXT("設定はオンです。DLSSまたはDLAAを選ぶと再開します。"), TEXT("Enabled in settings. Select DLSS or DLAA to resume."));
 #if !EW_WITH_RR_EVIDENCE
-    return bRRApplied ? TEXT("レイ再構成を設定しました。この構成では内部処理の計測情報を取得できません。") :
-        TEXT("レイ再構成を開始していません。");
+    return bRRApplied ? EWL::Pick(TEXT("レイ再構成を設定しました。この構成では内部処理の計測情報を取得できません。"), TEXT("Ray reconstruction configured. Internal processing measurements are unavailable in this build.")) :
+        EWL::Pick(TEXT("レイ再構成を開始していません。"), TEXT("Ray reconstruction has not started."));
 #else
-    return IsRayReconstructionActive() ? TEXT("レイ再構成：動作中") : TEXT("レイ再構成の動作を確認しています…");
+    return IsRayReconstructionActive() ? EWL::Pick(TEXT("レイ再構成：動作中"), TEXT("Ray reconstruction: active")) : EWL::Pick(TEXT("レイ再構成の動作を確認しています…"), TEXT("Checking ray reconstruction…"));
 #endif
 #else
-    return TEXT("この配布版にはレイ再構成が含まれていません。保存済みの設定は保持されます。");
+    return EWL::Pick(TEXT("この配布版にはレイ再構成が含まれていません。保存済みの設定は保持されます。"), TEXT("Ray reconstruction is not included in this build. Your saved preference is retained."));
 #endif
 }
 
 FString FEWGraphics::HDRStatus() const
 {
-    if (!bInitialized) return TEXT("画面の対応状況を確認しています…");
-    if (!CanHDR()) return HDR ? TEXT("設定はオンです。現在の画面ではSDRで表示しています。HDR対応画面へ戻すと再開します。") :
-        TEXT("HDR対応画面で、Windowsの「HDRを使用する」をオンにすると利用できます。");
-    if (!HDR) return TEXT("HDRを利用できます。明るい水面や空の光を、より広い明るさで表示します。");
+    if (!bInitialized) return EWL::Pick(TEXT("画面の対応状況を確認しています…"), TEXT("Checking display support…"));
+    if (!CanHDR()) return HDR ? EWL::Pick(TEXT("設定はオンです。現在の画面ではSDRで表示しています。HDR対応画面へ戻すと再開します。"), TEXT("Enabled in settings. Using SDR on this display. HDR resumes on a supported display.")) :
+        EWL::Pick(TEXT("HDR対応画面で、Windowsの「HDRを使用する」をオンにすると利用できます。"), TEXT("On an HDR display, enable Use HDR in Windows settings."));
+    if (!HDR) return EWL::Pick(TEXT("HDRを利用できます。明るい水面や空の光を、より広い明るさで表示します。"), TEXT("HDR is available. Water and sky highlights can use a wider brightness range."));
 #if EW_WITH_PRESENTATION_EVIDENCE
     if (PresentationEvidence().Available)
-        return IsHDRActive() ? TEXT("HDR：動作中") : TEXT("HDR表示へ切り替えています…");
+        return IsHDRActive() ? EWL::Pick(TEXT("HDR：動作中"), TEXT("HDR: active")) : EWL::Pick(TEXT("HDR表示へ切り替えています…"), TEXT("Switching to HDR…"));
 #endif
-    return IsHDRActive() ? TEXT("HDR：Unreal Engineで有効（画面出力の直接計測は未対応）") : TEXT("HDR表示へ切り替えています…");
+    return IsHDRActive() ? EWL::Pick(TEXT("HDR：Unreal Engineで有効（画面出力の直接計測は未対応）"), TEXT("HDR: enabled in Unreal Engine (display output not directly measured)")) : EWL::Pick(TEXT("HDR表示へ切り替えています…"), TEXT("Switching to HDR…"));
 }
 
 void FEWGraphics::ApplyPresentation()
@@ -546,20 +547,20 @@ void FEWGraphics::ApplyPresentation()
 
 FString FEWGraphics::PresentationStatus() const
 {
-    if (!CanFrameGenerate()) return TEXT("ゲーム描画のFPS上限を設定します。垂直同期と併用できます。");
+    if (!CanFrameGenerate()) return EWL::Pick(TEXT("ゲーム描画のFPS上限を設定します。垂直同期と併用できます。"), TEXT("Set the game rendering FPS limit. Can be used with VSync."));
     if (!NvidiaCVarAvailable(TEXT("t.Streamline.Reflex.PresentationMaxFPS")))
-        return TEXT("ゲーム描画のFPS上限を設定します。フレーム生成を使う場合、生成フレームを含む表示FPSの上限は保証されません。");
-    FString Result = TEXT("上限には生成したフレームも含みます。");
+        return EWL::Pick(TEXT("ゲーム描画のFPS上限を設定します。フレーム生成を使う場合、生成フレームを含む表示FPSの上限は保証されません。"), TEXT("Set the game rendering FPS limit. With frame generation, the total displayed FPS limit is not guaranteed."));
+    FString Result = EWL::Pick(TEXT("上限には生成したフレームも含みます。"), TEXT("This limit includes generated frames."));
     if (FrameGeneration >= 2 && FrameGeneration <= 6 && MaxDisplayFPS)
-        Result += FString::Printf(TEXT(" %d倍ではゲーム描画の上限は %.1f FPS です。"), FrameGeneration, float(MaxDisplayFPS) / FrameGeneration);
-    if (FrameGeneration == 10) Result += TEXT("\n動的フレーム生成と垂直同期は併用できません。");
-    else if (FrameGeneration && !CanUseVSync()) Result += TEXT("\nこの環境はフレーム生成と垂直同期の併用に対応していません。");
+        Result += EWL::Format(TEXT(" %d倍ではゲーム描画の上限は %.1f FPS です。"), TEXT(" At %dx, the game rendering limit is %.1f FPS."), FrameGeneration, float(MaxDisplayFPS) / FrameGeneration);
+    if (FrameGeneration == 10) Result += EWL::Pick(TEXT("\n動的フレーム生成と垂直同期は併用できません。"), TEXT("\nDynamic frame generation cannot be combined with VSync."));
+    else if (FrameGeneration && !CanUseVSync()) Result += EWL::Pick(TEXT("\nこの環境はフレーム生成と垂直同期の併用に対応していません。"), TEXT("\nThis system does not support frame generation with VSync."));
     return Result;
 }
 
 FString FEWGraphics::Status() const
 {
-    if (!bInitialized) return TEXT("描画機能を確認しています…");
+    if (!bInitialized) return EWL::Pick(TEXT("描画機能を確認しています…"), TEXT("Checking graphics features…"));
 #if EW_WITH_NVIDIA
     FString Result = TEXT("DLSS　") + SRReason(UDLSSLibrary::QueryDLSSSupport());
     if (!CanFrameGenerate())
@@ -567,26 +568,26 @@ FString FEWGraphics::Status() const
         switch(UStreamlineLibraryDLSSG::QueryDLSSGSupport())
         {
         case EStreamlineFeatureSupport::NotSupportedHardewareSchedulingDisabled:
-            Result+=TEXT("\nフレーム生成には Windows のハードウェアアクセラレータによるGPUスケジューリングが必要です。");break;
+            Result+=EWL::Pick(TEXT("\nフレーム生成には Windows のハードウェアアクセラレータによるGPUスケジューリングが必要です。"), TEXT("\nFrame generation requires Windows hardware-accelerated GPU scheduling."));break;
         case EStreamlineFeatureSupport::NotSupportedDriverOutOfDate:
-            Result+=TEXT("\nフレーム生成には NVIDIA ドライバーの更新が必要です。");break;
+            Result+=EWL::Pick(TEXT("\nフレーム生成には NVIDIA ドライバーの更新が必要です。"), TEXT("\nFrame generation requires an NVIDIA driver update."));break;
         case EStreamlineFeatureSupport::NotSupportedByRHI:
-            Result+=TEXT("\nフレーム生成は DirectX 12 で起動すると利用できます。");break;
-        default:Result+=TEXT("\nフレーム生成はこの環境で利用できません。");break;
+            Result+=EWL::Pick(TEXT("\nフレーム生成は DirectX 12 で起動すると利用できます。"), TEXT("\nLaunch with DirectX 12 to use frame generation."));break;
+        default:Result+=EWL::Pick(TEXT("\nフレーム生成はこの環境で利用できません。"), TEXT("\nFrame generation is unavailable on this system."));break;
         }
     }
-    if (SuperResolution && !UDLSSLibrary::IsDLSSEnabled()) Result += TEXT("\n現在はネイティブ描画を使用しています。");
+    if (SuperResolution && !UDLSSLibrary::IsDLSSEnabled()) Result += EWL::Pick(TEXT("\n現在はネイティブ描画を使用しています。"), TEXT("\nCurrently using native rendering."));
     if (FrameGeneration == 10 && !NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")))
-        Result += TEXT("\nこの構成は動的フレーム生成の目標FPS設定に対応していません。保存設定を保持し、生成を停止しています。");
+        Result += EWL::Pick(TEXT("\nこの構成は動的フレーム生成の目標FPS設定に対応していません。保存設定を保持し、生成を停止しています。"), TEXT("\nThis build does not support a target FPS for dynamic frame generation. Generation is paused; your setting is retained."));
     else if (FrameGeneration && SuspendReason == TEXT("hud_unavailable"))
-        Result += TEXT("\n案内表示の準備ができないため、フレーム生成を一時停止しています。");
+        Result += EWL::Pick(TEXT("\n案内表示の準備ができないため、フレーム生成を一時停止しています。"), TEXT("\nFrame generation is paused while the HUD is unavailable."));
     else if (FrameGeneration && CanFrameGenerate() && !SuspendReason.IsEmpty())
-        Result += bMenuOpen ? TEXT("\nメニュー中はフレーム生成を一時停止します。探索へ戻ると再開します。") : TEXT("\nフレーム生成を一時停止しています。");
+        Result += bMenuOpen ? EWL::Pick(TEXT("\nメニュー中はフレーム生成を一時停止します。探索へ戻ると再開します。"), TEXT("\nFrame generation pauses in menus and resumes during exploration.")) : EWL::Pick(TEXT("\nフレーム生成を一時停止しています。"), TEXT("\nFrame generation is paused."));
     else if (FrameGeneration && UStreamlineLibraryDLSSG::GetDLSSGMode() == EStreamlineDLSSGMode::Off)
-        Result += TEXT("\n保存されたフレーム生成設定はこの環境で利用できません。");
+        Result += EWL::Pick(TEXT("\n保存されたフレーム生成設定はこの環境で利用できません。"), TEXT("\nThe saved frame generation setting is unavailable on this system."));
     return Result;
 #else
-    return TEXT("ネイティブ / TSR 描画を使用しています。\nこの配布版にはDLSS・フレーム生成・Reflexが含まれていません。保存済みの設定は保持されます。");
+    return EWL::Pick(TEXT("ネイティブ / TSR 描画を使用しています。\nこの配布版にはDLSS・フレーム生成・Reflexが含まれていません。保存済みの設定は保持されます。"), TEXT("Using Native / TSR rendering.\nThis build does not include DLSS, frame generation or Reflex. Saved preferences are retained."));
 #endif
 }
 TSharedRef<FJsonObject> FEWGraphics::Evidence() const

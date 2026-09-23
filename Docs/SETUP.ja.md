@@ -25,13 +25,13 @@ SDKとMSVCは、リリースのUATビルドで実際に選択された版を再�
 
 ## 同じ版の素材を準備する
 
-**v0.1.1** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
-今回の更新はメニューのみで、変更のないv0.1.0の素材アーカイブを再利用します。
+**v0.1.2** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
+今回の更新は日本語・英語表示の対応で、変更のないv0.1.0の素材アーカイブを再利用します。
 リポジトリーには独自ソースと生成スクリプトを置き、大容量のContent/SourceArtは
 ルートの `release-assets.json` に記録してGitHub Releasesから配布します。
 
 ```powershell
-git clone --branch v0.1.1 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.2 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```

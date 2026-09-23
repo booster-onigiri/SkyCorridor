@@ -1,4 +1,5 @@
 #include "EWHudLayer.h"
+#include "EWLocalization.h"
 #include "EWGameInstance.h"
 #include "Engine/Engine.h"
 #include "Engine/GameViewportClient.h"
@@ -114,7 +115,7 @@ struct FEWHudLayer::FState
     {
         IDWriteTextFormat* Format=nullptr; IDWriteTextLayout* Result=nullptr;
         HRESULT HR=TextFactory->CreateTextFormat(L"Yu Gothic UI",nullptr,DWRITE_FONT_WEIGHT_NORMAL,
-            DWRITE_FONT_STYLE_NORMAL,DWRITE_FONT_STRETCH_NORMAL,Size,L"ja-jp",&Format);
+            DWRITE_FONT_STYLE_NORMAL,DWRITE_FONT_STRETCH_NORMAL,Size,EWL::IsEnglish()?L"en-us":L"ja-jp",&Format);
         if (SUCCEEDED(HR)) HR=TextFactory->CreateTextLayout(*Text,Text.Len(),Format,MaximumWidth,MaximumHeight,&Result);
         EWRelease(Format);
         if (FAILED(HR)) { LayoutFailed=true; EWRelease(Result); return nullptr; }
@@ -140,7 +141,7 @@ struct FEWHudLayer::FState
         const auto Foreground=D2D1::ColorF(.986f,.982f,.95f,1);
         Target->BeginDraw(); Target->Clear(D2D1::ColorF(0,0,0,0));
         auto* Title=Layout(Region,29.33f*Scale,FMath::Max(100.f,Width*.45f),100*Scale);
-        auto* Subtitle=Layout(TEXT("空の回廊  /  ENDLESS WORLD"),14.67f*Scale,FMath::Max(100.f,Width*.45f),80*Scale);
+        auto* Subtitle=Layout(EWL::Pick(TEXT("空の回廊  /  ENDLESS WORLD"), TEXT("SKY CORRIDOR  /  ENDLESS WORLD")),14.67f*Scale,FMath::Max(100.f,Width*.45f),80*Scale);
         DWRITE_TEXT_METRICS A{},B{};
         if (Title) Title->GetMetrics(&A); if (Subtitle) Subtitle->GetMetrics(&B);
         Panel(Margin,Margin,FMath::Max(A.widthIncludingTrailingWhitespace,B.widthIncludingTrailingWhitespace)+2*PaddingX,

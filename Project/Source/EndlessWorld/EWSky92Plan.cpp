@@ -1,6 +1,7 @@
 #include "EWSky92Plan.h"
 #include "EWSky92Data.h"
 #include "EWOuterWater.h"
+#include "EWLocalization.h"
 #include "Components/LocalFogVolumeComponent.h"
 #include "GameFramework/Actor.h"
 
@@ -20,7 +21,7 @@ FString Directions(int32 I)
     const TCHAR* D[]={TEXT("水都駅の昇降機で広場へ。北側の滝見の回廊を上がり、左のガラス塔へ。"),
         TEXT("円環商店街のある広場から橋を東へ一つ渡る。北の滝見の回廊にある昇降機で「雲上の回廊院」へ。"),
         TEXT("回廊院の広場から東へ一つ、さらに北へ一つ橋を渡る。滝見の回廊の奥の昇降機で「空に眠る城」へ。")};
-    return D[FMath::Clamp(I,0,2)];
+    return EWL::Translate(D[FMath::Clamp(I,0,2)]);
 }
 namespace
 {

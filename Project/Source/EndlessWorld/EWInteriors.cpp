@@ -1,4 +1,5 @@
 #include "EWInteriors.h"
+#include "EWLocalization.h"
 #include "EWInteriorPlan.h"
 #include "EWHotelPlan.h"
 #include "EWExplorationPlan.h"
@@ -136,14 +137,14 @@ FString NearbyText(const EW::ChunkRecipe& R,const FVector& Position)
         if(FMath::Abs(Position.Z-Room.Frame.GetLocation().Z-90)>130)continue;
         const auto P=Room.Frame.InverseTransformPosition(Position);
         if(EWHotelPlan::IsSuite(Room.Kind))
-        {if(FMath::Abs(P.X)<755 && P.Y>-805 && P.Y<1010)return Name(Room.Kind)+TEXT("　雲を望む上層の客室");continue;}
+        {if(FMath::Abs(P.X)<755 && P.Y>-805 && P.Y<1010)return EWL::Translate(Name(Room.Kind))+EWL::Pick(TEXT("　雲を望む上層の客室"), TEXT("  An upper suite overlooking the clouds"));continue;}
         if(Room.Kind==10)
-        {if(FMath::Abs(P.X)<1550 && P.Y>-2150 && P.Y<1550)return Name(10)+TEXT("　32席の小さな映画館");continue;}
+        {if(FMath::Abs(P.X)<1550 && P.Y>-2150 && P.Y<1550)return EWL::Translate(Name(10))+EWL::Pick(TEXT("　32席の小さな映画館"), TEXT("  An intimate 32-seat cinema"));continue;}
         if(Room.Kind==4)
-        {if(FMath::Abs(P.X)<1650 && FMath::Abs(P.Y)<1650)return Name(4)+TEXT("　空の見える閲覧室");continue;}
+        {if(FMath::Abs(P.X)<1650 && FMath::Abs(P.Y)<1650)return EWL::Translate(Name(4))+EWL::Pick(TEXT("　空の見える閲覧室"), TEXT("  A reading room open to the sky"));continue;}
         const bool Inside=P.X>30 && P.X<870 && P.Y>-1760 && P.Y<-1220;
         const bool Entrance=P.X>75 && P.X<375 && P.Y>-2320 && P.Y<=-1760;
-        if(Inside || Entrance)return Name(Room.Kind)+(Entrance?TEXT("　このまま歩いて入れます"):TEXT("　回廊へ自由に出入りできます"));
+        if(Inside || Entrance)return EWL::Translate(Name(Room.Kind))+(Entrance?EWL::Pick(TEXT("　このまま歩いて入れます"), TEXT("  Walk inside to enter")):EWL::Pick(TEXT("　回廊へ自由に出入りできます"), TEXT("  Walk freely between the room and corridor")));
     }
     return {};
 }

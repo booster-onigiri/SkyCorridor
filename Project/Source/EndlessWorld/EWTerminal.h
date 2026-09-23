@@ -27,6 +27,7 @@ class ENDLESSWORLD_API AEWTerminal : public AActor
 {
     GENERATED_BODY()
 public:
+    void RefreshLanguage() { Refresh(); }
     AEWTerminal();
     virtual void BeginPlay() override;
     virtual void Tick(float Delta) override;

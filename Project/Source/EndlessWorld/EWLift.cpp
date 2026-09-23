@@ -1,4 +1,5 @@
 #include "EWLift.h"
+#include "EWLocalization.h"
 #include "EWCharacter.h"
 #include "EWGameInstance.h"
 #include "Components/BoxComponent.h"
@@ -130,10 +131,10 @@ bool AEWLift::Ride(AEWCharacter* P,int32 Stop)
 FString AEWLift::Hint(const AEWCharacter* P) const
 {
     int32 Stop;bool OnCar;if(!Nearby(P,Stop,OnCar))return {};
-    if(IsMoving())return TEXT("展望昇降機　移動中…");
-    if(OnCar)return TEXT("展望昇降機　行き先の階を選ぶ");
-    if(Spec.Id.StartsWith(TEXT("skyrail")))return Spec.Stops[Stop].Label+(CurrentStop==Stop?TEXT("　開いたかごへ進む"):TEXT("　この階へ呼ぶ"));
-    return CurrentStop==Stop?TEXT("展望昇降機　かごの中央へ進む"):TEXT("展望昇降機　この階へ呼ぶ");
+    if(IsMoving())return EWL::Pick(TEXT("展望昇降機　移動中…"), TEXT("Panoramic elevator  Moving…"));
+    if(OnCar)return EWL::Pick(TEXT("展望昇降機　行き先の階を選ぶ"), TEXT("Panoramic elevator  Choose a floor"));
+    if(Spec.Id.StartsWith(TEXT("skyrail")))return EWL::Translate(Spec.Stops[Stop].Label)+(CurrentStop==Stop?EWL::Pick(TEXT("　開いたかごへ進む"), TEXT("  Enter the open cabin")):EWL::Pick(TEXT("　この階へ呼ぶ"), TEXT("  Call to this floor")));
+    return CurrentStop==Stop?EWL::Pick(TEXT("展望昇降機　かごの中央へ進む"), TEXT("Panoramic elevator  Move to the centre of the cabin")):EWL::Pick(TEXT("展望昇降機　この階へ呼ぶ"), TEXT("Panoramic elevator  Call to this floor"));
 }
 void AEWLift::Tick(float Delta)
 {
@@ -154,7 +155,7 @@ void AEWLift::Tick(float Delta)
         ++CompletedRides;Rider.Reset();
     }
     else ++CompletedCalls;
-    if(auto* GI=GetGameInstance<UEWGameInstance>())GI->Notify(TEXT("展望昇降機：")+Spec.Stops[CurrentStop].Label);
+    if(auto* GI=GetGameInstance<UEWGameInstance>())GI->Notify(EWL::Pick(TEXT("展望昇降機："), TEXT("Panoramic elevator: "))+EWL::Translate(Spec.Stops[CurrentStop].Label));
 }
 bool AEWLift::SetCinematicTrip(int32 FromStop,int32 ToStop,double Seconds)
 {

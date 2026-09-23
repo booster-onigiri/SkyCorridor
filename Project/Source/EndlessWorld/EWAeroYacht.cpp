@@ -1,4 +1,5 @@
 #include "EWAeroYacht.h"
+#include "EWLocalization.h"
 #include "EWAeroYachtPlan.h"
 #include "EWGameInstance.h"
 #include "EWChunkManager.h"
@@ -100,7 +101,7 @@ double AEWAeroYacht::Clock() const
 }
 bool AEWAeroYacht::AtDock() const{return bReady && EWAeroYachtPlan::Docked(Clock(),Index);}
 bool AEWAeroYacht::CanBoard() const{return bReady && EWAeroYachtPlan::GangwayOpen(Clock(),Index);}
-FString AEWAeroYacht::Name() const{return Index?TEXT("月凪 / TSUKINAGI"):TEXT("白鷺 / SHIRASAGI");}
+FString AEWAeroYacht::Name() const{return Index?EWL::Pick(TEXT("月凪 / TSUKINAGI"), TEXT("TSUKINAGI / Moon Calm")):EWL::Pick(TEXT("白鷺 / SHIRASAGI"), TEXT("SHIRASAGI / White Heron"));}
 bool AEWAeroYacht::Contains(const AEWCharacter* P) const
 {
     if(!bReady || !P)return false;
@@ -111,8 +112,8 @@ bool AEWAeroYacht::Contains(const AEWCharacter* P) const
 FString AEWAeroYacht::Hint(const AEWCharacter* P) const
 {
     if(!Contains(P))return {};
-    return Name()+(AtDock()?FString::Printf(TEXT("　寄港中・出港まで %d 秒　乗り口から下船できます"),FMath::Max(0,FMath::CeilToInt(EWAeroYachtPlan::Dwell-EWAeroYachtPlan::Phase(Clock(),Index)))):
-        TEXT("　都市遊覧中　船内を自由に歩けます / 階段から上部プールデッキへ"));
+    return Name()+(AtDock()?EWL::Format(TEXT("　寄港中・出港まで %d 秒　乗り口から下船できます"), TEXT("  Docked · Departure in %d s · Disembark through the boarding door"),FMath::Max(0,FMath::CeilToInt(EWAeroYachtPlan::Dwell-EWAeroYachtPlan::Phase(Clock(),Index)))):
+        EWL::Pick(TEXT("　都市遊覧中　船内を自由に歩けます / 階段から上部プールデッキへ"), TEXT("  Cruising over the city · Explore the cabin / Take the stairs to the pool deck")));
 }
 void AEWAeroYacht::Tick(float Delta)
 {
@@ -264,11 +265,11 @@ FString AEWAeroPort::Status() const
     {
         const double Phase=EWAeroYachtPlan::Phase(Y->Clock(),Y->Index);
         if(Y->AtDock())return TEXT("AURELIA SKYPORT\n")+Y->Name()+
-            (Y->CanBoard()?TEXT("　乗船できます"):TEXT("　乗船橋を操作中"))+
-            FString::Printf(TEXT("\n出港まで %d 秒　橋を渡って船内へ"),FMath::Max(0,FMath::CeilToInt(EWAeroYachtPlan::Dwell-Phase)));
+            (Y->CanBoard()?EWL::Pick(TEXT("　乗船できます"), TEXT("  Boarding open")):EWL::Pick(TEXT("　乗船橋を操作中"), TEXT("  Boarding bridge moving")))+
+            EWL::Format(TEXT("\n出港まで %d 秒　橋を渡って船内へ"), TEXT("\nDeparture in %d s · Cross the bridge to board"),FMath::Max(0,FMath::CeilToInt(EWAeroYachtPlan::Dwell-Phase)));
         if(EWAeroYachtPlan::Period-Phase<Wait){Wait=EWAeroYachtPlan::Period-Phase;Next=Y->Name();}
     }
-    return TEXT("AURELIA SKYPORT\n次の遊覧船：")+Next+FString::Printf(TEXT("\n到着まで 約 %d 秒　ゲートの手前でお待ちください"),FMath::CeilToInt(Wait));
+    return EWL::Pick(TEXT("AURELIA SKYPORT\n次の遊覧船："), TEXT("AURELIA SKYPORT\nNext sky yacht: "))+Next+EWL::Format(TEXT("\n到着まで 約 %d 秒　ゲートの手前でお待ちください"), TEXT("\nArrival in about %d s · Please wait before the gate"),FMath::CeilToInt(Wait));
 }
 void AEWAeroPort::Tick(float Delta)
 {

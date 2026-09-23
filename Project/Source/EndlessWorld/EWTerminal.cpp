@@ -1,5 +1,6 @@
 #include "EWTerminal.h"
 #include "EWLocalization.h"
+#include "EWMediaPolicy.h"
 #include "EWTerminalView.h"
 #include "EWSky92Plan.h"
 #include "Camera/CameraActor.h"
@@ -162,6 +163,8 @@ void AEWTerminal::Close(){if(auto* G=GetGameInstance<UEWGameInstance>())G->SetMe
 void AEWTerminal::ShowPage(int32 Value)
 {
     if(Value<0 || Value>5)return;
+    if(Value==3 && !EWMediaPolicy::PlaybackEnabled)
+    {if(auto* G=GetGameInstance<UEWGameInstance>())G->Notify(EWMediaPolicy::Unavailable());return;}
     if(Value==4)
     {
         auto* G=GetGameInstance<UEWGameInstance>();
@@ -204,7 +207,7 @@ FString AEWTerminal::RouteText(int32 Index) const
     return EWL::Format(TEXT("%s　直線で約 %.0f m\n%s\n\n%s"), TEXT("%s  About %.0f m in a straight line\n%s\n\n%s"),Bearing,D.Size2D()/100.,D.Z>400?EWL::Pick(TEXT("今いる場所より上の階です。昇降機を利用してください。"), TEXT("On a higher floor. Use an elevator.")):D.Z<-400?EWL::Pick(TEXT("今いる場所より下の階です。"), TEXT("On a lower floor.")):EWL::Pick(TEXT("ほぼ同じ高さにあります。"), TEXT("At roughly the same height.")),*EWL::Translate(P.Direction));
 }
 void AEWTerminal::SearchVideo(const FString& Query)
-{if(Surface && !Query.TrimStartAndEnd().IsEmpty()){Surface->Search(Query);Surface->EnableSound();}}
+{if(EWMediaPolicy::PlaybackEnabled && Surface && !Query.TrimStartAndEnd().IsEmpty()){Surface->Search(Query);Surface->EnableSound();}}
 void AEWTerminal::StopVideo(){if(Surface)Surface->Stop();Audio->Stop();Wave->FlushSamples();bSoundPlaying=false;}
 void AEWTerminal::PauseVideo(){if(Surface)Surface->Pause(true);Audio->Stop();Wave->FlushSamples();bSoundPlaying=false;}
 bool AEWTerminal::MediaAudible() const{return bSoundPlaying && Audio && Audio->IsPlaying();}

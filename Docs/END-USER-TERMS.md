@@ -1,6 +1,6 @@
 # Sky Corridor — end-user terms / 製品利用条件
 
-These terms accompany the **Sky Corridor / 空の回廊 v0.1.0** Windows product.
+These terms accompany the **Sky Corridor / 空の回廊 v0.1.3** Windows product.
 By using the product, you agree to the applicable terms below.
 
 ## English
@@ -9,7 +9,7 @@ By using the product, you agree to the applicable terms below.
 PolyForm Noncommercial License 1.0.0 (`LICENSE`). Original project assets use
 CC BY-NC 4.0 (`ASSET-LICENSE`). The separate `GAMEPLAY-VIDEO-PERMISSION.md` permits
 recording, sharing, streaming and monetizing your own gameplay within its stated
-scope. Those permissions do not cover unrelated third-party content viewed in the browser.
+scope. Those permissions do not cover unrelated third-party content.
 
 **Unreal Engine technology.** The product incorporates Unreal Engine Licensed
 Technology under [Epic's Unreal Engine EULA](https://www.unrealengine.com/eula/unreal).
@@ -43,7 +43,7 @@ or other third-party media.
 **本作独自の著作物。** 独自コードは同梱のPolyForm Noncommercial 1.0.0（`LICENSE`）、
 独自素材はCC BY-NC 4.0（`ASSET-LICENSE`）の条件で提供します。
 自分のプレイの録画・公開・配信・収益化は、別紙 `GAMEPLAY-VIDEO-PERMISSION.md` の範囲で許可します。
-ブラウザーで視聴する無関係な第三者のコンテンツは、この許可に含みません。
+無関係な第三者のコンテンツは、この許可に含みません。
 
 **Unreal Engineの技術。** 本製品には、[EpicのUnreal Engine EULA](https://www.unrealengine.com/eula/unreal)
 に基づくLicensed Technology（許諾対象技術）を組み込んでいます。本製品の利用条件による許諾は、

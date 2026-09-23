@@ -16,8 +16,11 @@ profile and packaged archive hash. Publish the applicable evidence with the rele
   collect/read a memory, save, exit, relaunch, and check that progress persists.
 - [ ] Travel/content smoke check: water city, upper transport, interiors, day/night,
   camera and menus relevant to the release.
-- [ ] Packaged YouTube check when claimed: provider access, video, controls and sound.
-  Editor/PIE does not substitute for this check.
+- [ ] Public playback removal: phone Video is unavailable; plaza/cinema/sky control
+  tablets cannot open playback; direct/legacy media requests cannot start a browser,
+  provider request or audio. Experimental flags must not restore YouTube playback.
+- [ ] Public copy and promotional footage: no current playback claim. Identify any
+  YouTube demonstration in older footage as a historical prototype unavailable publicly.
 - [ ] Audio technical checks: full PCM decode, level/clipping, duration, reproducible
   source and correct imported tracks. Track physical listening separately.
 - [ ] Final trailer checks: complete decode, dimensions/frame rate/color metadata,
@@ -40,8 +43,11 @@ single development PC or an offline-rendered trailer.
 特定したうえで結果を記録してください。
 
 個人データと権利表記、素材の新規復元、EditorとShippingのビルド、別フォルダーへの新規展開、
-起動・移動・端末・記録・保存再開、街の主要経路、パッケージ版YouTube、音源、最終トレーラー、
-同梱案内を確認します。NVIDIA構成とオンライン・音声は、それぞれ別に条件を記録して検証します。
+起動・移動・端末・記録・保存再開、街の主要経路、YouTube再生の無効化、音源、最終トレーラー、
+同梱案内を確認します。動画アプリと常設端末だけでなく、直接呼出し・旧経路・実験用フラグでも
+ブラウザー・配信元への接続・動画音声が起動しないことを確認します。公開案内では再生を機能として宣伝せず、
+旧映像に映る再生は過去の試作で公開版にはないと明記します。
+NVIDIA構成とオンライン・音声は、それぞれ別に条件を記録して検証します。
 
 **合格・失敗・未確認・未測定** を明示してください。ビルド成功、録画映像、同一PC内の接続、
 実機での確認は異なる結果です。開発PC1台の結果やオフラインで描画したトレーラーから、

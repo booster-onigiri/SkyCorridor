@@ -1,4 +1,6 @@
 #include "EWMediaAudit.h"
+#include "EWMediaPolicy.h"
+#include "EWTerminal.h"
 #include "EWMediaScreen.h"
 #include "EWBrowserSurface.h"
 #include "EWGameInstance.h"
@@ -52,8 +54,8 @@ void AEWMediaAudit::Finish(const FString& Error)
 {
     if(Finished)return;Finished=true;auto G=GetGameInstance<UEWGameInstance>();auto O=MakeShared<FJsonObject>();
     O->SetBoolField(TEXT("success"),Error.IsEmpty());O->SetStringField(TEXT("failure"),Error);O->SetNumberField(TEXT("seconds"),FPlatformTime::Seconds()-Started);
-    O->SetStringField(TEXT("physical_output_check"),FParse::Param(FCommandLine::Get(),TEXT("EWSilentAudit"))?TEXT("NOT_MEASURED: final main submix muted for silent testing; source spatialization measured"):TEXT("main submix measured; human listening not measured"));
-    O->SetStringField(TEXT("scope"),TEXT("CharacterMovement jumps, central screen placement, live clock rendering, and CEF tone through positional and main UE output at the actual plaza listener. YouTube playback and physical key timing are separate UI checks."));
+    O->SetStringField(TEXT("physical_output_check"),!EWMediaPolicy::PlaybackEnabled?TEXT("NOT_APPLICABLE: browser playback removed; no output requested"):FParse::Param(FCommandLine::Get(),TEXT("EWSilentAudit"))?TEXT("NOT_MEASURED: final main submix muted for silent testing; source spatialization measured"):TEXT("main submix measured; human listening not measured"));
+    O->SetStringField(TEXT("scope"),!EWMediaPolicy::PlaybackEnabled?TEXT("Public-build browser removal: all three screens and handheld reject UI, direct search, resume, synchronization, and diagnostic playback. Does not measure jump height or physical audio output."):TEXT("CharacterMovement jumps, central screen placement, live clock rendering, and CEF tone through positional and main UE output at the actual plaza listener. YouTube playback and physical key timing are separate UI checks."));
     O->SetArrayField(TEXT("checks"),Checks);O->SetArrayField(TEXT("audio_cases"),Samples);O->SetNumberField(TEXT("single_jump_cm"),SinglePeak-GroundZ);O->SetNumberField(TEXT("double_jump_cm"),PeakZ-GroundZ);
     O->SetArrayField(TEXT("clock_frames"),ClockSamples);
     if(BaselineOutput)O->SetObjectField(TEXT("main_before_tone"),BaselineOutput);
@@ -79,6 +81,38 @@ void AEWMediaAudit::Tick(float Delta)
     const double Now=FPlatformTime::Seconds(),Age=Now-Stage;
     if(Now-Started>180){Finish(TEXT("audit timeout"));return;}
     if(G->Manager->IsTravelling() || P->IsStreamingHeld())return;
+    if(!EWMediaPolicy::PlaybackEnabled)
+    {
+        if(!G->Terminal || !G->CinemaScreen || !G->SkyTheatre || G->Manager->ReadyCount()<49)return;
+        const EEWMenu Before=G->Menu();const int32 PhonePage=G->Terminal->PageIndex();
+        G->SetMenu(EEWMenu::Monitor);G->Terminal->ShowPage(3);
+        G->Terminal->SearchVideo(TEXT("https://www.youtube.com/watch?v=EWTEST00001"));
+        if(!Check(G->Menu()==Before && G->Terminal->PageIndex()==PhonePage,TEXT("direct monitor and phone video requests preserve existing UI")))return;
+        TArray<TSharedPtr<FEWBrowserSurface>> Browsers;
+        Browsers.Add(G->Terminal->Browser());
+        for(auto* Screen:{G->MediaScreen.Get(),G->CinemaScreen.Get(),G->SkyTheatre.Get()})
+        {
+            Screen->OpenControls();Screen->Search(TEXT("https://www.youtube.com/watch?v=EWTEST00001"));Screen->ControlPlayback(TEXT("play"));
+            if(!Check(!Screen->Available() && !Screen->CanControlPlayback() && !Screen->TabletOpen() && G->Menu()==Before,Screen->GetName()+TEXT(": public controls cannot open or play")))return;
+            Browsers.Add(Screen->Browser());
+        }
+        int32 Index=0;
+        for(const auto& Browser:Browsers)
+        {
+            if(!Check(Browser.IsValid(),TEXT("inert media surface exists")))return;
+            if(!Check(!Browser->Start(),TEXT("browser initialization rejected")))return;
+            Browser->Search(TEXT("public removal audit"));Browser->ApplyPlayback(TEXT("EWTEST00001"),7,false);
+            Browser->Pause(false);Browser->SetPlaybackPaused(false);Browser->SetVideoFullscreen(true);Browser->EnableSound();
+            Browser->TestTone();Browser->TestStereoTone(0);Browser->TestSyncFilm();Browser->SeekForAudit(12,false);
+            Browser->Tick();TArray<int16> PCM;PCM.Add(123);Browser->DrainStereoAudio(PCM);
+            const auto State=Browser->Evidence();
+            if(!Check(!Browser->HasPage() && !Browser->HasAudio() && Browser->VideoPaused() && PCM.IsEmpty() &&
+                !State->GetBoolField(TEXT("initialized")) && State->GetNumberField(TEXT("runtime_browser_owners"))==0 &&
+                State->GetNumberField(TEXT("audio_samples"))==0 && State->GetStringField(TEXT("video_id")).IsEmpty(),
+                FString::Printf(TEXT("surface %d remains inert after direct/resume/sync/audit requests"),Index++)))return;
+        }
+        Finish();return;
+    }
     auto* Move=P->GetCharacterMovement();auto* S=G->MediaScreen.Get();auto B=S->Browser();
     if(Phase==0)
     {

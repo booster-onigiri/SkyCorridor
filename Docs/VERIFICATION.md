@@ -4,6 +4,62 @@ Results as of **2026-09-23 JST**. The checks listed below passed within their st
 
 **2026年9月23日時点の検証結果です。** 以下の確認は記載した範囲で通過しました。自動テストの合格を、すべての機能・機器・外部サービスの動作保証とはしていません。
 
+## v0.1.3 playback removal / 公開版の動画再生中止
+
+In-game YouTube playback is discontinued; world screens remain scenery. The exact
+packaged Shipping executable passed **270 localization**, **18 restart/language preference**,
+**58 public-menu**, and **16 playback-removal checks** using isolated saves. Its SHA-256 is
+`721cbc6ac50db0eb35ea39e9c38714a3c231d32d9627c86b04733a3e43f5164e`.
+
+The checks exercise production Slate labels and disabled states, language switching,
+local apps and memory recording, and direct requests to the three world screens and
+handheld video surface. Browser initialization, search, resume, synchronized playback
+and diagnostic playback remain inert. The title, phone unavailable screen and plaza
+tablet were visually reviewed for readable unavailable states. These are scripted
+game checks and sampled image review, not physical keyboard/mouse operation or a full playthrough.
+
+Generated Editor/Shipping compile definitions both disable YouTube. The Shipping target
+receipt and staged/archive filename inspection found no browser runtime dependencies
+or runtime files. All four audit runs observed zero browser helper processes and no
+MonitorBrowser directories in their inspected locations. This is **not a full network
+capture** or proof that all game/OS network activity is zero. An earlier filename scan
+flagged the retained CEF license notice; the corrected scan distinguishes notices from
+runtime files, and the original diagnostic is retained.
+
+The local packaged-file audit passed **257 files**. Official cooked-container listings
+matched **495 approved game packages**, with no unknown/missing game package or
+DevValidation package. Container bytes matched between stage and archive. The existing
+`M_CloudLayers` cooked chunk differs from the reference; the listings do not establish
+source-content identity or visual equivalence. See the sanitized
+[playback-removal receipt](PLAYBACK-REMOVAL-VERIFICATION.json).
+
+公開版のYouTube再生は中止し、モニターは景観として残します。上記SHA-256のShipping実行版で、
+独立したセーブを使い、**言語表示270項目・再起動と言語保存18項目・公開メニュー58項目・
+再生無効化16項目**が通過しました。実際のSlateの表示と無効状態、言語切替、探索用アプリと
+痕跡の記録を確認しました。常設モニター3台とスマホへの直接要求でも、ブラウザー初期化・検索・
+再開・同期再生・診断再生は作動しません。タイトル・スマホの利用不可画面・広場端末の描画画像で
+表示の読みやすさを確認しました。物理入力による操作や全編の手動プレイを確認したものではありません。
+
+Editor・Shippingの生成済み定義はYouTubeを無効化し、Shippingの依存情報とステージ・梱包先の
+ファイル名検査でブラウザーの実行依存・実行ファイルは検出されませんでした。4回の実行で観測した
+ブラウザー補助プロセスは0件、検査先のMonitorBrowserフォルダーも0件です。全通信の取得や
+PC全体の通信が0であることを示す検査ではありません。最初のファイル名検査は保持したCEFの
+ライセンス文書を検出したため、実行部品と表記を区別する検査へ修正しました。初回の記録も保持しています。
+
+ローカルの梱包先**257ファイル**の監査と、Cook済みゲーム資産**495件**の一覧照合が通過しました。
+不明・欠落資産とDevValidationの混入はありません。ステージと梱包先のコンテナーは一致しました。
+既存の`M_CloudLayers`のCook済みチャンクには参照版との差異があります。一覧照合は元素材の同一性や
+見た目の同等性まで保証するものではありません。
+
+The final Windows ZIP passed readback of all **257 members**; its identity is listed below.
+This section covers the local candidate, before public-download verification. Broader
+gameplay, physical audio/HDR and external-network results were not rerun here. The older
+media/browser results and JSON receipts below remain **historical evidence**, not current
+playback support or a compliance approval. / 最終Windows ZIPの**257件すべて**の読み戻しが通過しました。
+識別情報は下表に記載します。この節は公開先からの取得確認前のローカル候補版の結果です。
+広範なゲームプレイ、実音声・HDR、外部回線は今回再検証していません。以下の旧版メディア検証とJSON記録は
+**過去の事実**として保持し、現行版の再生対応や規約上の承認を示すものとはしません。
+
 ## v0.1.2 English/Japanese update / 日本語・英語対応の確認
 
 The standard Editor and Shipping targets compiled with UE 5.8.2, followed by a fresh cook/package. The final Shipping executable passed **256 localization checks**, **17 fresh-process language preference checks**, and **55 public-menu regression checks**, all with isolated saves.
@@ -104,6 +160,7 @@ These identities apply to the locally checked final Windows archive and developm
 
 | Archive | Bytes | SHA-256 |
 | --- | ---: | --- |
+| `SkyCorridor-v0.1.3-Windows.zip` | 1,752,315,384 | `b5e7541c5427fe7032610264fd2a255082400477a62d9dfd67bd656e7e1640bb` |
 | `SkyCorridor-v0.1.1-Windows.zip` | 1,901,370,009 | `00fd0934164e3e148c52096a86d62a32c5ac10d59d45faa18225cab89a06a2eb` |
 | `SkyCorridor-v0.1.0-Windows.zip` | 1,901,348,041 | `85b407efcd793299582686870e406edd231d7fc8fc0909e49048d67e2be92b0c` |
 | `SkyCorridor-v0.1.0-DevelopmentAssets-01.zip` | 1,642,626,580 | `b4b6f2a8503b1ba2d458e58e2e1483c624853189a87e5b4af03522696411e04f` |

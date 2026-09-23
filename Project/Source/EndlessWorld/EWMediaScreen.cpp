@@ -1,5 +1,6 @@
 #include "EWMediaScreen.h"
 #include "EWLocalization.h"
+#include "EWMediaPolicy.h"
 #include "EWMediaTabletView.h"
 #include "EWTerminal.h"
 #include "Camera/CameraActor.h"
@@ -161,7 +162,7 @@ void AEWMediaScreen::BeginPlay()
         +SOverlay::Slot()[SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
             .BorderBackgroundColor(FLinearColor(.015,.045,.055,1)).HAlign(HAlign_Center).VAlign(VAlign_Center)
             .Visibility_Lambda([this]{return Surface.IsValid() && Surface->HasPage()?EVisibility::Collapsed:EVisibility::Visible;})
-            [SNew(STextBlock).Text_Lambda([this]{return FText::FromString(bSkyTheatre?EWL::Pick(TEXT("天空シアター\n\n入口の光る端末で上映を選ぶ"), TEXT("SKY THEATRE\n\nChoose a film at the glowing tablet by the entrance")):bCinema?EWL::Pick(TEXT("水鏡の映写室\n\nロビーの光る端末で上映を選ぶ"), TEXT("MIRRORWATER CINEMA\n\nChoose a film at the glowing tablet in the lobby")):EWL::Pick(TEXT("空の回廊 シネマ\n\n広場の光る端末で YouTubeを探す"), TEXT("SKY CORRIDOR CINEMA\n\nFind YouTube videos at the glowing tablet in the plaza")));})
+            [SNew(STextBlock).Text_Lambda([this]{if(!EWMediaPolicy::PlaybackEnabled)return FText::FromString(Title()+EWL::Pick(TEXT("\n\n上映休止\n動画再生は公開版では利用できません。"),TEXT("\n\nNO SCREENINGS\nVideo playback is unavailable in this public build.")));return FText::FromString(bSkyTheatre?EWL::Pick(TEXT("天空シアター\n\n入口の光る端末で上映を選ぶ"), TEXT("SKY THEATRE\n\nChoose a film at the glowing tablet by the entrance")):bCinema?EWL::Pick(TEXT("水鏡の映写室\n\nロビーの光る端末で上映を選ぶ"), TEXT("MIRRORWATER CINEMA\n\nChoose a film at the glowing tablet in the lobby")):EWL::Pick(TEXT("空の回廊 シネマ\n\n広場の光る端末で YouTubeを探す"), TEXT("SKY CORRIDOR CINEMA\n\nFind YouTube videos at the glowing tablet in the plaza")));})
                 .Justification(ETextJustify::Center).Font(Font).ColorAndOpacity(FLinearColor(.7,.9,.85,1))]];};
     Panel->SetSlateWidget(Display());if(!IsTheatre())BackPanel->SetSlateWidget(Display());
     Wave=NewObject<UEWBrowserAudioWave>(this);Wave->SetSampleRate(48000);Wave->NumChannels=1;
@@ -188,9 +189,10 @@ void AEWMediaScreen::BeginPlay()
     if(FParse::Param(FCommandLine::Get(),TEXT("EWSilentAudit")))if(auto Device=GetWorld()->GetAudioDevice())
         Device->SetSubmixOutputVolume(&Device->GetMainSubmixObject(),0.f);
 }
-bool AEWMediaScreen::Available() const{return bInDistrict;}
+bool AEWMediaScreen::Available() const{return EWMediaPolicy::PlaybackEnabled && bInDistrict;}
 bool AEWMediaScreen::Nearby() const
 {
+    if(!EWMediaPolicy::PlaybackEnabled)return false;
     const auto* P=UGameplayStatics::GetPlayerPawn(this,0);
     if(!bInDistrict || !P || !TabletAnchor || FVector::Dist2D(P->GetActorLocation(),Station)>240 || FMath::Abs(P->GetActorLocation().Z-Station.Z)>125)return false;
     const auto* Camera=UGameplayStatics::GetPlayerCameraManager(this,0);if(!Camera)return false;
@@ -200,9 +202,10 @@ bool AEWMediaScreen::Nearby() const
     return !GetWorld()->LineTraceSingleByChannel(Hit,Eye,TabletAnchor->GetComponentLocation(),ECC_Visibility,Q);
 }
 bool AEWMediaScreen::CanControlPlayback() const
-{const auto* G=GetGameInstance<UEWGameInstance>();return !(bCinema && G && G->CinemaSession && G->CinemaSession->Guest());}
+{const auto* G=GetGameInstance<UEWGameInstance>();return EWMediaPolicy::PlaybackEnabled && !(bCinema && G && G->CinemaSession && G->CinemaSession->Guest());}
 void AEWMediaScreen::OpenControls()
 {
+    if(!EWMediaPolicy::PlaybackEnabled){if(auto* G=GetGameInstance<UEWGameInstance>())G->Notify(EWMediaPolicy::Unavailable());return;}
     auto* G=GetGameInstance<UEWGameInstance>();auto* PC=UGameplayStatics::GetPlayerController(this,0);
     if(!G || !PC || !TabletView || bTabletOpen)return;
     if(!Nearby()){G->Notify(Title()+EWL::Pick(TEXT("の光る端末に近づいて操作してください。"), TEXT(": move closer to its glowing tablet to use it.")));return;}
@@ -253,6 +256,7 @@ void AEWMediaScreen::LookAtScreen()
 {if(Surface && CanControlPlayback())Surface->SetVideoFullscreen(true);if(auto* G=GetGameInstance<UEWGameInstance>())G->SetMenu(EEWMenu::None);if(auto* PC=UGameplayStatics::GetPlayerController(this,0))PC->SetControlRotation((GetActorLocation()-PC->PlayerCameraManager->GetCameraLocation()).Rotation());}
 void AEWMediaScreen::Search(const FString& Query)
 {
+    if(!EWMediaPolicy::PlaybackEnabled)return;
     if(bCinema)if(const auto* G=GetGameInstance<UEWGameInstance>())if(G->CinemaSession && G->CinemaSession->Guest())return;
     if(Surface)Surface->Search(Query);
 }
@@ -393,8 +397,8 @@ TSharedRef<FJsonObject> AEWMediaScreen::Evidence() const
     O->SetBoolField(TEXT("back_render_target"),BackPanel && BackPanel->GetRenderTarget());
     O->SetBoolField(TEXT("two_readable_faces"),Panel && BackPanel && FVector::DotProduct(Panel->GetForwardVector(),BackPanel->GetForwardVector())<-.999
         && BackPanel->GetRelativeLocation().X<-52.5 && BackPanel->GetDrawSize()==Panel->GetDrawSize());
-    O->SetNumberField(TEXT("browser_instances"),Surface.IsValid()?1:0);
-    O->SetNumberField(TEXT("audio_sources"),IsTheatre()?2:1);
+    O->SetNumberField(TEXT("browser_instances"),EWMediaPolicy::PlaybackEnabled && Surface.IsValid()?1:0);
+    O->SetNumberField(TEXT("audio_sources"),EWMediaPolicy::PlaybackEnabled?(IsTheatre()?2:1):0);
     O->SetBoolField(TEXT("sky_theatre"),bSkyTheatre);O->SetNumberField(TEXT("screen_width_cm"),ScreenWidth());
     O->SetBoolField(TEXT("cinema"),bCinema);O->SetNumberField(TEXT("room_gain"),RoomGain);
     O->SetNumberField(TEXT("right_queued_audio_bytes"),RightWave?RightWave->PendingBytes():0);

@@ -6,6 +6,10 @@ public class EndlessWorld : ModuleRules
     public EndlessWorld(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        // Public builds intentionally contain no YouTube/browser playback runtime.
+        // This is a source/build decision; command-line flags cannot enable it.
+        bool WithYouTube = false;
+        PublicDefinitions.Add("EW_WITH_YOUTUBE=" + (WithYouTube ? "1" : "0"));
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "SQLiteCore", "Json", "JsonUtilities", "Slate", "SlateCore", "UMG", "RenderCore", "RHI", "ApplicationCore", "PhysicsCore" });
         PrivateDependencyModuleNames.AddRange(new string[] { "EWGamepad", "MovieSceneCapture" });
         // Installing a plugin must not silently change the public baseline.
@@ -40,12 +44,16 @@ public class EndlessWorld : ModuleRules
         if (Target.Platform == UnrealTargetPlatform.Win64) PublicSystemLibraries.AddRange(new string[] { "d2d1.lib", "dwrite.lib", "gdi32.lib", "user32.lib" });
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
-            PrivateDependencyModuleNames.AddRange(new string[] { "CEF3Utils", "HTTP", "AudioMixer", "AudioExtensions", "WebSockets", "EOSShared", "EOSVoiceChat", "VoiceChat" });
+            PrivateDependencyModuleNames.AddRange(new string[] { "HTTP", "AudioMixer", "AudioExtensions", "WebSockets", "EOSShared", "EOSVoiceChat", "VoiceChat" });
             AddEngineThirdPartyPrivateStaticDependencies(Target, "EOSSDK");
-            AddEngineThirdPartyPrivateStaticDependencies(Target, "CEF3");
-            RuntimeDependencies.Add("$(EngineDir)/Binaries/Win64/EpicWebHelper.exe");
+            if (WithYouTube)
+            {
+                PrivateDependencyModuleNames.Add("CEF3Utils");
+                AddEngineThirdPartyPrivateStaticDependencies(Target, "CEF3");
+                RuntimeDependencies.Add("$(EngineDir)/Binaries/Win64/EpicWebHelper.exe");
+            }
             // Optional room-host runtime. Never stage tests, captured media, or
-            // arbitrary files from this directory. Solo/YouTube needs none of it.
+            // arbitrary files from this directory. Solo exploration needs none of it.
             string CinemaRuntime = Path.GetFullPath(Path.Combine(ModuleDirectory, "../../CinemaOnline"));
             foreach (string RelativeFile in new[] {
                 "server.mjs", "node.exe", "cloudflared.exe", "LICENSE-node.txt", "LICENSE-cloudflared.txt",

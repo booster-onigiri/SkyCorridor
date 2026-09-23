@@ -1,5 +1,6 @@
 #include "EWGameInstance.h"
 #include "EWLocalization.h"
+#include "EWMediaPolicy.h"
 #include "EWTerminal.h"
 #include "EWMusic.h"
 #include "EWMemoryAudit.h"
@@ -520,8 +521,11 @@ bool UEWGameInstance::IsMenuAvailable(EEWMenu Menu) const
 {
     switch (Menu)
     {
-    case EEWMenu::City:
+    case EEWMenu::Monitor:
+        return EWMediaPolicy::PlaybackEnabled;
     case EEWMenu::Online:
+        return EWMediaPolicy::PlaybackEnabled && FParse::Param(FCommandLine::Get(), TEXT("EWEnableExperimentalOnline"));
+    case EEWMenu::City:
         return FParse::Param(FCommandLine::Get(), TEXT("EWEnableExperimentalOnline"));
     case EEWMenu::Workshop:
     case EEWMenu::Chess:
@@ -536,7 +540,7 @@ void UEWGameInstance::SetMenu(EEWMenu Menu)
     // Gate every entry point before closing a working phone, photo or video UI.
     if (!IsMenuAvailable(Menu))
     {
-        Notify(EWL::Pick(TEXT("この機能は開発中です。通常の公開版では利用できません。"), TEXT("This feature is in development and unavailable in the public build.")));
+        Notify((Menu==EEWMenu::Monitor || Menu==EEWMenu::Online)?EWMediaPolicy::Unavailable():FString(EWL::Pick(TEXT("この機能は開発中です。通常の公開版では利用できません。"), TEXT("This feature is in development and unavailable in the public build."))));
         return;
     }
     if(CurrentMenu==EEWMenu::Monitor && Menu!=EEWMenu::Monitor && ActiveMediaScreen)ActiveMediaScreen->CloseControls();

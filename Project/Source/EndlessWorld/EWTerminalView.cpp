@@ -1,5 +1,6 @@
 #include "EWTerminalView.h"
 #include "EWLocalization.h"
+#include "EWMediaPolicy.h"
 #include "EWTerminal.h"
 #include "EWGameInstance.h"
 #include "EWBrowserSurface.h"
@@ -175,7 +176,7 @@ void SEWTerminalView::Rebuild()
         +SHorizontalBox::Slot().FillWidth(1).HAlign(HAlign_Right).VAlign(VAlign_Center)[Text(TEXT("MEMORIA"),18,Foreground)]];
     if(!HomePage)
     {
-        const TCHAR* Names[]={TEXT(""),EWL::Pick(TEXT("地図"), TEXT("Map")),EWL::Pick(TEXT("記録"), TEXT("Records")),TEXT("YouTube"),EWL::Pick(TEXT("友人"), TEXT("Friends")),EWL::Pick(TEXT("観測"), TEXT("Observe"))};
+        const TCHAR* Names[]={TEXT(""),EWL::Pick(TEXT("地図"), TEXT("Map")),EWL::Pick(TEXT("記録"), TEXT("Records")),EWL::Pick(TEXT("動画"), TEXT("Video")),EWL::Pick(TEXT("友人"), TEXT("Friends")),EWL::Pick(TEXT("観測"), TEXT("Observe"))};
         auto BackButton=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(8).OnClicked_Lambda([this]{Back();return FReply::Handled();})[Icon(6,38,Accent)];Buttons.Add(BackButton);
         Stack->AddSlot().AutoHeight().Padding(2,14,8,26)[SNew(SHorizontalBox)
             +SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)[BackButton]
@@ -198,7 +199,7 @@ void SEWTerminalView::Home(TSharedRef<SVerticalBox> Box)
 {
     const auto* G=Owner->GetGameInstance<UEWGameInstance>();
     const bool FriendsAvailable=G && G->IsMenuAvailable(EEWMenu::City);
-    const TCHAR* Labels[]={EWL::Pick(TEXT("観測"), TEXT("Observe")),EWL::Pick(TEXT("地図"), TEXT("Map")),EWL::Pick(TEXT("記録"), TEXT("Records")),TEXT("YouTube"),EWL::Pick(TEXT("友人"), TEXT("Friends")),EWL::Pick(TEXT("カメラ"), TEXT("Camera"))};
+    const TCHAR* Labels[]={EWL::Pick(TEXT("観測"), TEXT("Observe")),EWL::Pick(TEXT("地図"), TEXT("Map")),EWL::Pick(TEXT("記録"), TEXT("Records")),EWL::Pick(TEXT("動画"), TEXT("Video")),EWL::Pick(TEXT("友人"), TEXT("Friends")),EWL::Pick(TEXT("カメラ"), TEXT("Camera"))};
     const int Pages[]={5,1,2,3,4,-1};Box->AddSlot().FillHeight(.6);
     for(int Row=0;Row<3;++Row)
     {
@@ -206,11 +207,11 @@ void SEWTerminalView::Home(TSharedRef<SVerticalBox> Box)
         for(int Col=0;Col<2;++Col)
         {
             const int I=Row*2+Col,Page=Pages[I];auto Tile=SNew(SVerticalBox);
-            const bool Available=Page!=4 || FriendsAvailable;
+            const bool Available=(Page!=4 || FriendsAvailable) && (Page!=3 || EWMediaPolicy::PlaybackEnabled);
             const FLinearColor Foreground=Available?FLinearColor::White:FLinearColor(.60,.64,.66,1);
             Tile->AddSlot().AutoHeight().HAlign(HAlign_Center)[SNew(SBox).WidthOverride(188).HeightOverride(188)[Card(Icon(I,108,Foreground),Available?AppColor(I):FLinearColor(.16,.19,.21,1),FMargin(20))]];
             Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,20,0,0)[Text(Labels[I],29,Foreground)];
-            if(!Available)Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,5,0,0)[Text(EWL::Pick(TEXT("開発中"), TEXT("In development")),22,Foreground)];
+            if(!Available)Tile->AddSlot().AutoHeight().HAlign(HAlign_Center).Padding(0,5,0,0)[Text(Page==3?EWMediaPolicy::Badge():FString(EWL::Pick(TEXT("開発中"), TEXT("In development"))),22,Foreground)];
             auto B=SNew(SButton).ButtonStyle(&TouchStyle()).ContentPadding(FMargin(12,14)).IsEnabled(Available).OnClicked_Lambda([this,Page]
             {if(Owner.IsValid()){RecordDetail=INDEX_NONE;if(Page>=0)Owner->ShowPage(Page);else if(auto* G=Owner->GetGameInstance<UEWGameInstance>()){Owner->Close();if(G->PhotoMode)G->PhotoMode->Open();}}return FReply::Handled();})[Tile];Buttons.Add(B);
             Line->AddSlot().FillWidth(1).HAlign(HAlign_Center)[B];
@@ -272,6 +273,8 @@ void SEWTerminalView::Records(TSharedRef<SVerticalBox> Box)
 }
 void SEWTerminalView::Video(TSharedRef<SVerticalBox> Box)
 {
+    if(!EWMediaPolicy::PlaybackEnabled)
+    {Box->AddSlot().AutoHeight()[Card(Text(EWMediaPolicy::Unavailable(),28,Muted))];return;}
     auto Browser=Owner->Browser();
     static const FEditableTextBoxStyle SearchStyle=FEditableTextBoxStyle(FCoreStyle::Get().GetWidgetStyle<FEditableTextBoxStyle>("NormalEditableTextBox"))
         .SetBackgroundImageNormal(FSlateRoundedBoxBrush(FLinearColor::White,14.f))

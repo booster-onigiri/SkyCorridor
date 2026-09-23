@@ -1,4 +1,10 @@
 #include "EWBrowserSurface.h"
+#include "EWMediaPolicy.h"
+#include "Dom/JsonObject.h"
+#include "Rendering/DrawElements.h"
+#include "InputCoreTypes.h"
+
+#if EW_WITH_YOUTUBE
 #include "EWLocalization.h"
 #include "EWYouTubeQuality.h"
 #include "EWShutdownTrace.h"
@@ -388,18 +394,6 @@ TSharedRef<FJsonObject> FEWBrowserSurface::Evidence()const
  O->SetNumberField(TEXT("player_width"),Impl->Data->PlayerWidth);O->SetNumberField(TEXT("player_height"),Impl->Data->PlayerHeight);O->SetBoolField(TEXT("browser_muted"),Impl->Browser && Impl->Browser->GetHost()->IsAudioMuted());
  O->SetNumberField(TEXT("dropped_samples"),double(Impl->Data->DroppedSamples));O->SetStringField(TEXT("status"),Impl->Data->Message);return O;}
 
-int32 SEWBrowserView::OnPaint(const FPaintArgs&,const FGeometry& G,const FSlateRect&,FSlateWindowElementList& Out,int32 Layer,const FWidgetStyle&,bool)const
-{if(Browser && Browser->HasPage())FSlateDrawElement::MakeBox(Out,Layer,G.ToPaintGeometry(),Browser->Brush());return Layer;}
-FReply SEWBrowserView::Pointer(const FGeometry& G,const FPointerEvent& E,int32 Action)
-{if(!Browser)return FReply::Unhandled();const FVector2D P=G.AbsoluteToLocal(E.GetScreenSpacePosition())/G.GetLocalSize();Browser->Mouse(FMath::Clamp(int32(P.X*1280),0,1279),FMath::Clamp(int32(P.Y*720),0,719),Action,E.GetEffectingButton()==EKeys::RightMouseButton?1:0,FMath::RoundToInt(E.GetWheelDelta()*120));return FReply::Handled();}
-FReply SEWBrowserView::OnMouseButtonDown(const FGeometry& G,const FPointerEvent& E){Pointer(G,E,1);return FReply::Handled().SetUserFocus(SharedThis(this)).CaptureMouse(SharedThis(this));}
-FReply SEWBrowserView::OnMouseButtonUp(const FGeometry& G,const FPointerEvent& E){Pointer(G,E,2);return FReply::Handled().ReleaseMouseCapture();}
-FReply SEWBrowserView::OnMouseMove(const FGeometry& G,const FPointerEvent& E){return Pointer(G,E,0);}
-FReply SEWBrowserView::OnMouseWheel(const FGeometry& G,const FPointerEvent& E){return Pointer(G,E,3);}
-FReply SEWBrowserView::OnKeyDown(const FGeometry&,const FKeyEvent& E){if(E.GetKey()==EKeys::Escape)return FReply::Unhandled();if(Browser)Browser->Key(E.GetKeyCode(),false,false,(E.IsShiftDown()?2:0)|(E.IsControlDown()?4:0)|(E.IsAltDown()?8:0));return FReply::Handled();}
-FReply SEWBrowserView::OnKeyUp(const FGeometry&,const FKeyEvent& E){if(Browser)Browser->Key(E.GetKeyCode(),true,false,0);return FReply::Handled();}
-FReply SEWBrowserView::OnKeyChar(const FGeometry&,const FCharacterEvent& E){if(Browser)Browser->Key(E.GetCharacter(),false,true,0);return FReply::Handled();}
-
 void FEWBrowserSurface::ApplyPlayback(const FString& VideoId,double Seconds,bool Paused)
 {
     if(VideoId.IsEmpty())
@@ -436,3 +430,65 @@ void FEWBrowserSurface::SeekForAudit(double Seconds,bool Paused)
     const FString Script=FString::Printf(TEXT("(()=>{const v=document.querySelector('video');if(!v)return;v.currentTime=%.3f;%s;})();"),Seconds,Paused?TEXT("v.pause()"):TEXT("v.play()"));
     Impl->Browser->GetMainFrame()->ExecuteJavaScript(TCHAR_TO_WCHAR(*Script),"about:blank",1);
 }
+
+#else
+// Deliberately no CEF types, initialization, URL parser, network, PCM capture,
+// or restoration path in the public binary. Keep callers inert, including
+// console/capture automation and synchronized playback requests.
+struct FEWBrowserSurface::FImpl {};
+FEWBrowserSurface::FEWBrowserSurface():Impl(MakeUnique<FImpl>())
+{
+    Image.DrawAs=ESlateBrushDrawType::NoDrawType;
+    Image.ImageSize=FVector2D(Width,Height);
+}
+FEWBrowserSurface::~FEWBrowserSurface()=default;
+bool FEWBrowserSurface::Start(){return false;}
+void FEWBrowserSurface::Tick(){}
+void FEWBrowserSurface::Shutdown(){}
+void FEWBrowserSurface::Search(const FString&){}
+void FEWBrowserSurface::Stop(){}
+void FEWBrowserSurface::Back(){}
+void FEWBrowserSurface::Pause(bool){}
+void FEWBrowserSurface::TestTone(){}
+void FEWBrowserSurface::SetVideoFullscreen(bool){}
+void FEWBrowserSurface::EnableSound(){}
+bool FEWBrowserSurface::VideoPaused() const{return true;}
+void FEWBrowserSurface::SetPlaybackPaused(bool){}
+bool FEWBrowserSurface::IsVideoFullscreen() const{return false;}
+void FEWBrowserSurface::Mouse(int32,int32,int32,int32,int32){}
+void FEWBrowserSurface::Key(int32,bool,bool,int32){}
+void FEWBrowserSurface::DrainAudio(TArray<int16>& Out){Out.Reset();}
+void FEWBrowserSurface::DrainStereoAudio(TArray<int16>& Out){Out.Reset();}
+void FEWBrowserSurface::TestStereoTone(int32){}
+void FEWBrowserSurface::ApplyPlayback(const FString&,double,bool){}
+void FEWBrowserSurface::TestSyncFilm(){}
+void FEWBrowserSurface::SeekForAudit(double,bool){}
+FString FEWBrowserSurface::Status() const{return EWMediaPolicy::Unavailable();}
+bool FEWBrowserSurface::HasPage() const{return false;}
+bool FEWBrowserSurface::HasAudio() const{return false;}
+TSharedRef<FJsonObject> FEWBrowserSurface::Evidence() const
+{
+    auto O=MakeShared<FJsonObject>();
+    O->SetBoolField(TEXT("playback_available"),false);
+    O->SetStringField(TEXT("disabled_reason"),TEXT("removed_from_public_release"));
+    for(const TCHAR* Key:{TEXT("initialized"),TEXT("page"),TEXT("video"),TEXT("video_ad"),TEXT("video_muted"),TEXT("video_fullscreen"),TEXT("browser_fullscreen"),TEXT("browser_muted")})
+        O->SetBoolField(Key,false);
+    O->SetBoolField(TEXT("video_paused"),true);
+    for(const TCHAR* Key:{TEXT("paint_frames"),TEXT("audio_packets"),TEXT("audio_samples"),TEXT("audio_peak"),TEXT("audio_recent_peak"),TEXT("audio_packet_age"),TEXT("quality_height"),TEXT("quality_changes"),TEXT("video_width"),TEXT("video_height"),TEXT("video_volume"),TEXT("video_time"),TEXT("video_state_age"),TEXT("runtime_browser_owners"),TEXT("player_width"),TEXT("player_height"),TEXT("dropped_samples")})
+        O->SetNumberField(Key,0);
+    for(const TCHAR* Key:{TEXT("quality_status"),TEXT("quality_label"),TEXT("quality_options"),TEXT("video_id")})O->SetStringField(Key,TEXT(""));
+    O->SetStringField(TEXT("status"),Status());return O;
+}
+#endif
+
+int32 SEWBrowserView::OnPaint(const FPaintArgs&,const FGeometry& G,const FSlateRect&,FSlateWindowElementList& Out,int32 Layer,const FWidgetStyle&,bool)const
+{if(Browser && Browser->HasPage())FSlateDrawElement::MakeBox(Out,Layer,G.ToPaintGeometry(),Browser->Brush());return Layer;}
+FReply SEWBrowserView::Pointer(const FGeometry& G,const FPointerEvent& E,int32 Action)
+{if(!Browser)return FReply::Unhandled();const FVector2D P=G.AbsoluteToLocal(E.GetScreenSpacePosition())/G.GetLocalSize();Browser->Mouse(FMath::Clamp(int32(P.X*1280),0,1279),FMath::Clamp(int32(P.Y*720),0,719),Action,E.GetEffectingButton()==EKeys::RightMouseButton?1:0,FMath::RoundToInt(E.GetWheelDelta()*120));return FReply::Handled();}
+FReply SEWBrowserView::OnMouseButtonDown(const FGeometry& G,const FPointerEvent& E){Pointer(G,E,1);return FReply::Handled().SetUserFocus(SharedThis(this)).CaptureMouse(SharedThis(this));}
+FReply SEWBrowserView::OnMouseButtonUp(const FGeometry& G,const FPointerEvent& E){Pointer(G,E,2);return FReply::Handled().ReleaseMouseCapture();}
+FReply SEWBrowserView::OnMouseMove(const FGeometry& G,const FPointerEvent& E){return Pointer(G,E,0);}
+FReply SEWBrowserView::OnMouseWheel(const FGeometry& G,const FPointerEvent& E){return Pointer(G,E,3);}
+FReply SEWBrowserView::OnKeyDown(const FGeometry&,const FKeyEvent& E){if(E.GetKey()==EKeys::Escape)return FReply::Unhandled();if(Browser)Browser->Key(E.GetKeyCode(),false,false,(E.IsShiftDown()?2:0)|(E.IsControlDown()?4:0)|(E.IsAltDown()?8:0));return FReply::Handled();}
+FReply SEWBrowserView::OnKeyUp(const FGeometry&,const FKeyEvent& E){if(Browser)Browser->Key(E.GetKeyCode(),true,false,0);return FReply::Handled();}
+FReply SEWBrowserView::OnKeyChar(const FGeometry&,const FCharacterEvent& E){if(Browser)Browser->Key(E.GetCharacter(),false,true,0);return FReply::Handled();}

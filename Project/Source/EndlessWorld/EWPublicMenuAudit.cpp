@@ -1,4 +1,5 @@
 #include "EWPublicMenuAudit.h"
+#include "EWMediaPolicy.h"
 #include "EWGameInstance.h"
 #include "EWChunkManager.h"
 #include "EWCharacter.h"
@@ -102,8 +103,9 @@ void AEWPublicMenuAudit::InspectMain(bool Paused)
     TArray<FPublicButton> Found; CollectButtons(View, Found);
     const FString Surface = Paused ? TEXT("pause") : TEXT("title");
     AddEvidence(Found, Surface, Buttons);
-    for (const TCHAR* Label : {TEXT("街を探す・街を開く"), TEXT("世界の卵・追加要素"), TEXT("みんなで映画を見る")})
+    for (const TCHAR* Label : {TEXT("街を探す・街を開く"), TEXT("世界の卵・追加要素")})
         Check(Matches(Found, Label, false, true), Surface + TEXT(": disabled with development badge: ") + Label);
+    Check(Matches(Found,TEXT("みんなで映画を見る"),false) && WidgetText(View).Contains(EWMediaPolicy::Badge()),Surface+TEXT(": movie sharing unavailable in public build"));
     for (const TCHAR* Label : {TEXT("画質と操作"), TEXT("水辺の魚図鑑・釣りに行く"), TEXT("映画館へ行く"), TEXT("上層の客室を訪ねる")})
         Check(Matches(Found, Label, true), Surface + TEXT(": working destination remains enabled: ") + Label);
     Check(Matches(Found, G->CanContinue() ? TEXT("続きから") : TEXT("散策を始める"), true), Surface + TEXT(": solo start remains enabled"));
@@ -121,8 +123,9 @@ void AEWPublicMenuAudit::InspectPhone()
     if (!View) return;
     TArray<FPublicButton> Found; CollectButtons(View.ToSharedRef(), Found);
     AddEvidence(Found, TEXT("phone home"), Buttons);
+    Check(Matches(Found,TEXT("動画"),false) && WidgetText(View.ToSharedRef()).Contains(EWMediaPolicy::Badge()),TEXT("phone: Video disabled with public unavailable badge"));
     Check(Matches(Found, TEXT("友人"), false, true), TEXT("phone: Friends disabled with development badge"));
-    for (const TCHAR* Label : {TEXT("観測"), TEXT("地図"), TEXT("記録"), TEXT("YouTube"), TEXT("カメラ")})
+    for (const TCHAR* Label : {TEXT("観測"), TEXT("地図"), TEXT("記録"), TEXT("カメラ")})
         Check(Matches(Found, Label, true), FString(TEXT("phone: local app remains enabled: ")) + Label);
 }
 void AEWPublicMenuAudit::Finish(const FString& Error)
@@ -152,7 +155,7 @@ void AEWPublicMenuAudit::Tick(float Delta)
     auto* P = Cast<AEWCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
     if (!G || !G->Manager || !G->Terminal || !G->SocialSession || !G->CinemaSession || !G->PhotoMode || !P) return;
     if (G->Manager->IsTravelling() || P->IsStreamingHeld() || G->Manager->ReadyCount() < 49) return;
-    const EEWMenu Blocked[] = {EEWMenu::City, EEWMenu::Online, EEWMenu::Workshop, EEWMenu::Chess};
+    const EEWMenu Blocked[] = {EEWMenu::City, EEWMenu::Online, EEWMenu::Workshop, EEWMenu::Chess, EEWMenu::Monitor};
     if (Phase == 0)
     {
         if (G->SessionStarted() || G->Menu() != EEWMenu::Main) { Finish(TEXT("audit must begin on normal title menu")); return; }
@@ -200,7 +203,9 @@ void AEWPublicMenuAudit::Tick(float Delta)
         Check(G->Terminal->PageIndex() == 0 && G->Menu() == EEWMenu::Terminal, TEXT("direct Friends page request preserves phone home"));
         G->Terminal->InviteFriends();
         Check(G->Menu() == EEWMenu::Terminal, TEXT("direct phone invite request preserves terminal"));
-        for (int32 Page : {1, 2, 3, 5})
+        G->Terminal->ShowPage(3);
+        Check(G->Terminal->PageIndex()==0 && G->Menu()==EEWMenu::Terminal,TEXT("direct Video page request preserves phone home"));
+        for (int32 Page : {1, 2, 5})
         {
             G->Terminal->ShowPage(Page);
             Check(G->Terminal->PageIndex() == Page, FString::Printf(TEXT("local phone page %d still opens"), Page));

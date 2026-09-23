@@ -25,13 +25,13 @@ SDKとMSVCは、リリースのUATビルドで実際に選択された版を再�
 
 ## 同じ版の素材を準備する
 
-**v0.1.2** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
-今回の更新は日本語・英語表示の対応で、変更のないv0.1.0の素材アーカイブを再利用します。
+**v0.1.3** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
+今回の更新は公開版のYouTube再生を中止し、変更のないv0.1.0の素材アーカイブを再利用します。
 リポジトリーには独自ソースと生成スクリプトを置き、大容量のContent/SourceArtは
 ルートの `release-assets.json` に記録してGitHub Releasesから配布します。
 
 ```powershell
-git clone --branch v0.1.2 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.3 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```
@@ -68,8 +68,10 @@ Editorのビルド後は、UE 5.8.2で `Project/EndlessWorld.uproject` を開き
 Shippingの出力先は作成したフォルダーの `Archive` で、`PLAY.cmd`、遊び方、権利表記、
 `Windows` が入ります。そこで `PLAY.cmd` を起動すると、隣の `PlayData` に保存します。
 
-YouTubeブラウザーはパッケージ版でのみ初期化します。Editor/PIEでは確認できません。
-ネットワークに接続したパッケージ版で確認してください。再生可否と画質候補は配信元にも依存します。
+公開ビルドはブラウザー再生をコンパイル対象から外します。Editor/PIE・パッケージ版とも
+YouTube再生はできず、モニターは景観として残ります。再生を有効にする起動引数はありません。
+オンライン・追加要素の実験用フラグでも再生は復活しません。過去のメディア検証は旧版の記録であり、
+現在の公開版が再生を提供するという証拠には使用できません。
 
 ## グラフィックス構成
 

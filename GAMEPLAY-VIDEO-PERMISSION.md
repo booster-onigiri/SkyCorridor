@@ -15,7 +15,7 @@ the game, charging for a hosted game service, selling extracted assets, or
 redistributing standalone music or asset packs for commercial use.
 
 **It does not grant rights to third-party videos, music, images or other material
-you display through the in-game YouTube/browser features.** Obtain any permission
+that you add to your recording or stream.** Obtain any permission
 required from the relevant rights holders for that material. Engine, SDK and
 library terms remain unchanged. Do not claim an official endorsement from the
 project or its contributors.
@@ -34,7 +34,7 @@ Sky Corridorプロジェクトは、**自分でプレイした「空の回廊 / 
 ゲームの販売、有料ゲームサービスの提供、抽出した素材の販売、音楽や素材集を単独で商用配布する
 ことまで認めるものではありません。
 
-**ゲーム内のYouTube・ブラウザー機能で表示した第三者の動画、音楽、画像などには、この許可は及びません。**
+**録画・配信に追加する第三者の動画、音楽、画像などには、この許可は及びません。**
 それらの使用に必要な許可は各権利者から取得してください。エンジン・SDK・ライブラリーの
 利用条件も変更しません。本プロジェクトや協力者による公式な推薦・公認を装わないでください。
 

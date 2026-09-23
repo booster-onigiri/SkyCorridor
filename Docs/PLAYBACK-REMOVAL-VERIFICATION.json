@@ -1,0 +1,1643 @@
+{
+  "version": "v0.1.3",
+  "date": "2026-09-23",
+  "status": "LOCAL_PACKAGED_CANDIDATE_VERIFIED",
+  "success": true,
+  "scope": "Exact Shipping executable, isolated saves, scripted production UI and inert-media calls, sampled process ancestry and cache locations, generated build definitions and package inventories. No whole-system network capture, physical input/listening, full manual playthrough, public-download certification.",
+  "executable_sha256": "721cbc6ac50db0eb35ea39e9c38714a3c231d32d9627c86b04733a3e43f5164e",
+  "total_runtime_checks": 362,
+  "cases": [
+    {
+      "name": "locale",
+      "success": true,
+      "check_count": 270,
+      "raw_audit_sha256": "724abc83bf51f7b9b94eca7e32c3c94c8fcc04a706136490c9abaa3085846104",
+      "exit_code": 0,
+      "timed_out": false,
+      "executable_sha256_unchanged": true,
+      "observed_browser_helper_count": 0,
+      "observed_monitor_browser_directory_count": 0,
+      "scope": "Production Slate text and disabled states, real Slate button Accept dispatch, language preference reload, map and all memory narratives, hotel/transit/fish labels. First-memory recording uses an isolated position/camera fixture; not a physical input or full gameplay test. No online or microphone is started.",
+      "checks": [
+        {
+          "check": "audit starts on normal public title",
+          "pass": true
+        },
+        {
+          "check": "Japanese title: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "Japanese title: expected display language",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese before title switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "title language button switches Japanese to English",
+          "pass": true
+        },
+        {
+          "check": "English title: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English title: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English title: disabled and marked in development: Find / Host a City",
+          "pass": true
+        },
+        {
+          "check": "English title: disabled and marked in development: World Eggs & Add-ons",
+          "pass": true
+        },
+        {
+          "check": "English title: movie sharing unavailable in public build",
+          "pass": true
+        },
+        {
+          "check": "English title: enabled local action: Graphics & Controls",
+          "pass": true
+        },
+        {
+          "check": "English title: enabled local action: Fish Journal / Go Fishing",
+          "pass": true
+        },
+        {
+          "check": "English title: enabled local action: Visit the Cinema",
+          "pass": true
+        },
+        {
+          "check": "English title: enabled local action: Visit the Upper-floor Suites",
+          "pass": true
+        },
+        {
+          "check": "English title: solo start enabled",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 9 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 8 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 13 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 14 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 7 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after title switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "English settings: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English settings: expected display language",
+          "pass": true
+        },
+        {
+          "check": "settings language button switches English to Japanese",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "Japanese after settings switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "Japanese settings: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "Japanese settings: expected display language",
+          "pass": true
+        },
+        {
+          "check": "settings language button switches Japanese to English",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen persistent tablet exists",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen idle and controls follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen title and unavailable label follow language switch",
+          "pass": true
+        },
+        {
+          "check": "English after settings switch: WorldScreen no search prompt or playback controls in public build",
+          "pass": true
+        },
+        {
+          "check": "invalid language leaves selection unchanged",
+          "pass": true
+        },
+        {
+          "check": "all 15 memory places loaded",
+          "pass": true
+        },
+        {
+          "check": "memory 0 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 0 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 0 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 0 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 0 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 0 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 1 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 1 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 1 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 1 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 1 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 1 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 2 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 2 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 2 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 2 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 2 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 2 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 3 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 3 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 3 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 3 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 3 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 3 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 4 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 4 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 4 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 4 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 4 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 4 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 5 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 5 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 5 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 5 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 5 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 5 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 6 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 6 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 6 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 6 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 6 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 6 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 7 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 7 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 7 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 7 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 7 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 7 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 8 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 8 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 8 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 8 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 8 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 8 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 9 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 9 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 9 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 9 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 9 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 9 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 10 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 10 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 10 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 10 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 10 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 10 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 11 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 11 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 11 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 11 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 11 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 11 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 12 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 12 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 12 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 12 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 12 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 12 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 13 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 13 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 13 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 13 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 13 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 13 route is English",
+          "pass": true
+        },
+        {
+          "check": "memory 14 field 0 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 14 field 1 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 14 field 2 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 14 field 3 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 14 field 4 has complete English text",
+          "pass": true
+        },
+        {
+          "check": "memory 14 route is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 0 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 0 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 1 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 1 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 2 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 2 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 3 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 3 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 4 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 4 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 5 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 5 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 6 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 6 description is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 7 name is English",
+          "pass": true
+        },
+        {
+          "check": "hotel 7 description is English",
+          "pass": true
+        },
+        {
+          "check": "rail line 0 English",
+          "pass": true
+        },
+        {
+          "check": "rail line 0 station 0 English",
+          "pass": true
+        },
+        {
+          "check": "rail line 0 station 1 English",
+          "pass": true
+        },
+        {
+          "check": "rail line 1 English",
+          "pass": true
+        },
+        {
+          "check": "rail line 1 station 0 English",
+          "pass": true
+        },
+        {
+          "check": "rail line 1 station 1 English",
+          "pass": true
+        },
+        {
+          "check": "rail line 1 station 2 English",
+          "pass": true
+        },
+        {
+          "check": "all loaded elevator destination labels translate",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: cloud-minnow",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: cloud-minnow",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: silver-bream",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: silver-bream",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: clock-koi",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: clock-koi",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: petal-fish",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: petal-fish",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: glass-trout",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: glass-trout",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: canal-perch",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: canal-perch",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: sunset-carp",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: sunset-carp",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: lantern-tetra",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: lantern-tetra",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: moon-angel",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: moon-angel",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: star-catfish",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: star-catfish",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: rain-ribbon",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: rain-ribbon",
+          "pass": true
+        },
+        {
+          "check": "fish name and description: aurora-fish",
+          "pass": true
+        },
+        {
+          "check": "fish habitat and hours: aurora-fish",
+          "pass": true
+        },
+        {
+          "check": "unknown text is preserved",
+          "pass": true
+        },
+        {
+          "check": "stable memory IDs are preserved",
+          "pass": true
+        },
+        {
+          "check": "English menu 16: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 16: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English menu 15: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 15: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English menu 2: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 2: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English menu 4: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 4: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English menu 5: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 5: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English menu 10: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 10: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English menu 12: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English menu 12: expected display language",
+          "pass": true
+        },
+        {
+          "check": "solo play starts in English",
+          "pass": true
+        },
+        {
+          "check": "phone production widget available",
+          "pass": true
+        },
+        {
+          "check": "English phone home: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English phone home: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English Friends icon remains disabled with badge",
+          "pass": true
+        },
+        {
+          "check": "English local phone app enabled: Observe",
+          "pass": true
+        },
+        {
+          "check": "English local phone app enabled: Map",
+          "pass": true
+        },
+        {
+          "check": "English local phone app enabled: Records",
+          "pass": true
+        },
+        {
+          "check": "English local phone app enabled: Camera",
+          "pass": true
+        },
+        {
+          "check": "English Video icon disabled with public unavailable badge",
+          "pass": true
+        },
+        {
+          "check": "English Video direct page is blocked",
+          "pass": true
+        },
+        {
+          "check": "English Friends direct page is blocked",
+          "pass": true
+        },
+        {
+          "check": "English phone map: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English phone map: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English phone record list: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English phone record list: expected display language",
+          "pass": true
+        },
+        {
+          "check": "English phone observe: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English phone observe: expected display language",
+          "pass": true
+        },
+        {
+          "check": "first memory observed through normal proximity and visibility logic",
+          "pass": true
+        },
+        {
+          "check": "first memory recorded and saved in isolated data",
+          "pass": true
+        },
+        {
+          "check": "real record card opens through Slate Accept handlers",
+          "pass": true
+        },
+        {
+          "check": "English memory detail: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "English memory detail: expected display language",
+          "pass": true
+        },
+        {
+          "check": "memory detail contains the complete English narrative",
+          "pass": true
+        },
+        {
+          "check": "switch back to Japanese during a session",
+          "pass": true
+        },
+        {
+          "check": "Japanese phone record detail: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "Japanese phone record detail: expected display language",
+          "pass": true
+        },
+        {
+          "check": "language changes retain collected memory",
+          "pass": true
+        },
+        {
+          "check": "return to English during a session",
+          "pass": true
+        },
+        {
+          "check": "English language preference saved to isolated data",
+          "pass": true
+        },
+        {
+          "check": "online city and voice remain inactive",
+          "pass": true
+        },
+        {
+          "check": "shared cinema remains inactive",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: title",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: settings",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: plaza-tablet",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: phone-home",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: phone-world",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: phone-map",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: phone-records",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: phone-observe",
+          "pass": true
+        },
+        {
+          "check": "rendered image exists: phone-memory-detail",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "persist",
+      "success": true,
+      "check_count": 18,
+      "raw_audit_sha256": "551c081fcfb134976e019082a8c1708ae3abcde702c9e63b30a5d49f5efab6cf",
+      "exit_code": 0,
+      "timed_out": false,
+      "executable_sha256_unchanged": true,
+      "observed_browser_helper_count": 0,
+      "observed_monitor_browser_directory_count": 0,
+      "scope": "Production Slate text and disabled states, real Slate button Accept dispatch, language preference reload, map and all memory narratives, hotel/transit/fish labels. First-memory recording uses an isolated position/camera fixture; not a physical input or full gameplay test. No online or microphone is started.",
+      "checks": [
+        {
+          "check": "English preference restored on fresh process",
+          "pass": true
+        },
+        {
+          "check": "persistence test starts on normal title",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: production widget has text",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: expected display language",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: disabled and marked in development: Find / Host a City",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: disabled and marked in development: World Eggs & Add-ons",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: movie sharing unavailable in public build",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: enabled local action: Graphics & Controls",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: enabled local action: Fish Journal / Go Fishing",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: enabled local action: Visit the Cinema",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: enabled local action: Visit the Upper-floor Suites",
+          "pass": true
+        },
+        {
+          "check": "persisted English title: solo start enabled",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 9 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 8 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 13 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 14 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "English direct menu 7 remains blocked",
+          "pass": true
+        },
+        {
+          "check": "persisted title screenshot exists",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "menus",
+      "success": true,
+      "check_count": 58,
+      "raw_audit_sha256": "f39c46d2c9bb895aa3105928808462455dbfe51686906ffd7e0ce31d064964f7",
+      "exit_code": 0,
+      "timed_out": false,
+      "executable_sha256_unchanged": true,
+      "observed_browser_helper_count": 0,
+      "observed_monitor_browser_directory_count": 0,
+      "scope": "Actual production Slate button trees, public-default menu and phone guards, solo UI preservation. No online service, microphone, workshop generation, or personal save is exercised.",
+      "checks": [
+        {
+          "check": "initial title permits solo play",
+          "pass": true
+        },
+        {
+          "check": "title: disabled with development badge: 街を探す・街を開く",
+          "pass": true
+        },
+        {
+          "check": "title: disabled with development badge: 世界の卵・追加要素",
+          "pass": true
+        },
+        {
+          "check": "title: movie sharing unavailable in public build",
+          "pass": true
+        },
+        {
+          "check": "title: working destination remains enabled: 画質と操作",
+          "pass": true
+        },
+        {
+          "check": "title: working destination remains enabled: 水辺の魚図鑑・釣りに行く",
+          "pass": true
+        },
+        {
+          "check": "title: working destination remains enabled: 映画館へ行く",
+          "pass": true
+        },
+        {
+          "check": "title: working destination remains enabled: 上層の客室を訪ねる",
+          "pass": true
+        },
+        {
+          "check": "title: solo start remains enabled",
+          "pass": true
+        },
+        {
+          "check": "title: direct blocked menu 9 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "title: direct blocked menu 8 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "title: direct blocked menu 13 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "title: direct blocked menu 14 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "title: direct blocked menu 7 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "settings opens normally",
+          "pass": true
+        },
+        {
+          "check": "blocked city preserves active settings",
+          "pass": true
+        },
+        {
+          "check": "normal solo start starts a session",
+          "pass": true
+        },
+        {
+          "check": "pause: disabled with development badge: 街を探す・街を開く",
+          "pass": true
+        },
+        {
+          "check": "pause: disabled with development badge: 世界の卵・追加要素",
+          "pass": true
+        },
+        {
+          "check": "pause: movie sharing unavailable in public build",
+          "pass": true
+        },
+        {
+          "check": "pause: working destination remains enabled: 画質と操作",
+          "pass": true
+        },
+        {
+          "check": "pause: working destination remains enabled: 水辺の魚図鑑・釣りに行く",
+          "pass": true
+        },
+        {
+          "check": "pause: working destination remains enabled: 映画館へ行く",
+          "pass": true
+        },
+        {
+          "check": "pause: working destination remains enabled: 上層の客室を訪ねる",
+          "pass": true
+        },
+        {
+          "check": "pause: solo start remains enabled",
+          "pass": true
+        },
+        {
+          "check": "pause: return to exploration remains enabled",
+          "pass": true
+        },
+        {
+          "check": "pause: photo mode remains enabled",
+          "pass": true
+        },
+        {
+          "check": "pause: direct blocked menu 9 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "pause: direct blocked menu 8 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "pause: direct blocked menu 13 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "pause: direct blocked menu 14 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "pause: direct blocked menu 7 preserves Main",
+          "pass": true
+        },
+        {
+          "check": "photo mode opens normally",
+          "pass": true
+        },
+        {
+          "check": "blocked menu 9 does not close active photo mode",
+          "pass": true
+        },
+        {
+          "check": "blocked menu 8 does not close active photo mode",
+          "pass": true
+        },
+        {
+          "check": "blocked menu 13 does not close active photo mode",
+          "pass": true
+        },
+        {
+          "check": "blocked menu 14 does not close active photo mode",
+          "pass": true
+        },
+        {
+          "check": "blocked menu 7 does not close active photo mode",
+          "pass": true
+        },
+        {
+          "check": "handheld terminal opens normally",
+          "pass": true
+        },
+        {
+          "check": "phone has its production Slate widget",
+          "pass": true
+        },
+        {
+          "check": "phone: Video disabled with public unavailable badge",
+          "pass": true
+        },
+        {
+          "check": "phone: Friends disabled with development badge",
+          "pass": true
+        },
+        {
+          "check": "phone: local app remains enabled: 観測",
+          "pass": true
+        },
+        {
+          "check": "phone: local app remains enabled: 地図",
+          "pass": true
+        },
+        {
+          "check": "phone: local app remains enabled: 記録",
+          "pass": true
+        },
+        {
+          "check": "phone: local app remains enabled: カメラ",
+          "pass": true
+        },
+        {
+          "check": "direct Friends page request preserves phone home",
+          "pass": true
+        },
+        {
+          "check": "direct phone invite request preserves terminal",
+          "pass": true
+        },
+        {
+          "check": "direct Video page request preserves phone home",
+          "pass": true
+        },
+        {
+          "check": "local phone page 1 still opens",
+          "pass": true
+        },
+        {
+          "check": "local phone page 2 still opens",
+          "pass": true
+        },
+        {
+          "check": "local phone page 5 still opens",
+          "pass": true
+        },
+        {
+          "check": "EOS authentication, voice, and public city remain inactive",
+          "pass": true
+        },
+        {
+          "check": "cinema sharing remains inactive without a host or invite",
+          "pass": true
+        },
+        {
+          "check": "rendered screenshot exists: title",
+          "pass": true
+        },
+        {
+          "check": "rendered screenshot exists: pause",
+          "pass": true
+        },
+        {
+          "check": "rendered screenshot exists: phone-screen",
+          "pass": true
+        },
+        {
+          "check": "rendered screenshot exists: phone",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "media",
+      "success": true,
+      "check_count": 16,
+      "raw_audit_sha256": "c6b281277696e54f45fe73ac258bbcd5b25624d4adc51905b46c54bf1cc9e08c",
+      "exit_code": 0,
+      "timed_out": false,
+      "executable_sha256_unchanged": true,
+      "observed_browser_helper_count": 0,
+      "observed_monitor_browser_directory_count": 0,
+      "scope": "Public-build browser removal: all three screens and handheld reject UI, direct search, resume, synchronization, and diagnostic playback. Does not measure jump height or physical audio output.",
+      "checks": [
+        {
+          "check": "direct monitor and phone video requests preserve existing UI",
+          "pass": true
+        },
+        {
+          "check": "WorldScreen: public controls cannot open or play",
+          "pass": true
+        },
+        {
+          "check": "WorldScreen: public controls cannot open or play",
+          "pass": true
+        },
+        {
+          "check": "WorldScreen: public controls cannot open or play",
+          "pass": true
+        },
+        {
+          "check": "inert media surface exists",
+          "pass": true
+        },
+        {
+          "check": "browser initialization rejected",
+          "pass": true
+        },
+        {
+          "check": "surface 0 remains inert after direct/resume/sync/audit requests",
+          "pass": true
+        },
+        {
+          "check": "inert media surface exists",
+          "pass": true
+        },
+        {
+          "check": "browser initialization rejected",
+          "pass": true
+        },
+        {
+          "check": "surface 1 remains inert after direct/resume/sync/audit requests",
+          "pass": true
+        },
+        {
+          "check": "inert media surface exists",
+          "pass": true
+        },
+        {
+          "check": "browser initialization rejected",
+          "pass": true
+        },
+        {
+          "check": "surface 2 remains inert after direct/resume/sync/audit requests",
+          "pass": true
+        },
+        {
+          "check": "inert media surface exists",
+          "pass": true
+        },
+        {
+          "check": "browser initialization rejected",
+          "pass": true
+        },
+        {
+          "check": "surface 3 remains inert after direct/resume/sync/audit requests",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "browser_exclusion": {
+    "success": true,
+    "receipt_sha256": "76ede14d3ebbaa44c4d1ee899386b532ab1e12a38b6ed27913f4edc7e8ea5b61",
+    "target_receipt_sha256": "66e3039432ceed457dcad4d70018e31653ca763982124a3d8877381f0d634d58",
+    "generated_definitions": [
+      {
+        "target": "UnrealGame",
+        "configuration": "Shipping",
+        "sha256": "fc7be9fe1b83345947e1c3872ec1fe189b1ad150d7fc64f9c9ab1a1c6df712f5",
+        "youtube_disabled": true,
+        "standard_tsr": true
+      },
+      {
+        "target": "UnrealEditor",
+        "configuration": "Development",
+        "sha256": "bfe0a7fcd917389417b6e1edfee589502c9fb11e8d6e7e91902769b3648b02db",
+        "youtube_disabled": true,
+        "standard_tsr": true
+      }
+    ],
+    "runtime_dependency_count": 997,
+    "browser_runtime_dependency_count": 0,
+    "layouts": [
+      {
+        "layout": "stage",
+        "file_count": 38,
+        "browser_runtime_file_count": 0,
+        "retained_notice_count": 0
+      },
+      {
+        "layout": "archive",
+        "file_count": 257,
+        "browser_runtime_file_count": 0,
+        "retained_notice_count": 1
+      }
+    ],
+    "initial_scan_correction": "The first filename scan also matched the retained CEF license notice. The corrected scan distinguishes legal notices from browser runtime files. The failed diagnostic is retained privately; no runtime file was accepted as a notice.",
+    "network_trace": "NOT_MEASURED"
+  },
+  "packaged_file_audit": {
+    "success": true,
+    "file_count": 257,
+    "receipt_sha256": "c08d729da4ff456a8dd8425fabdb04623c7a3d06220eba5bc5d6dc454192b1eb",
+    "scope": "Local packaged directory inventory/hash audit. Final Windows ZIP readback was verified separately."
+  },
+  "cooked_container_audit": {
+    "success": true,
+    "receipt_sha256": "439b72516da529ac607d6baa1d4d19ed022606c127d92f511015a5f78daf3987",
+    "approved_game_package_count": 495,
+    "observed_game_package_count": 495,
+    "unknown_game_package_count": 0,
+    "missing_game_package_count": 0,
+    "dev_validation_present": false,
+    "engine_package_count": 505,
+    "changed_game_chunk_hashes": [
+      "/Game/EndlessWorld/Materials/M_CloudLayers"
+    ],
+    "containers": [
+      {
+        "name": "EndlessWorld-Windows.pak",
+        "bytes": 13117723,
+        "sha256": "a7a8aec735644cd6ae58df699811b89eeed6f43bedf05b857958d904a0a0aaa6",
+        "stage_archive_match": true,
+        "unchanged_during_review": true,
+        "stage_still_matches": true
+      },
+      {
+        "name": "EndlessWorld-Windows.ucas",
+        "bytes": 1621226256,
+        "sha256": "3f98915fdd1073f98e1e57e99b058412ebd2a5c8c985cc22a7524fdaef26b19e",
+        "stage_archive_match": true,
+        "unchanged_during_review": true,
+        "stage_still_matches": true
+      },
+      {
+        "name": "EndlessWorld-Windows.utoc",
+        "bytes": 836336,
+        "sha256": "17ed679d2514f7a00d6d768ba17aaecedbf757f859a871d0bfb907f74377b0e8",
+        "stage_archive_match": true,
+        "unchanged_during_review": true,
+        "stage_still_matches": true
+      },
+      {
+        "name": "global.ucas",
+        "bytes": 3349408,
+        "sha256": "caf64676247206a8b02098ba9b14edcc4defa4fbf3a078c8c0bc69ac51cb820b",
+        "stage_archive_match": true,
+        "unchanged_during_review": true,
+        "stage_still_matches": true
+      },
+      {
+        "name": "global.utoc",
+        "bytes": 818,
+        "sha256": "45f2173674e998758ef1c8b76a5f4091a8a57279f9d42ab4b187b8e62be15d11",
+        "stage_archive_match": true,
+        "unchanged_during_review": true,
+        "stage_still_matches": true
+      }
+    ],
+    "scope": "Official UnrealPak/IoStore package and path allowlists plus stage/archive byte equality. Listing does not establish source-content identity, visual equivalence or gameplay."
+  },
+  "sampled_visual_review": {
+    "status": "PASS",
+    "reviewed_views": [
+      "Public title",
+      "Phone video unavailable screen",
+      "Plaza tablet"
+    ],
+    "findings": "Unavailable labels readable; playback controls absent in reviewed views.",
+    "scope": "Parent reviewer inspected captured images; no continuous physical-input or HDR-display acceptance."
+  },
+  "not_tested": [
+    "Public download",
+    "Full physical-input playthrough",
+    "Physical audio listening",
+    "HDR display output",
+    "External-network multiplayer",
+    "Whole-system network capture"
+  ],
+  "privacy": "Only sanitized check names, counts, hashes and verification scope are published. Local paths, process identifiers, device names and personal data are omitted.",
+  "windows_archive": {
+    "name": "SkyCorridor-v0.1.3-Windows.zip",
+    "bytes": 1752315384,
+    "sha256": "b5e7541c5427fe7032610264fd2a255082400477a62d9dfd67bd656e7e1640bb",
+    "member_readback_count": 257,
+    "member_readback_status": "PASS",
+    "scope": "Local archive creation and complete member readback; not public upload/download certification."
+  }
+}

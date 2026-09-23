@@ -8,6 +8,7 @@
 #include "EWExplorationPlan.h"
 #include "EWLift.h"
 #include "EWMediaScreen.h"
+#include "EWMediaPolicy.h"
 #include "EWCinemaSession.h"
 #include "EWSocialSession.h"
 #include "EWFishing.h"
@@ -311,10 +312,10 @@ TSharedRef<SWidget> SEWOverlay::MainPanel()
         [Button(EWL::Pick(TEXT("街の寄り道案内　屋上プール・図書館・美術館"), TEXT("Places to Explore — Pools, Library & Museum")),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Explore);})];
     Box->AddSlot().AutoHeight().Padding(0,0,0,8)[Button(EWL::Pick(TEXT("東の外縁へ　白塔の水都"), TEXT("Eastern Outskirts — White Tower Water City")),[this]{if(Owner.IsValid())Owner->VisitOuterWater();})];
     if(!GI->SocialSession || !GI->SocialSession->Active())Box->AddSlot().AutoHeight().Padding(0,0,0,8)
-        [Button(CinemaOnlineAvailable?EWL::Pick(TEXT("みんなで映画を見る"), TEXT("Watch Movies Together")):EWL::Pick(TEXT("みんなで映画を見る　開発中"), TEXT("Watch Movies Together — In development")),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Online);},CinemaOnlineAvailable)];
+        [Button(CinemaOnlineAvailable?EWL::Pick(TEXT("みんなで映画を見る"), TEXT("Watch Movies Together")):EWL::Pick(TEXT("みんなで映画を見る　公開版では利用不可"), TEXT("Watch Movies Together — Unavailable in public build")),[this]{if(Owner.IsValid())Owner->SetMenu(EEWMenu::Online);},CinemaOnlineAvailable)];
     Box->AddSlot().AutoHeight().Padding(0,0,0,8)
         [Button(EWL::Pick(TEXT("時計広場駅へ　水都・ホテル・シアター・空港"), TEXT("Clock Plaza Station — Water City & Upper Line")),[this]{if(Owner.IsValid())Owner->VisitSkyrail();})];
-    if(GI->SessionStarted() && GI->CinemaScreen && GI->CinemaScreen->ListenerInside())
+    if(EWMediaPolicy::PlaybackEnabled && GI->SessionStarted() && GI->CinemaScreen && GI->CinemaScreen->ListenerInside())
         Box->AddSlot().AutoHeight().Padding(0,0,0,8)
             [Button(EWL::Pick(TEXT("映画館の上映を選ぶ"), TEXT("Choose a film in the cinema")),[this]{if(Owner.IsValid() && Owner->CinemaScreen)Owner->CinemaScreen->OpenControls();})];
     if(GI->SessionStarted() && GI->MediaScreen && GI->MediaScreen->Available())

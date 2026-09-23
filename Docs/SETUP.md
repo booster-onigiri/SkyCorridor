@@ -28,13 +28,13 @@ than the packaged game.
 
 ## Restore the versioned assets
 
-Check out **v0.1.2** and use the asset archives pinned in its manifest.
-This English/Japanese interface update reuses the unchanged v0.1.0 development asset archives. The repository
+Check out **v0.1.3** and use the asset archives pinned in its manifest.
+This release discontinues public YouTube playback and reuses the unchanged v0.1.0 development asset archives. The repository
 contains original source and generator scripts. Large Content/SourceArt files are
 listed in the root `release-assets.json` and delivered through GitHub Releases.
 
 ```powershell
-git clone --branch v0.1.2 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.3 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```
@@ -76,9 +76,10 @@ Shipping output is under the selected output directory's `Archive`, with
 `PLAY.cmd`, player guides, notices and `Windows`. Launch `PLAY.cmd` there;
 the launcher sets the save location to its sibling `PlayData` folder.
 
-The YouTube browser is initialized only in the packaged game. Editor/PIE cannot
-validate that feature. Test browser playback using your packaged build and a
-network connection; playback and quality choices also depend on the provider.
+The public build compiles out browser playback. YouTube is unavailable in Editor/PIE
+and packaged builds; world screens remain scenery. No command-line flag restores playback,
+including the experimental online/workshop flags. Historical media tests describe older builds
+and must not be used as evidence that the current release offers playback.
 
 ## Graphics profiles
 

@@ -1,5 +1,6 @@
 #include "EWLocalizationAudit.h"
 #include "EWLocalization.h"
+#include "EWMediaPolicy.h"
 #include "EWGameInstance.h"
 #include "EWChunkManager.h"
 #include "EWCharacter.h"
@@ -140,12 +141,13 @@ FString AEWLocalizationAudit::Inspect(const TSharedRef<SWidget>& View,const FStr
 void AEWLocalizationAudit::InspectTitle(const FString& Surface)
 {
     auto* G=GetGameInstance<UEWGameInstance>();const auto View=Overlay(G);Inspect(View,Surface);
-    for(const TCHAR* Label:{TEXT("Find / Host a City"),TEXT("World Eggs & Add-ons"),TEXT("Watch Movies Together")})
+    for(const TCHAR* Label:{TEXT("Find / Host a City"),TEXT("World Eggs & Add-ons")})
         Check(Matches(View,Label,false,true),Surface+TEXT(": disabled and marked in development: ")+Label);
+    Check(Matches(View,TEXT("Watch Movies Together"),false) && WidgetText(View).Contains(TEXT("Unavailable in public build")),Surface+TEXT(": movie sharing unavailable in public build"));
     for(const TCHAR* Label:{TEXT("Graphics & Controls"),TEXT("Fish Journal / Go Fishing"),TEXT("Visit the Cinema"),TEXT("Visit the Upper-floor Suites")})
         Check(Matches(View,Label,true),Surface+TEXT(": enabled local action: ")+Label);
     Check(Matches(View,G->CanContinue()?TEXT("Continue"):TEXT("Begin exploring"),true),Surface+TEXT(": solo start enabled"));
-    for(EEWMenu Menu:{EEWMenu::City,EEWMenu::Online,EEWMenu::Workshop,EEWMenu::Chess})
+    for(EEWMenu Menu:{EEWMenu::City,EEWMenu::Online,EEWMenu::Workshop,EEWMenu::Chess,EEWMenu::Monitor})
     {
         G->SetMenu(Menu);
         Check(G->Menu()==EEWMenu::Main && !G->IsMenuAvailable(Menu),FString::Printf(TEXT("English direct menu %d remains blocked"),int32(Menu)));
@@ -164,8 +166,9 @@ void AEWLocalizationAudit::InspectMediaTablets(const FString& Surface,bool Engli
         auto O=MakeShared<FJsonObject>();O->SetStringField(TEXT("surface"),Name);O->SetStringField(TEXT("text"),Text);
         Surfaces.Add(MakeShared<FJsonValueObject>(O));
         Check(English?!EWL::HasJapanese(Text):EWL::HasJapanese(Text),Name+TEXT(" idle and controls follow language switch"));
-        Check(Text.Contains(Screen->Title()) && Text.Contains(English?TEXT("Choose a video to play"):TEXT("上映する動画を選ぶ")) &&
-            Text.Contains(English?TEXT("Search YouTube / Paste video URL"):TEXT("YouTubeで検索 / 動画URLを貼り付け")),Name+TEXT(" title, idle label and search hint update"));
+        Check(Text.Contains(Screen->Title()) && Text.Contains(English?TEXT("NO SCREENINGS"):TEXT("上映休止")) &&
+            Text.Contains(EWMediaPolicy::Unavailable()),Name+TEXT(" title and unavailable label follow language switch"));
+        Check(!Text.Contains(TEXT("YouTube")) && !Screen->CanControlPlayback(),Name+TEXT(" no search prompt or playback controls in public build"));
     }
 }
 void AEWLocalizationAudit::InspectContent()
@@ -285,8 +288,10 @@ void AEWLocalizationAudit::Tick(float Delta)
         G->SetMenu(EEWMenu::None);T->Open();T->ShowPage(0);const auto View=T->FocusWidget();
         Check(View.IsValid(),TEXT("phone production widget available"));if(!View){Finish(TEXT("phone widget missing"));return;}
         Inspect(View.ToSharedRef(),TEXT("English phone home"));Check(Matches(View.ToSharedRef(),TEXT("Friends"),false,true),TEXT("English Friends icon remains disabled with badge"));
-        for(const TCHAR* Label:{TEXT("Observe"),TEXT("Map"),TEXT("Records"),TEXT("YouTube"),TEXT("Camera")})
+        for(const TCHAR* Label:{TEXT("Observe"),TEXT("Map"),TEXT("Records"),TEXT("Camera")})
             Check(Matches(View.ToSharedRef(),Label,true),FString(TEXT("English local phone app enabled: "))+Label);
+        Check(Matches(View.ToSharedRef(),TEXT("Video"),false) && WidgetText(View.ToSharedRef()).Contains(TEXT("Unavailable in public build")),TEXT("English Video icon disabled with public unavailable badge"));
+        T->ShowPage(3);Check(T->PageIndex()==0,TEXT("English Video direct page is blocked"));
         T->ShowPage(4);Check(T->PageIndex()==0,TEXT("English Friends direct page is blocked"));
         Phase=4;Stage=Now;return;
     }

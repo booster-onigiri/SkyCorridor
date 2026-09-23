@@ -1,5 +1,6 @@
 #include "EWMediaTabletView.h"
 #include "EWLocalization.h"
+#include "EWMediaPolicy.h"
 #include "EWMediaScreen.h"
 #include "EWBrowserSurface.h"
 #include "EWGameInstance.h"
@@ -57,6 +58,16 @@ TSharedRef<SWidget> SEWMediaTabletView::Button(TAttribute<FText> Label,TFunction
 void SEWMediaTabletView::Rebuild()
 {
     if(!Owner.IsValid())return;
+    if(!EWMediaPolicy::PlaybackEnabled)
+    {
+        SearchInput.Reset();Query.Reset();const auto Screen=Owner;
+        ChildSlot[SNew(SBorder).BorderImage(&Glass).BorderBackgroundColor(Dark).Padding(44)
+            .HAlign(HAlign_Center).VAlign(VAlign_Center)[SNew(SVerticalBox)
+            +SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center)[BoundText(TAttribute<FText>::CreateLambda([Screen]{return FText::FromString(Screen.IsValid()?Screen->Title():FString());}),36)]
+            +SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0,32)[BoundText(Localized(TEXT("上映休止"),TEXT("NO SCREENINGS")),32)]
+            +SVerticalBox::Slot().AutoHeight()[BoundText(TAttribute<FText>::CreateLambda([]{return FText::FromString(EWMediaPolicy::Unavailable());}),26,Muted)]]];
+        return;
+    }
     const auto Screen=Owner;const auto Browser=Owner->Browser();
     auto Body=SNew(SVerticalBox);
     Body->AddSlot().AutoHeight().Padding(2,0,2,12)[SNew(SBox).HeightOverride(48)[SNew(SHorizontalBox)

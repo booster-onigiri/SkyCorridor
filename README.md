@@ -1,10 +1,21 @@
 # Sky Corridor / 空の回廊
 
-[日本語](README.ja.md) · **v0.1.4** · Free Windows exploration prototype · English / Japanese in-game interface
+[日本語の詳しい説明](README.ja.md) · **v0.1.4** · Free Windows exploration prototype / 無料のWindows探索ゲーム試作版 · English / 日本語
 
 An empty city floats above the clouds. Its water still flows and its trains still
 run. Walk its canals, ride to the upper districts, and use a small handheld device
 to find faint traces of the lives once lived here.
+
+誰もいなくなった天空都市。水は流れ、列車は今も走っています。
+水路を歩き、上層の街へ移動し、小さな端末でかつての暮らしの痕跡を集める探索ゲームです。
+Unreal Engineと、CodexのGPT-6 Astraによる制作支援を使って開発しています。
+ゲーム内表示は日本語・英語に対応し、非商用で改造・再配布できるソースも公開しています。
+
+- **遊ぶ：** [無料のWindows版をダウンロード](https://github.com/booster-onigiri/SkyCorridor/releases/tag/v0.1.4) → ZIP全体を展開 → **PLAY.cmd** で起動。[日本語の遊び方](Docs/PLAY-JA.md)
+- **開発する：** [日本語のセットアップ・ビルド手順](Docs/SETUP.ja.md)。Unreal Engine 5.8.2と、ソースに対応した素材アーカイブを使用します。
+
+公開版は一人用の探索が中心です。マルチプレイや世界の卵・追加要素は開発中で、標準では選択できません。
+ゲーム内のYouTube再生機能は公開版では中止しています。[詳しい仕様・利用条件はこちら](README.ja.md)。
 
 See the [verification results and remaining limits](Docs/VERIFICATION.md).
 

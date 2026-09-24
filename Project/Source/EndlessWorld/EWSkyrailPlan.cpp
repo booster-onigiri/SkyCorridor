@@ -86,9 +86,7 @@ void EWSkyrailPlan::AddInfrastructure(EW::ChunkRecipe& R)
     };
     auto FinishLift=[&](EW::LiftSpec L)
     {
-        double Bottom=DBL_MAX,Top=-DBL_MAX;for(const auto& S:L.Stops){Bottom=FMath::Min(Bottom,S.Height);Top=FMath::Max(Top,S.Height);}
-        const auto P=L.Cabin+Offset;
-        for(double Y:{-204.,204.})Part(TEXT("Wall"),FVector(P.X+170,P.Y+Y,(Bottom+Top+330)*.5),FVector(.13,.13,(Top+330-Bottom)/100.));
+        // Express lifts float freely; cabin collision and landing guards are independent.
         R.Lifts.Add(L);
     };
     for(int Line=0;Line<2;++Line)

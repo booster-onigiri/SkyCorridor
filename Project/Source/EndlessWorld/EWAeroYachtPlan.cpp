@@ -70,7 +70,7 @@ void EWAeroYachtPlan::AddInfrastructure(EW::ChunkRecipe& R)
     for(double X:{-1640.,1640.})for(double Y:{-1200.,1200.})Box(FVector(X,Y,255),FVector(20,20,255));
     for(double X:{-1200.,1200.})for(double Y:{-400.,400.})Box(FVector(X,Y,65),FVector(120,55,65));
     for(double X:{-170.,170.})Box(FVector(X,2600,56),FVector(6,800,56));
-    auto Stop=Lift->Stops.Last();const double Previous=Stop.Height,Dz=Origin.Z-Stop.Height;
+    auto Stop=Lift->Stops.Last();const double Dz=Origin.Z-Stop.Height;
     Stop.Height=Origin.Z;Stop.Entry.Z+=Dz;Stop.Landing.Z+=Dz;Stop.Threshold.Z+=Dz;
     Stop.Floor+=FMath::CeilToInt(Dz/450.);Stop.Label=TEXT("アウレリア空中港・最上階");Lift->Stops.Add(Stop);
     const FVector A=T.InverseTransformPosition(Stop.Entry);const FVector B=FVector::ZeroVector;const FVector V=B-A;
@@ -112,9 +112,6 @@ void EWAeroYachtPlan::AddInfrastructure(EW::ChunkRecipe& R)
             Box(Pos+FVector(0,0,60),FVector((S.Y-S.X)*.5,10,60),false,Yaw);
         }
     }
-    for(double Z=Previous;Z<Stop.Height;Z+=3600)
-        R.Parts.Add({TEXT("UrbanLiftMast"),FTransform(Lift->Rotation,FVector(Lift->Cabin.X,Lift->Cabin.Y,Z)),0});
-    // Slender structural columns connect the terminal to the old rooftop.
-    for(double X:{-1400.,1400.})for(double Y:{-1400.,1400.})
-        Part(TEXT("Wall"),FVector(X,Y,-(Origin.Z-Design().OldRoof)*.5),FVector(.6,.6,(Origin.Z-Design().OldRoof)/100.));
+    // Floating lift: no full-height guide masts through the city panorama.
+    // The skyport deck floats too; its walkable deck and guards remain unchanged.
 }

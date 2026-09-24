@@ -1,0 +1,442 @@
+{
+  "version": "v0.1.4",
+  "recorded_utc": "2026-09-24T02:45:34.098928+00:00",
+  "success": true,
+  "build": {
+    "engine": "5.8.2",
+    "editor_and_shipping": true,
+    "fresh_cook_and_package": true,
+    "build_log_sha256": "d1119e77354de6b880609a05f6883d8703a7e5bae88e60a129815156bad7345d"
+  },
+  "shipping_executable_sha256": "78190a14f1d4e7e07c0533e5f8bfdd12e0de626c29192519f4e287bbceef61f5",
+  "cloud_preparation": {
+    "success": true,
+    "created": [
+      "/Game/EndlessWorld/Materials/M_CloudLayers",
+      "/Game/EndlessWorld/Materials/MI_CloudSea"
+    ],
+    "existing_assets_modified": false,
+    "measured_parameters": {
+      "Layout_CloudGlobalScale": 14.0,
+      "Cloud_GlobalCoverage": -0.18000000715255737,
+      "Cloud_GlobalDensity": 0.014000000432133675
+    },
+    "recipe_parameters": {
+      "Layout_CloudGlobalScale": 14.0,
+      "Cloud_GlobalCoverage": -0.18,
+      "Cloud_GlobalDensity": 0.014
+    },
+    "recipe_match": true,
+    "source_archive_exclusions": [
+      "Project/Content/EndlessWorld/Materials/M_CloudLayers.uasset",
+      "Project/Content/EndlessWorld/Materials/MI_CloudSea.uasset"
+    ],
+    "engine_source_distributed": false
+  },
+  "build_script_sha256": "fe19616dbd72abf23af0908c59625c58e7bcd7451eac0c02a89d31ad1f6a99ad",
+  "superseded_candidate": {
+    "published": false,
+    "reason": "Initial Shipping-only candidate omitted engine-derived clouds (493 of 495 approved packages). Common preparation was added, both materials regenerated, and the complete package was rebuilt and retested."
+  },
+  "build_inputs": {
+    "matching_source_and_config_files": 200,
+    "unchanged_runtime_mechanics": [
+      {
+        "file": "Project/Source/EndlessWorld/EWLift.cpp",
+        "unchanged_from_previous_commit": true
+      },
+      {
+        "file": "Project/Source/EndlessWorld/EWLift.h",
+        "unchanged_from_previous_commit": true
+      },
+      {
+        "file": "Project/Source/EndlessWorld/EWCharacter.cpp",
+        "unchanged_from_previous_commit": true
+      },
+      {
+        "file": "Project/Source/EndlessWorld/EWCharacter.h",
+        "unchanged_from_previous_commit": true
+      },
+      {
+        "file": "Project/Source/EndlessWorld/EWChunkManager.cpp",
+        "unchanged_from_previous_commit": true
+      },
+      {
+        "file": "Project/Source/EndlessWorld/EWChunkManager.h",
+        "unchanged_from_previous_commit": true
+      }
+    ]
+  },
+  "runtime_checks": [
+    {
+      "mode": "locale",
+      "success": true,
+      "check_count": 270,
+      "seconds": 27.019206299999496,
+      "exit_code": 0,
+      "audit_sha256": "950ad655015cf07be1718f58386b6062f596c3d8d9a9d03467380457ab43ce78",
+      "browser_helper_count": 0,
+      "monitor_browser_directories": []
+    },
+    {
+      "mode": "persist",
+      "success": true,
+      "check_count": 18,
+      "seconds": 8.042393400000037,
+      "exit_code": 0,
+      "audit_sha256": "6ca90a509f07874e10ed6346c33a4f2e130f513343dc8d06905504653faa1e4b",
+      "browser_helper_count": 0,
+      "monitor_browser_directories": []
+    },
+    {
+      "mode": "menus",
+      "success": true,
+      "check_count": 58,
+      "seconds": 14.978094200000669,
+      "exit_code": 0,
+      "audit_sha256": "0cd6f82085aff45098bbd0968b2c7dcf0faddbac5bbedae400cff028f5e55303",
+      "browser_helper_count": 0,
+      "monitor_browser_directories": []
+    },
+    {
+      "mode": "media",
+      "success": true,
+      "check_count": 16,
+      "seconds": 7.037640599999577,
+      "exit_code": 0,
+      "audit_sha256": "e714117953c54b99ce43a72fa6e6f975a1faba4c6dd81dd027617b5586487ef9",
+      "browser_helper_count": 0,
+      "monitor_browser_directories": []
+    }
+  ],
+  "upper_rail": {
+    "success": true,
+    "checks": [
+      {
+        "pass": true,
+        "check": "clock plaza platform to transfer lift"
+      },
+      {
+        "pass": true,
+        "check": "call skyrail78/0/1"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail78/0/2"
+      },
+      {
+        "pass": true,
+        "check": "upper-line transfer platform"
+      },
+      {
+        "pass": true,
+        "check": "upper train 1 to 0"
+      },
+      {
+        "pass": true,
+        "check": "hotel platform to guest lift"
+      },
+      {
+        "pass": true,
+        "check": "call skyrail88/hotel/2"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail88/hotel/0"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 101"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-101"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 101"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 102"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-102"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 102"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 105"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-105"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 105"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 106"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-106"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 106"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail88/hotel/1"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 103"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-103"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 103"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 104"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-104"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 104"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 107"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-107"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 107"
+      },
+      {
+        "pass": true,
+        "check": "walk into suite 108"
+      },
+      {
+        "pass": true,
+        "check": "arrival-suite-108"
+      },
+      {
+        "pass": true,
+        "check": "walk back from suite 108"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail88/hotel/2"
+      },
+      {
+        "pass": true,
+        "check": "hotel return platform"
+      },
+      {
+        "pass": true,
+        "check": "upper train 0 to 1"
+      },
+      {
+        "pass": true,
+        "check": "theatre platform to express lift"
+      },
+      {
+        "pass": true,
+        "check": "call skyrail78/0/2"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail78/0/3"
+      },
+      {
+        "pass": true,
+        "check": "theatre entrance and front aisle"
+      },
+      {
+        "pass": true,
+        "check": "arrival-theatre"
+      },
+      {
+        "pass": true,
+        "check": "theatre front seat"
+      },
+      {
+        "pass": true,
+        "check": "theatre seating interaction"
+      },
+      {
+        "pass": true,
+        "check": "theatre return to station lift"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail78/0/2"
+      },
+      {
+        "pass": true,
+        "check": "theatre platform for airport"
+      },
+      {
+        "pass": true,
+        "check": "upper train 1 to 2"
+      },
+      {
+        "pass": true,
+        "check": "airport platform around the buffer stop"
+      },
+      {
+        "pass": true,
+        "check": "call skyrail88/airport/0"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail88/airport/1"
+      },
+      {
+        "pass": true,
+        "check": "skyport entrance and boarding hall"
+      },
+      {
+        "pass": true,
+        "check": "arrival-airport"
+      },
+      {
+        "pass": true,
+        "check": "airport return to station lift"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail88/airport/0"
+      },
+      {
+        "pass": true,
+        "check": "airport return platform"
+      },
+      {
+        "pass": true,
+        "check": "airport train door"
+      },
+      {
+        "pass": true,
+        "check": "upper train 2 to 1"
+      },
+      {
+        "pass": true,
+        "check": "return transfer lift"
+      },
+      {
+        "pass": true,
+        "check": "call skyrail78/0/2"
+      },
+      {
+        "pass": true,
+        "check": "ride skyrail78/0/1"
+      },
+      {
+        "pass": true,
+        "check": "return to clock plaza platform"
+      },
+      {
+        "pass": true,
+        "check": "upper-line-complete"
+      }
+    ],
+    "walked_metres": 1681.4766604503873,
+    "fall_recoveries": 0,
+    "seconds": 776.961071498692,
+    "origin_rebases": 0,
+    "method": "real CharacterMovement, trains, lift rides, eight hotel interiors, theatre seat and skyport; only initial station travel; isolated data and no sound"
+  },
+  "render_review": {
+    "scope": "Sampled hotel, Sky Theatre and skyport captures reviewed for rendered geometry and visible sky/clouds; not a full visual regression or HDR monitor test.",
+    "images": [
+      {
+        "file": "arrival-suite-101.png",
+        "sha256": "4ab0902aa1a9711499e97d8e570c7d49d13904898d939ae9b545ab3c3c1db34d"
+      },
+      {
+        "file": "arrival-theatre.png",
+        "sha256": "5e375d8fa18020592f02e0fda8dc1012579413d901fccaa2b5b1b34fbdf7cbb2"
+      },
+      {
+        "file": "arrival-airport.png",
+        "sha256": "e9b7a23c1d6363471fa2f7728d4f06eccf402f352c371afad1abde94352c613a"
+      }
+    ]
+  },
+  "browser_exclusion": {
+    "success": true,
+    "headers": [
+      {
+        "target": "UnrealGame",
+        "configuration": "Shipping",
+        "sha256": "fc7be9fe1b83345947e1c3872ec1fe189b1ad150d7fc64f9c9ab1a1c6df712f5",
+        "youtube_disabled": true,
+        "standard_tsr": true
+      },
+      {
+        "target": "UnrealEditor",
+        "configuration": "Development",
+        "sha256": "bfe0a7fcd917389417b6e1edfee589502c9fb11e8d6e7e91902769b3648b02db",
+        "youtube_disabled": true,
+        "standard_tsr": true
+      }
+    ],
+    "browser_dependencies": [],
+    "layouts": [
+      {
+        "layout": "stage",
+        "file_count": 38,
+        "browser_files": [],
+        "nonruntime_browser_notices": []
+      },
+      {
+        "layout": "archive",
+        "file_count": 257,
+        "browser_files": [],
+        "nonruntime_browser_notices": [
+          "Licenses/CEF3_Chromium_License.txt"
+        ]
+      }
+    ],
+    "scope": "Generated compile definitions, target receipt and browser runtime filenames. Not a whole-system network trace."
+  },
+  "windows_inventory": {
+    "success": true,
+    "files": 257,
+    "problems": []
+  },
+  "cooked_inventory": {
+    "success": true,
+    "game_package_count": 495,
+    "approved_package_count": 495,
+    "unknown_game_packages": [],
+    "missing_game_packages": [],
+    "dev_validation_present": false,
+    "changed_game_chunk_hashes": [
+      "/Game/EndlessWorld/Materials/M_CloudLayers"
+    ],
+    "scope": "Official UnrealPak and IoStore listings match all 495 approved game package names and the previous game-side PAK path allowlist. Stage/archive bytes agree and were unchanged. No DevValidation package was included. Chunk hash differences are recorded; listing alone does not prove source-content identity, gameplay, or visual equivalence."
+  },
+  "scope": "Fresh public-source build, isolated scripted runtime and bounded inventory checks. Not a new full manual playthrough, physical input/listening test, HDR monitor check, or whole-system network trace. Public-download and final archive verification are reported separately in release notes."
+}

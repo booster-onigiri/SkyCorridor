@@ -1,6 +1,6 @@
 # 空の回廊 / Sky Corridor
 
-[English](README.md) · **v0.1.3** · 無料のWindows探索ゲーム試作版 · ゲーム内表示は日本語・英語
+[English](README.md) · **v0.1.4** · 無料のWindows探索ゲーム試作版 · ゲーム内表示は日本語・英語
 
 誰もいなくなった天空都市。水は流れ、列車は今も走っています。
 水路を歩き、上層の街へ移動し、小さな端末でかつての暮らしの痕跡を集めます。
@@ -9,7 +9,7 @@
 
 ## 遊ぶ
 
-[Releases](https://github.com/booster-onigiri/SkyCorridor/releases) からWindows版を入手し、
+[v0.1.4のリリース](https://github.com/booster-onigiri/SkyCorridor/releases/tag/v0.1.4) からWindows版を入手し、
 ZIP全体を書き込みできるフォルダーへ展開してください。**Windows** フォルダーと並ぶ
 **PLAY.cmd** で起動します。Unreal Editorのインストールは不要です。
 保存先はランチャーの隣にある **PlayData** です。更新前にフォルダー全体をバックアップしてください。
@@ -25,7 +25,11 @@ ZIP全体を書き込みできるフォルダーへ展開してください。**
 「みんなで映画を見る」は **公開版では利用不可** と表示し、実験用フラグでも有効になりません。
 一人用の探索・釣り・撮影は引き続き利用できます。**公開版のゲーム内YouTube再生機能は中止しました。**
 広場・映画館・天空のモニターは景観として残り、オンライン動画は再生しません。
-以前の紹介映像に映るYouTube再生は過去の試作機能で、v0.1.3では利用できません。
+以前の紹介映像に映るYouTube再生は過去の試作機能で、v0.1.4では利用できません。
+
+v0.1.4では、景色を遮っていたエレベーターの長いガイド支柱と、空中港の装飾支柱4本を取り除きました。
+昇降機は浮遊する外観となり、既存の停止階・かご・扉・乗り場の床と安全柵を保持しています。
+[変更内容と検証範囲](Docs/LIFT-RODS-REMOVAL.md)も参照してください。
 
 ## ソースから作る
 
@@ -36,7 +40,7 @@ Blenderで制作した素材を再生成するときは **Blender 4.5** も使�
 `Tools/Audio/requirements.txt` の固定版NumPyを追加で使用します。
 
 ```powershell
-git clone --branch v0.1.3 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.4 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 .\build.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -Target Editor
@@ -46,7 +50,7 @@ cd SkyCorridor
 セットアップが `release-assets.json` に従ってダウンロードし、ハッシュを検証します。
 GitHubのソースZIPだけでは素材が揃いません。取得済みのアーカイブを使う場合は
 `-AssetsDirectory` を指定してください。素材はこのソースの `release-assets.json` が指定するものを使用します。
-v0.1.3は素材を変更していないため、v0.1.0の素材アーカイブを再利用します。
+v0.1.4は素材を変更していないため、v0.1.0の素材アーカイブを再利用します。
 [構築手順](Docs/SETUP.ja.md) と [素材の構成](Docs/ASSETS.md) に詳細があります。
 
 標準のグラフィックス構成は **baseline / TSR** です。NVIDIA SDKプラグインは任意導入で、

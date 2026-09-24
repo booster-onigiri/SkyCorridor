@@ -14,9 +14,16 @@ $buildLog=Join-Path $OutputRoot 'build.log'
 $priorDDC=[Environment]::GetEnvironmentVariable('UE-LocalDataCachePath','Process')
 try {
     [Environment]::SetEnvironmentVariable('UE-LocalDataCachePath',(Join-Path $repoRoot 'Local/DDC'),'Process')
-    if($Target -eq 'Editor'){
-        & (Join-Path $EngineRoot 'Engine/Build/BatchFiles/Build.bat') EndlessWorldEditor Win64 Development "-Project=$projectFile" -WaitMutex -NoUBA "-MaxParallelActions=$ParallelActions" *> $buildLog
-    }else{
+    # Shipping from a fresh checkout needs the same local engine-derived clouds
+    # as an Editor build. They are deliberately absent from source archives.
+    $editorBuildLog=if($Target -eq 'Editor'){$buildLog}else{Join-Path $OutputRoot 'prepare-editor-build.log'}
+    & (Join-Path $EngineRoot 'Engine/Build/BatchFiles/Build.bat') EndlessWorldEditor Win64 Development "-Project=$projectFile" -WaitMutex -NoUBA "-MaxParallelActions=$ParallelActions" *> $editorBuildLog
+    if($LASTEXITCODE -ne 0){throw "Editor build failed. Inspect $editorBuildLog"}
+    $prepareLog=Join-Path $OutputRoot 'prepare-content.log'
+    & (Join-Path $EngineRoot 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe') $projectFile -run=pythonscript "-script=$(Join-Path $repoRoot 'Tools/Art/ensure_cloud_materials.py')" -unattended -nosplash -nosound -nullrhi -nop4 -stdout -UTF8Output "-abslog=$prepareLog" *> (Join-Path $OutputRoot 'prepare-content-console.log')
+    if($LASTEXITCODE -ne 0){throw "Content preparation failed. Inspect $prepareLog"}
+    if(Select-String -LiteralPath $prepareLog,(Join-Path $OutputRoot 'prepare-content-console.log') -Pattern 'Failed to compile Material|doesn.t have a valid ShaderMap|Shadermap pointer is null|LogMaterial: Error' -Quiet){throw 'Generated material compilation failed.'}
+    if($Target -eq 'Shipping'){
         $arguments=@('BuildCookRun',"-project=$projectFile",'-noP4','-platform=Win64','-clientconfig=Shipping',
             '-build','-cook','-stage','-pak','-iostore','-compressed','-prereqs','-archive',
             "-CookOutputDir=$(Join-Path $OutputRoot 'Cook/Windows')", "-stagingdirectory=$(Join-Path $OutputRoot 'Stage')",
@@ -26,12 +33,6 @@ try {
         & (Join-Path $EngineRoot 'Engine/Build/BatchFiles/RunUAT.bat') @arguments *> $buildLog
     }
     if($LASTEXITCODE -ne 0){throw "Build failed. Inspect $buildLog"}
-    if($Target -eq 'Editor'){
-        $prepareLog=Join-Path $OutputRoot 'prepare-content.log'
-        & (Join-Path $EngineRoot 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe') $projectFile -run=pythonscript "-script=$(Join-Path $repoRoot 'Tools/Art/ensure_cloud_materials.py')" -unattended -nosplash -nosound -nullrhi -nop4 -stdout -UTF8Output "-abslog=$prepareLog" *> (Join-Path $OutputRoot 'prepare-content-console.log')
-        if($LASTEXITCODE -ne 0){throw "Content preparation failed. Inspect $prepareLog"}
-        if(Select-String -LiteralPath $prepareLog,(Join-Path $OutputRoot 'prepare-content-console.log') -Pattern 'Failed to compile Material|doesn.t have a valid ShaderMap|Shadermap pointer is null|LogMaterial: Error' -Quiet){throw 'Generated material compilation failed.'}
-    }
     if(Select-String -LiteralPath $buildLog -Pattern 'Failed to compile Material|doesn.t have a valid ShaderMap|Shadermap pointer is null' -Quiet){throw 'Material compilation failed.'}
     if($Target -eq 'Shipping'){
         $archiveRoot=Join-Path $OutputRoot 'Archive'

@@ -1,6 +1,6 @@
 # Sky Corridor / 空の回廊
 
-[日本語](README.ja.md) · **v0.1.3** · Free Windows exploration prototype · English / Japanese in-game interface
+[日本語](README.ja.md) · **v0.1.4** · Free Windows exploration prototype · English / Japanese in-game interface
 
 An empty city floats above the clouds. Its water still flows and its trains still
 run. Walk its canals, ride to the upper districts, and use a small handheld device
@@ -10,7 +10,7 @@ See the [verification results and remaining limits](Docs/VERIFICATION.md).
 
 ## Play
 
-Get the Windows package from [Releases](https://github.com/booster-onigiri/SkyCorridor/releases).
+Get the Windows package from [the v0.1.4 release](https://github.com/booster-onigiri/SkyCorridor/releases/tag/v0.1.4).
 Extract the entire archive into a writable folder and launch **PLAY.cmd** beside
 the **Windows** folder. The Unreal Editor is not required. Progress is stored in
 **PlayData** beside the launcher; back up that folder before updating.
@@ -26,7 +26,12 @@ are labelled **In development** / **開発中** and disabled by default, includi
 Shared cinema is marked **Unavailable in public build** / **公開版では利用不可** and cannot be enabled by experimental flags.
 Solo exploration, fishing and photography remain available. **In-game YouTube playback has been discontinued in the public release.**
 The plaza, cinema and sky screens remain part of the scenery; they do not play online videos.
-Older promotional footage may show the historical YouTube prototype, which is not available in v0.1.3.
+Older promotional footage may show the historical YouTube prototype, which is not available in v0.1.4.
+
+v0.1.4 clears the skyline by removing the elevators' full-height guide masts and
+the airship port's four decorative support columns. The lifts now float between
+their existing stops; cabins, doors, landing floors and safety guards are retained.
+See [the change details and verification scope](Docs/LIFT-RODS-REMOVAL.md).
 
 ## Build and explore the source
 
@@ -37,7 +42,7 @@ uses Python's standard library; procedural music regeneration additionally uses
 the pinned NumPy dependency in `Tools/Audio/requirements.txt`.
 
 ```powershell
-git clone --branch v0.1.3 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.4 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 .\build.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8" -Target Editor
@@ -46,7 +51,7 @@ cd SkyCorridor
 Large `Project/Content` and `Project/SourceArt` files are distributed as matching
 Release archives. Setup downloads and verifies them using `release-assets.json`;
 the GitHub source ZIP alone is not a complete project. Already-downloaded archives
-can be supplied with `-AssetsDirectory`. Use the assets pinned by this source tag's manifest. v0.1.3 reuses the unchanged v0.1.0 development assets. See [setup/build instructions](Docs/SETUP.md) and the [asset workflow](Docs/ASSETS.md).
+can be supplied with `-AssetsDirectory`. Use the assets pinned by this source tag's manifest. v0.1.4 reuses the unchanged v0.1.0 development assets. See [setup/build instructions](Docs/SETUP.md) and the [asset workflow](Docs/ASSETS.md).
 
 The default graphics profile is **baseline**, using Unreal's **TSR**. NVIDIA SDK
 plugins are optional and are not included in the public source checkout. Their

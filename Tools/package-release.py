@@ -46,7 +46,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--kind', choices=['assets', 'source', 'windows'], required=True)
     p.add_argument('--windows-root', type=Path)
-    p.add_argument('--version', default='v0.1.3')
+    p.add_argument('--version', default='v0.1.4')
     a = p.parse_args()
     if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', a.version):
         p.error('--version must be a release tag such as v0.1.2')

@@ -1,8 +1,87 @@
 # Verification / 検証状況
 
-Results as of **2026-09-23 JST**. The checks listed below passed within their stated scope. This does not mean every feature, device or service has passed.
+Results as of **2026-09-24 JST**. The checks below passed within their stated scope; untested areas are identified separately. This does not mean every feature, device or service has passed.
 
-**2026年9月23日時点の検証結果です。** 以下の確認は記載した範囲で通過しました。自動テストの合格を、すべての機能・機器・外部サービスの動作保証とはしていません。
+**2026年9月24日時点の検証結果です。** 以下の確認は記載した範囲で通過し、未検証事項は区別しています。自動テストの合格を、すべての機能・機器・外部サービスの動作保証とはしていません。
+
+## v0.1.4 floating elevators / 昇降機の長い支柱を除去
+
+The city-generation change removes full-height elevator guide masts and the airship
+port's four decorative support columns. Cabin movement, doors, stops, landing floors,
+guards and their collision definitions are retained. See [the change details](LIFT-RODS-REMOVAL.md).
+
+The corrected candidate passed Editor compilation, local engine-derived cloud
+material preparation, and a fresh Shipping build/cook/package. Its exact Shipping
+executable SHA-256 is `78190a14f1d4e7e07c0533e5f8bfdd12e0de626c29192519f4e287bbceef61f5`.
+The cloud-preparation report confirmed success and a matching generation recipe.
+
+The packaged upper-rail audit passed **62 scripted checks** with an isolated save,
+covering all eight hotel rooms, the Sky Theatre seat, the skyport and the return
+route. It recorded **1,681.48 m** walked and **zero fall recoveries** over a
+**776.96-second audit** (784.81 seconds including the runner). Hotel 101, theatre
+and airport captures were visually reviewed; clouds were present. This run recorded
+**zero world-origin rebases**, so it does not establish rebasing coverage.
+
+Browser exclusion checks passed. The local Windows-package inventory passed all
+**257 files**, and the cooked-container audit matched **495 of 495 approved game
+packages**, with no unknown, missing or DevValidation game package. The existing
+`M_CloudLayers` cooked chunk differs from the reference; package-list matching
+does not establish source-content identity or visual equivalence. The final
+Windows ZIP passed full member-hash readback; its identity is listed below.
+See [the sanitized receipt](FLOATING-LIFTS-VERIFICATION.json).
+
+The same Shipping executable also passed **270 localization**, **18 restart/language
+preference**, **58 public-menu**, and **16 playback-removal checks** with isolated
+saves. All four runs observed **zero browser helper processes** and no
+`MonitorBrowser` directories in the inspected locations. These checks retain the
+public release's disabled playback and experimental menus; they do not certify
+zero whole-system network activity.
+
+These are local scripted checks and sampled image review, not a manual full
+playthrough, physical listening/HDR verification, or a full network capture.
+Broader historical checks below were not rerun in full. Public-download verification
+is separate and is recorded in the release notes after publication.
+
+The first candidate compiled and packaged, but the cooked-content audit found
+**493 of 495 expected game packages**: engine-derived `M_CloudLayers` and
+`MI_CloudSea` were missing. **That candidate was rejected and was not published.**
+The initial failure evidence is retained. `build.ps1` now prepares those materials
+from the installed Unreal Engine for Shipping as well as Editor. The successful
+corrected candidate above was cooked and packaged again after that repair.
+
+都市を縦断する昇降機のガイド支柱と、空中港の装飾支柱4本を除去しました。
+かごの移動・扉・停止階・乗り場の床・安全柵とその当たり判定の定義は維持しています。
+
+修正後の候補版は、Editorのコンパイル、エンジン由来の雲マテリアルのローカル生成、
+Shippingのビルド・新規Cook・梱包を通過しました。雲の生成記録も成功と生成条件の一致を示しています。
+実行ファイルのSHA-256は上記のとおりです。
+
+配布版を使う上層線の検証では、独立したセーブで**自動62項目**が通過しました。
+ホテル全8室、天空シアターの座席、空中港、帰路を含み、移動距離**1,681.48 m**、
+**落下復旧0回**、検証内の時間**776.96秒**（実行手順を含めると784.81秒）でした。
+ホテル101号室・シアター・空中港の描画画像3枚を目視確認し、雲の表示も確認しました。
+今回は**原点移動0回**で、原点移動の検証まで通過したという意味ではありません。
+
+ブラウザー除外の検査、Windows配布物**257ファイル**の台帳検査、Cook済み資産**495/495件**の
+照合が通過しました。不明・欠落資産とDevValidationの混入はありません。
+既存の `M_CloudLayers` のCook済みチャンクは参照版と異なります。一覧照合は元素材の同一性や
+見た目の同等性まで保証しません。最終Windows ZIPは全メンバーのハッシュ読み戻しを通過し、
+識別情報を下表に記載しています。
+
+同じShipping実行版で、独立したセーブによる**言語表示270項目・再起動と言語保存18項目・
+公開メニュー58項目・再生無効化16項目**も通過しました。4回の実行で観測したブラウザー補助プロセスは
+**0件**、検査先の `MonitorBrowser` フォルダーも**0件**でした。公開版の再生機能と実験メニューの
+無効化を維持する検査であり、PC全体の通信が0であることの証明ではありません。
+
+今回の結果はローカルの自動操作と抽出画面の確認であり、
+手動の通しプレイ、実音声・HDR画面、全通信の取得とは別です。以下の旧版の広範な検証をすべて
+再実行したものではありません。公開先からの取得確認は、公開後のリリースノートへ別途記録します。
+
+最初の候補版はコンパイル・梱包まで完了しましたが、Cook済み資産の検査で期待する495件のうち
+**493件**しかなく、エンジン由来の `M_CloudLayers` と `MI_CloudSea` の欠落を検出しました。
+**この候補版は不合格として公開せず、初回の失敗記録を保持しています。** `build.ps1` を修正し、
+ShippingでもEditorと同じ雲マテリアル生成を導入済みUnreal Engineから行うようにしました。
+修正後に新たにCook・梱包した候補版が、上記の検証を通過しました。
 
 ## v0.1.3 playback removal / 公開版の動画再生中止
 
@@ -160,6 +239,7 @@ These identities apply to the locally checked final Windows archive and developm
 
 | Archive | Bytes | SHA-256 |
 | --- | ---: | --- |
+| `SkyCorridor-v0.1.4-Windows.zip` | 1,752,326,357 | `7c12bcbb5e9564c2d067c855e51f9dc69ad6dfef647fcadd0cf7a187722c5070` |
 | `SkyCorridor-v0.1.3-Windows.zip` | 1,752,315,384 | `b5e7541c5427fe7032610264fd2a255082400477a62d9dfd67bd656e7e1640bb` |
 | `SkyCorridor-v0.1.1-Windows.zip` | 1,901,370,009 | `00fd0934164e3e148c52096a86d62a32c5ac10d59d45faa18225cab89a06a2eb` |
 | `SkyCorridor-v0.1.0-Windows.zip` | 1,901,348,041 | `85b407efcd793299582686870e406edd231d7fc8fc0909e49048d67e2be92b0c` |

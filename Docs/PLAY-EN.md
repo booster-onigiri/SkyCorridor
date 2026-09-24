@@ -1,4 +1,4 @@
-# Sky Corridor / 空の回廊 — playing v0.1.3
+# Sky Corridor / 空の回廊 — playing v0.1.4
 
 A free Windows exploration prototype. Walk an empty city above the clouds and use
 a small handheld device to collect traces of its former residents. The in-game
@@ -57,10 +57,14 @@ Station elevators reach the upper line serving the Cloud Hotel (**雲上ホテ�
 Sky Theatre (**天空シアター**) and airship port (**空中港**). Libraries, a museum,
 cafés and rooftops can be entered. A full day takes 30 real minutes.
 
+v0.1.4 removes the elevators' full-height guide masts and the airship port's four
+decorative support columns. The floating cabins still serve the same stops, with
+their doors, landing floors and guards retained.
+
 **In-game YouTube playback has been discontinued in the public release.** The plaza,
 cinema and sky screens remain scenery and do not offer online-video playback or controls.
 The cinema and Sky Theatre can still be visited. Older promotional footage may show
-the historical playback prototype; it is not a feature of v0.1.3.
+the historical playback prototype; it is not a feature of v0.1.4.
 
 ## Prototype scope
 
@@ -68,7 +72,7 @@ Solo exploration is the main experience. Online rooms are experimental and disab
 by default. External-network multiplayer and physical spatial audio still have
 unverified conditions. Built-in menus, handheld apps, memories, destination names, transit guidance and fishing descriptions support English. Online experimental tools are outside the translation scope.
 
-For problem reports, include **v0.1.3**, Windows/GPU details, the location, action,
+For problem reports, include **v0.1.4**, Windows/GPU details, the location, action,
 and time of day. Remove personal information from logs; do not publish your entire
 save folder or account data.
 
@@ -79,7 +83,7 @@ External videos and music retain their owners' rights. Keep
 The included **END-USER-TERMS.md** contains the product's Unreal technology terms
 and Epic disclaimer.
 
-## Unavailable features in v0.1.3
+## Unavailable features in v0.1.4
 
 City browsing/hosting, world eggs/add-ons and the phone Friends app
 are marked **In development** (English) or **開発中** (Japanese) and cannot be selected in normal play.

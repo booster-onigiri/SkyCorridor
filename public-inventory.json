@@ -36,8 +36,8 @@
     },
     {
       "file": "build.ps1",
-      "sha256": "3f75c9654bb40bd9682848f56d3dfa33c584176c31eaff5781138676480ea185",
-      "bytes": 4322,
+      "sha256": "fe19616dbd72abf23af0908c59625c58e7bcd7451eac0c02a89d31ad1f6a99ad",
+      "bytes": 4612,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -52,7 +52,7 @@
     },
     {
       "file": "Docs/ARCHITECTURE.md",
-      "sha256": "6dfe89bd73ce1a3bafa8bf84ec71f39468c72b037c17e7050f042de94ecf937c",
+      "sha256": "9c4cbfc747f00c931f39f127601d29f4ab040d91c699d83fe1f33dc112f0a4cc",
       "bytes": 3190,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
@@ -60,16 +60,32 @@
     },
     {
       "file": "Docs/ASSETS.md",
-      "sha256": "5f34327b5cd2fc46b967a50bcec337cb9142b6af17750c8010628bad617be16b",
-      "bytes": 5200,
+      "sha256": "ba92a87baf06015e73d56ae0a344e76e00c8096d20308a756ebde9d1eacb8d52",
+      "bytes": 5996,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/END-USER-TERMS.md",
-      "sha256": "8dc445f3920eea22a54fa480c836f56ab1fb9646c6ac01517a9d2f1d7dcfe94f",
+      "sha256": "d0c66c5bf65ee987eaa6e75392e649123dbfd17c41649f93490587f32a7abadc",
       "bytes": 5167,
+      "delivery": "git",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "origin": "Reviewed exported project source or notices"
+    },
+    {
+      "file": "Docs/FLOATING-LIFTS-VERIFICATION.json",
+      "sha256": "666673036ba417b6272f57ccbc8bdde049c6fb8b308bfe502b0d29211e7af014",
+      "bytes": 12247,
+      "delivery": "git",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "origin": "Reviewed exported project source or notices"
+    },
+    {
+      "file": "Docs/LIFT-RODS-REMOVAL.md",
+      "sha256": "75372d177549bbe63365261e123012477485589638739ab0bfc1435158dc4064",
+      "bytes": 5000,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -100,7 +116,7 @@
     },
     {
       "file": "Docs/ONLINE.md",
-      "sha256": "40913b8852f0317cfa5b5c22ece99d5acb5e931d40ac5f6c4f4a42a8be43bdf7",
+      "sha256": "3f1523626cca77409aa5076d915ea25d19ebe88872df621ace7ba32759d4af46",
       "bytes": 5773,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
@@ -108,16 +124,16 @@
     },
     {
       "file": "Docs/PLAY-EN.md",
-      "sha256": "95fda552018b2a0c96c8b952952c8a15763cf07e5e72faea00cbc6fa1dd27c4d",
-      "bytes": 4889,
+      "sha256": "563541f7053da449570380f86152169d8dc20d7f9f02e7e6af23cdc7afb88260",
+      "bytes": 5102,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/PLAY-JA.md",
-      "sha256": "3b56262d592362a26697bed3a498c647b4499b83e8f5983042edf21707129f2a",
-      "bytes": 5212,
+      "sha256": "cb24c873d46482e8ded6e2be009d0cb941c541b0d6052209425785aabc4eab5c",
+      "bytes": 5477,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -140,31 +156,31 @@
     },
     {
       "file": "Docs/SETUP.ja.md",
-      "sha256": "ab6f25df819a90508ad69db8c4a2bc50ca083945c49291fd3022a888c67e9c32",
-      "bytes": 6123,
+      "sha256": "715bac713e46c78ad80b830e012c947748ebb82b4e52d14a80242b0155431268",
+      "bytes": 6794,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/SETUP.md",
-      "sha256": "58bb91827c3f62d8d009fa39a62ed221aa5c12b99d7e4115c8727a25d2956dcf",
-      "bytes": 5429,
+      "sha256": "5622c5e53d8849c2a954f5c8b74808c387269b39fc433664acb4b550e113fb41",
+      "bytes": 5991,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/VERIFICATION.md",
-      "sha256": "f0bb92e0860a2ca5597581d09ce21676efbd1968e35a17c3130501e92c22b631",
-      "bytes": 22334,
+      "sha256": "5156de874830b911d6544bd5705cbb16445da4f27f9b9fb23427894b41d89f03",
+      "bytes": 28522,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "Docs/YOUTUBE-JA.md",
-      "sha256": "3cf1b72d8c10d6a7206d2c5e623a789cd1c38e545373ecc89477c5a09e5390d9",
+      "sha256": "4961beb33f1cdd308225b99b0311b2b90ab57f455204e55a951d69f5bb9918e6",
       "bytes": 4679,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
@@ -340,7 +356,7 @@
     },
     {
       "file": "Project/Config/DefaultGame.ini",
-      "sha256": "7c0bcf6e3808007090148387b25e5a1265f3464a4b463763828c7c4e0a3c516a",
+      "sha256": "25f669ee2e4079dfdcbfba2b519c0d23677c13d29c4ae56e2baa4599274d9446",
       "bytes": 1404,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
@@ -5164,8 +5180,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWAeroYachtPlan.cpp",
-      "sha256": "9e020e88087fa2193ae8a31fe26228aa4c2440ca86ca5d616ba21af01ec29e8a",
-      "bytes": 7436,
+      "sha256": "619be391d98c6101ed590f15424ccd86aaa81a689380645cb5668fb7438943ce",
+      "bytes": 7151,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -5380,8 +5396,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWCityAccess.cpp",
-      "sha256": "5afde508775573c89f54cb97678ee39f34ed76d3479b890a5fba92092e42eb6e",
-      "bytes": 23543,
+      "sha256": "5e9ae5506b7a83fcc9128a61ed2b512df6dafd24e3b355fbfd82abd186666c5d",
+      "bytes": 23440,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -5676,8 +5692,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWHotelPlan.cpp",
-      "sha256": "4f55439513fa233e5f434e633c1cb273ccb865a501bc60e097ac1d3f74d16bcc",
-      "bytes": 7713,
+      "sha256": "4147d15979593be85b8c1907dfae7563f572f1c029a88bd32b8cd6ddb4c0a939",
+      "bytes": 7555,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -6276,8 +6292,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWSky92Plan.cpp",
-      "sha256": "1b200923d60494cc25a5b34b9d23121addcd667a1dea9c55c33a274c23249419",
-      "bytes": 7236,
+      "sha256": "9ec535a388ed758cfbc9febf367401bd7e1f41885194ae7bab64e047e95f5f3b",
+      "bytes": 6968,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -6324,8 +6340,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWSkyrailPlan.cpp",
-      "sha256": "9e6c18233503c6c360195ba6f49697469bcbed447d5787f6dd6314a137cf8171",
-      "bytes": 9479,
+      "sha256": "bcc59d4696d2bb0f59d565cebe006ed5c2ce1c1ceae0dd12fa4fd8f19b6bc671",
+      "bytes": 9259,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -6348,8 +6364,8 @@
     },
     {
       "file": "Project/Source/EndlessWorld/EWSkyTheatrePlan.cpp",
-      "sha256": "71e64b4ede7298440f99a3300f272bfe8a84f3628d6a24db13b065d52d5b21b6",
-      "bytes": 4365,
+      "sha256": "e67193cb43c01fbf9060013d7510ac25f3c9d0a1abdf6a79979216ac47d9c6b9",
+      "bytes": 4295,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -10492,16 +10508,16 @@
     },
     {
       "file": "README.ja.md",
-      "sha256": "29fedb9910bd0a02c2ce9824f2770b10b43097e7ba28aba9d74cff35f6d7d180",
-      "bytes": 5479,
+      "sha256": "22857e8f3a78f5f9f19cc0a7317a591c361a53001205c673044dbad38155c199",
+      "bytes": 5866,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
     },
     {
       "file": "README.md",
-      "sha256": "4d5dbc36c6864faaeaf7d75f142de7a2400d414e94be6132399757fea5d8a681",
-      "bytes": 4865,
+      "sha256": "f17d0a3af8285bb3625567f5cca1cf2f8b75b980274cf5de99b2d3f71977cd54",
+      "bytes": 5207,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",
       "origin": "Reviewed exported project source or notices"
@@ -12236,7 +12252,7 @@
     },
     {
       "file": "Tools/package-release.py",
-      "sha256": "a3c3dc42b8b8693cd222a3efa7bb8092d2a892b472b1176a9cf6195d0158df04",
+      "sha256": "b4e0cffd5290ae68ae7296ae074697b1fadb3ced52f6bb4ebc3ae91d78200fde",
       "bytes": 4728,
       "delivery": "git",
       "license": "PolyForm-Noncommercial-1.0.0",

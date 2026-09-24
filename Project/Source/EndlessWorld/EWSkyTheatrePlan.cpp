@@ -62,5 +62,5 @@ void EWSkyTheatrePlan::AddInfrastructure(EW::ChunkRecipe& R)
         if(Side==0)Cut(11700-T.GetLocation().X); // station express lift
         for(const auto S:Spans)Rail(S.X,S.Y);
     }
-    R.Parts.Add({TEXT("UrbanLiftMast"),FTransform(Lift->Rotation,FVector(Lift->Cabin.X,Lift->Cabin.Y,Previous.Height)),1});
+    // Keep the skyline open above the floating lift.
 }

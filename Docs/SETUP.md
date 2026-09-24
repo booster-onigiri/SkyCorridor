@@ -28,13 +28,14 @@ than the packaged game.
 
 ## Restore the versioned assets
 
-Check out **v0.1.3** and use the asset archives pinned in its manifest.
-This release discontinues public YouTube playback and reuses the unchanged v0.1.0 development asset archives. The repository
+Check out **v0.1.4** and use the asset archives pinned in its manifest.
+This release removes skyline-spanning elevator rods through the city-generation code.
+Public YouTube playback remains discontinued. It reuses the unchanged v0.1.0 development asset archives. The repository
 contains original source and generator scripts. Large Content/SourceArt files are
 listed in the root `release-assets.json` and delivered through GitHub Releases.
 
 ```powershell
-git clone --branch v0.1.3 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.4 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```
@@ -70,6 +71,13 @@ Each invocation creates a new `Local/Editor-<timestamp>` or
 `-OutputRoot` must not already exist. `-ParallelActions` defaults to 4 and can be
 lowered for a constrained development machine. The wrapper checks material/shader
 failure messages as well as the process exit code.
+
+Both targets first build the Editor module and run `Tools/Art/ensure_cloud_materials.py`
+with the installed Unreal Engine. This prepares the engine-derived cloud materials
+`M_CloudLayers` and `MI_CloudSea`, which are deliberately excluded from source and
+development-asset archives. Since v0.1.4, selecting `-Target Shipping` directly also
+performs this preparation before cooking; a prior Editor build is not required.
+The preparation logs are kept in the chosen output directory.
 
 After the Editor build, open `Project/EndlessWorld.uproject` using UE 5.8.2.
 Shipping output is under the selected output directory's `Archive`, with

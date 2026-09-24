@@ -60,9 +60,7 @@ void Lift(EW::ChunkRecipe& R,int I,FVector Cabin,double Bottom,double Top,FRotat
         EW::LiftStop S;S.Height=Floor?Top:Bottom;S.Floor=Floor;S.Label=Floor?Name(I):TEXT("水都・滝見の回廊");S.BoardingRotation=Q;
         const auto P=FVector(Cabin.X,Cabin.Y,S.Height);S.Landing=P+L.Outward*320;S.Entry=S.Landing;S.Threshold=P+L.Outward*190;L.Stops.Add(S);
     }
-    for(double Side:{-1.,1.})Part(R,TEXT("Wall"),FTransform(FQuat::Identity,FVector(Cabin.X+220,Cabin.Y+Side*205,(Bottom+Top+330)*.5)));
-    // Slender guide rails only; the landmark itself retains its floating silhouette.
-    for(int J=R.Parts.Num()-2;J<R.Parts.Num();++J)R.Parts[J].Transform.SetScale3D(FVector(.09,.09,(Top+330-Bottom)/100.));
+    // No skyline-spanning rods: only the floating cabin and its safe landings.
     R.Lifts.Add(L);
 }
 }

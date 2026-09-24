@@ -97,7 +97,6 @@ void EWHotelPlan::AddInfrastructure(EW::ChunkRecipe& R)
                 for(const auto S:Spans)Rail(S.X,S.Y);
             }
         }
-        // A mast extension has the same cross section as the existing lift.
-        R.Parts.Add({TEXT("UrbanLiftMast"),FTransform(Lift->Rotation,FVector(Lift->Cabin.X,Lift->Cabin.Y,Original.Height),FVector(1,1,.65)),1});
+        // The floating car needs no full-height mast extension.
     }
 }

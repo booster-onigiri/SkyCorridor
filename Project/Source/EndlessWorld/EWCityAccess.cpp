@@ -368,8 +368,7 @@ void BuildCityAccess(ChunkRecipe& R)
                 AddLanding(GroundZ,End,0,TEXT("出発広場　地上連絡路"));
         }
         Lift.Stops.Sort([](const LiftStop&A,const LiftStop&B){return A.Height<B.Height;});
-        for(double Z=Lift.Stops[0].Height;Z<Lift.Stops.Last().Height;Z+=3600)
-            PartAt(R,TEXT("UrbanLiftMast"),FTransform(Lift.Rotation,FVector(Lift.Cabin.X,Lift.Cabin.Y,Z)),1);
+        // Floating lifts keep the skyline clear; the car and landing guards remain.
         R.Lifts.Add(MoveTemp(Lift));
     }
     // Ground guards are cut against every completed street/spur, including

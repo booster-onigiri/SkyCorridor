@@ -1,6 +1,6 @@
 # Sky Corridor — end-user terms / 製品利用条件
 
-These terms accompany the **Sky Corridor / 空の回廊 v0.1.3** Windows product.
+These terms accompany the **Sky Corridor / 空の回廊 v0.1.4** Windows product.
 By using the product, you agree to the applicable terms below.
 
 ## English

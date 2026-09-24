@@ -25,13 +25,14 @@ SDKとMSVCは、リリースのUATビルドで実際に選択された版を再�
 
 ## 同じ版の素材を準備する
 
-**v0.1.3** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
-今回の更新は公開版のYouTube再生を中止し、変更のないv0.1.0の素材アーカイブを再利用します。
+**v0.1.4** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
+今回の更新は都市の生成コードから長い昇降機支柱を取り除く変更です。公開版のYouTube再生中止を維持し、
+変更のないv0.1.0の素材アーカイブを再利用します。
 リポジトリーには独自ソースと生成スクリプトを置き、大容量のContent/SourceArtは
 ルートの `release-assets.json` に記録してGitHub Releasesから配布します。
 
 ```powershell
-git clone --branch v0.1.3 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.4 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```
@@ -63,6 +64,12 @@ Releaseのアーカイブが未公開の場合は、準備済みのローカル�
 `-OutputRoot` を指定する場合、既にあるフォルダーは使用できません。
 `-ParallelActions` の標準値は4です。開発PCの余裕に応じて下げられます。
 処理の終了コードに加え、マテリアル・シェーダーの失敗メッセージも検査します。
+
+どちらのターゲットでも、最初にEditorモジュールをビルドし、導入済みのUnreal Engineで
+`Tools/Art/ensure_cloud_materials.py` を実行します。ソース・開発用素材アーカイブには含めない
+エンジン由来の雲マテリアル `M_CloudLayers` と `MI_CloudSea` を、ここで生成します。
+v0.1.4以降は `-Target Shipping` を直接指定してもCook前にこの処理を行うため、
+Editorビルドを手動で先に実行する必要はありません。準備処理のログも指定した出力先へ保存します。
 
 Editorのビルド後は、UE 5.8.2で `Project/EndlessWorld.uproject` を開きます。
 Shippingの出力先は作成したフォルダーの `Archive` で、`PLAY.cmd`、遊び方、権利表記、

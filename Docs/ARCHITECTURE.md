@@ -20,7 +20,7 @@ packaged `PLAY.cmd` chooses a save directory beside the launcher.
 selects the explicit `EWGraphicsProfile` used by the project descriptor and build
 rules. `build.ps1` drives Unreal's Editor or Shipping pipeline.
 
-In v0.1.4, the public build compiles out browser playback. World screens remain scenery,
+In v0.1.5, the public build compiles out browser playback. World screens remain scenery,
 and neither Editor nor Shipping offers YouTube playback. There is no command-line option
 to re-enable it. Historical source and diagnostics do not imply a supported feature.
 Online connections are gated by `-EWEnableExperimentalOnline`; the default public experience remains solo.
@@ -36,7 +36,7 @@ UnrealのC++コードを中心に、生成・取り込み素材とローカル�
 `EWGraphicsProfile` を設定します。`build.ps1` がEditor・Shippingの構築を実行します。
 
 パッケージ版の `PLAY.cmd` は隣の `PlayData` を保存先として指定します。
-v0.1.4の公開ビルドはブラウザー再生をコンパイル対象から外します。モニターは景観として残り、
+v0.1.5の公開ビルドはブラウザー再生をコンパイル対象から外します。モニターは景観として残り、
 Editor・ShippingのいずれもYouTube再生を提供しません。起動引数で再有効化する機能もありません。
 過去のソースや診断コードが残っていても、利用可能な機能であることを意味しません。
 オンラインは実験用フラグで明示的に有効化します。診断用コマンドレットの結果は、

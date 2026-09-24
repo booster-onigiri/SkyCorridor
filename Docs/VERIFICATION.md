@@ -1,8 +1,40 @@
 # Verification / 検証状況
 
-Results as of **2026-09-24 JST**. The checks below passed within their stated scope; untested areas are identified separately. This does not mean every feature, device or service has passed.
+Results as of **2026-09-25 JST**. Each result applies to its stated build and scope; failures, partial results and unmeasured areas are retained. This does not mean every feature, device or service has passed.
 
-**2026年9月24日時点の検証結果です。** 以下の確認は記載した範囲で通過し、未検証事項は区別しています。自動テストの合格を、すべての機能・機器・外部サービスの動作保証とはしていません。
+**2026年9月25日時点の検証結果です。** ビルドと確認範囲を区別し、失敗・部分的な結果・未測定事項も保持しています。すべての機能・機器・外部サービスの動作保証ではありません。
+
+## v0.1.5 NVIDIA Windows and native HDR / NVIDIA版と本作のHDR
+
+The Windows game uses runtimes from the official, unmodified UE 5.8 DLSS 4.5 plugin **8.7.2**. The public source retains **baseline / TSR** as its default and excludes vendor SDK source and plugin binaries. The existing v0.1.0 development asset archives remain pinned. Publication and public-host download checks are separate from the local build/runtime evidence below; use the release's `SHA256SUMS.txt` for the final distributable identities.
+
+Windowsゲーム版は公式の未変更UE 5.8用DLSS 4.5プラグイン **8.7.2** の実行部品を使用します。公開ソースの既定は **baseline / TSR** のままで、SDKソース・プラグインのバイナリーを含みません。開発素材は既存のv0.1.0を継続使用します。以下はローカルでの構築・実行記録です。公開操作・公開ホストからの取得確認とは別で、最終配布物の識別情報はリリースの `SHA256SUMS.txt` を参照してください。
+
+| Check / 確認 | Observed result and scope / 観測結果と範囲 |
+| --- | --- |
+| Shipping04 build / 構築 | Succeeded in 70.96 s; NVIDIA profile, HDR SDR-grade isolation and native display diagnostics. Reused Shipping01's cooked content; this was not a fresh cook. / 70.96秒で成功。NVIDIA構成、HDR時のSDR色調処理の分離・表示診断を含む。Shipping01のCook済み内容を再利用し、全素材の再Cookではない。 |
+| Graphics01, preceding build / 先行ビルド | 16 modes, 93 samples, **380 passed checks, 0 failed**. `PARTIAL_NOT_MEASURED`, not an overall pass. This full mode matrix predates Shipping04 and was not rerun in full on its executable. / 16モード・93標本、**380項目通過・失敗0**。全体は未測定を残す部分結果。この全組合せをShipping04で再実行したとは扱わない。 |
+| HDR04, Shipping04 / HDR設定 | Six cases, 18 samples; **433 passed, 0 failed, 3 unmeasured checks**. Settings and viewport metadata passed. / 6条件・18標本、**433項目通過・失敗0・未測定3**。設定とviewport情報を確認。 |
+| HDRResume04, Shipping04 / 再起動 | Three samples; **65 passed, 0 failed, 3 unmeasured checks**. HDR On, peak 1100 nit, brightness 100%, reference white 203 nit and UI 80 nit were read back after restart. / 3標本、**65項目通過・失敗0・未測定3**。再起動後のHDR入・ピーク1100 nit・明るさ100%・基準白203 nit・UI 80 nitを読み戻した。 |
+| Matched HDR images / 同条件のHDR画像 | Four 2560×1440 noon/EV 13.2 captures with native TSR and SR/FG/RR off. SDR grade weights distinguish fixed and legacy paths. Image-derived brightness is not photometry. / 同条件の4画像で修正版と旧経路の材質重みを区別。画像からの輝度換算は実機の測光ではない。[Details / 詳細](HDR-VALIDATION.md). |
+| User appearance report / 利用者の目視報告 | On 2026-09-25 the reporting user confirmed the issue was resolved and suggested RTX HDR may have contributed. This is a user observation; causality and compatibility across other displays are not established. / 9月25日に報告者が解消を確認。RTX HDRの影響かもしれないとの説明は本人の推測で、原因や他の表示機器での結果は未確定。 |
+
+Both HDR audits remain **`PARTIAL_NOT_MEASURED`** (`success=false` while observed settings checks passed). The unmeasured checks are `unreal_output_texture`, `native_dxgi` and `generated_inclusive_presentation_cap`. A separate native descriptor probe did observe SDR `B8G8R8A8_UNORM`, HDR `R10G10B10A2_UNORM`, and a 10-bit PQ desktop output. That does not supply the missing applied swapchain color space, presentation timing or displayed pixels. Physical luminance and automated HDR image-quality acceptance remain `NOT_MEASURED`.
+
+HDR両検証の全体状態は **`PARTIAL_NOT_MEASURED`** です。観測した設定検証は通過していますが、未測定項目があるため `success=false` を保持します。未測定の3項目は上記のキーです。別のプローブでSDR/HDRのDXGIバッファ形式と10-bit PQのデスクトップ出力は観測していますが、実際に適用された色空間・表示タイミング・画素の証明ではありません。物理輝度と自動によるHDR画質判定も未測定です。
+
+Graphics01's SDK-reported counters are not independently measured presented FPS. Native SR/RR evaluation counts, image quality, other GPU/driver combinations and external frame-rate/latency benchmarks remain unverified. Fixed and dynamic frame generation are capability-dependent; the game rendering limit does not guarantee a cap on generated-inclusive display FPS. The user's resolved report is not an all-hardware pass.
+
+Graphics01のSDKカウンターは独立計測の表示FPSではありません。SR/RRのネイティブ評価回数、画質、他GPU・ドライバー構成、外部計測のFPS・遅延は未確認です。固定・動的フレーム生成は対応環境で利用でき、ゲーム描画の上限値は生成フレーム込みの表示FPS上限を保証しません。
+
+The following case-relative receipt identifiers bind this summary without publishing local machine paths. / 以下は検証ケース内の識別子とSHA-256です。個人環境のパスや生データを公開する指定ではありません。
+
+| Receipt | SHA-256 |
+| --- | --- |
+| `Builds/Shipping04/result.json` | `bf40fd4d29e155d9126fe93665b34e40e92fa606cac40025fe326f1ebb02c60d` |
+| `Runtime/Graphics01/graphics.json` | `970d3b7b5a81cfa02279991773e2b7811d65f51af1a85b984942cda32281bece` |
+| `Runtime/HDR04/hdr.json` | `6b96f8842e88bbdfd9a03fd2685bf4c11e4d36f9ad7a2121e306f9170315072a` |
+| `Runtime/HDRResume04/hdr-resume.json` | `d68ef02bc44959be46fc8a28775e2c7377c801b604c99dc557f41f8077591f74` |
 
 ## v0.1.4 floating elevators / 昇降機の長い支柱を除去
 
@@ -216,12 +248,12 @@ below belong to **v0.1.0** and were not rerun in full for this menu-only update.
 ## Known limits and not tested / 確認範囲の限界・未確認事項
 
 - **Manual Editor operation and full procedural-city editing: NOT TESTED.** The saved-building render above is narrower in scope. / **手動Editor操作・都市全体の編集：未確認。** 上記の保存済み建物の描画確認とは範囲が異なります。
-- **NOT TESTED:** complete playthrough with physical keyboard/mouse/controller input; listening on speakers/headphones; HDR display output; other GPU configurations; frame-rate/latency benchmarks; live online rooms and voice over external networks.
-  **未確認：** 物理的なキーボード・マウス・コントローラーによる通しプレイ、実機での試聴、HDR画面出力、他GPU構成、FPS・遅延測定、実サービスでのオンライン参加・外部回線の音声通信。
+- **NOT TESTED:** complete playthrough with physical keyboard/mouse/controller input; listening on speakers/headphones; physical HDR photometry and cross-display validation; other GPU configurations; independent frame-rate/latency benchmarks; live online rooms and voice over external networks. The v0.1.5 user's HDR appearance report is recorded separately above.
+  **未確認：** 物理的なキーボード・マウス・コントローラーによる通しプレイ、実機での試聴、HDR測光・他の表示機器での検証、他GPU構成、独立したFPS・遅延測定、実サービスでのオンライン参加・外部回線の音声通信。v0.1.5の利用者によるHDR目視報告は上記に分けて記載しています。
 
-The public default is **baseline / TSR**, with experimental online rooms disabled. No minimum or recommended hardware specification has been established.
+The public **source** defaults to **baseline / TSR**; the v0.1.5 Windows package includes NVIDIA runtimes and also offers TSR. Experimental online rooms remain disabled by default. No minimum or recommended hardware specification has been established.
 
-公開版の標準構成は **baseline / TSR** で、実験的なオンラインルームは初期状態で無効です。最低・推奨ハードウェア要件は未確定です。
+公開**ソース**の標準構成は **baseline / TSR** です。v0.1.5のWindows配布物はNVIDIA実行部品を含み、TSRも利用できます。実験的なオンラインルームは初期状態で無効です。最低・推奨ハードウェア要件は未確定です。
 
 The original failed test receipts are retained. The exploration-resume runner initially auto-started and overwrote its own isolated position fixture before Continue; the corrected title/Continue run passed. The first airship runner omitted the original test's forced-rebasing prerequisite; the corrected full-flight and restart cases also passed. These are test-runner changes, with no change to the game save format or normal launcher behavior.
 
@@ -235,7 +267,7 @@ This identifies the test machine only. It is not a minimum specification or a pe
 
 ## Verified archive identities / 照合した配布ファイル
 
-These identities apply to the locally checked final Windows archive and development assets. See the release's `SHA256SUMS.txt` for the source archive and other published files. This report does not certify a download from the public host. / 以下はローカルで照合した最終Windows版と開発用素材です。ソースZIPとその他の配布物はリリースの`SHA256SUMS.txt`を参照してください。この報告は公開ホストからのダウンロード検証を意味しません。
+These historical identities apply to the named, locally checked archives. The v0.1.0 development assets are still used by v0.1.5. See the v0.1.5 release's `SHA256SUMS.txt` for its final Windows/source archives; no earlier ZIP hash identifies the new executable. This report does not certify a download from the public host. / 以下は各版のローカル照合済み履歴です。v0.1.0開発素材はv0.1.5でも使用します。v0.1.5の最終Windows・ソースZIPは当該リリースの `SHA256SUMS.txt` を参照してください。過去のZIPハッシュを新版の識別情報には使いません。この報告は公開ホストからの取得検証ではありません。
 
 | Archive | Bytes | SHA-256 |
 | --- | ---: | --- |

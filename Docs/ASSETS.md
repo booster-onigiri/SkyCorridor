@@ -5,7 +5,8 @@
 Git contains the editable project source, original generators and import helpers.
 Large Unreal **Content** and **SourceArt** files are carried in separately versioned
 Release archives. `release-assets.json` is the authoritative file/hash inventory for
-the selected tag. `setup.ps1` verifies both archives and extracted files; it preserves
+the selected tag. v0.1.5 reuses the unchanged v0.1.0 development asset archives.
+`setup.ps1` verifies both archives and extracted files; it preserves
 an existing file if its content differs.
 
 | Location | Purpose |
@@ -24,8 +25,8 @@ an edited source file simply to make its hash match the release.
 
 Engine-derived cloud materials `M_CloudLayers` and `MI_CloudSea` are excluded from
 the source and development-asset archives. `build.ps1` prepares them locally from
-the installed Unreal Engine for both Editor and Shipping targets. The v0.1.4
-build workflow includes this step even when Shipping is the first target selected.
+the installed Unreal Engine for both Editor and Shipping targets. Since v0.1.4,
+the build workflow includes this step even when Shipping is the first target selected.
 
 The texture generators `build_craft95_paving.py` and `build_quality93_textures.py`
 also import NumPy and Pillow (`PIL`); install those separately before using these
@@ -63,7 +64,7 @@ licenses remain separate.
 
 Gitにはプロジェクトのソースと独自の生成・取り込みスクリプトを置きます。
 大容量の **Content** と **SourceArt** は、そのソースのマニフェストが指定するReleaseアーカイブから復元します。
-v0.1.4は変更のないv0.1.0の素材を使用します。長い昇降機支柱の除去は生成コードの変更であり、素材の再取得は不要です。
+v0.1.5は変更のないv0.1.0の素材を使用します。今回の描画修正に伴う開発用素材の再取得は不要です。
 対象ファイルとハッシュは `release-assets.json` に記録され、`setup.ps1` が検証します。
 内容の異なる既存ファイルは上書きしません。
 
@@ -73,7 +74,7 @@ v0.1.4は変更のないv0.1.0の素材を使用します。長い昇降機支�
 
 エンジン由来の雲マテリアル `M_CloudLayers` と `MI_CloudSea` は、ソース・開発用素材の
 アーカイブに含めません。`build.ps1` が導入済みUnreal Engineを使ってローカルで生成します。
-v0.1.4ではEditor・Shippingの両方に準備処理を適用し、初回にShippingを選んでも雲の生成を行います。
+v0.1.4以降はEditor・Shippingの両方に準備処理を適用し、初回にShippingを選んでも雲の生成を行います。
 
 `build_craft95_paving.py` と `build_quality93_textures.py` による任意のテクスチャ再生成には、
 NumPy と Pillow（`PIL`）も別途必要です。完成済みアーカイブを復元するセットアップは

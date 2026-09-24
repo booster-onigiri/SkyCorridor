@@ -25,14 +25,15 @@ SDKとMSVCは、リリースのUATビルドで実際に選択された版を再�
 
 ## 同じ版の素材を準備する
 
-**v0.1.4** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
-今回の更新は都市の生成コードから長い昇降機支柱を取り除く変更です。公開版のYouTube再生中止を維持し、
+**v0.1.5** のソースと、その `release-assets.json` が指定する素材を組み合わせます。
+今回はNVIDIA対応Windows版と、本作のHDR設定・SDR専用色調処理の修正を含みます。
+公開ソースの既定はTSRのままで、開発用NVIDIA SDKは[任意導入](NVIDIA.md)です。公開版のYouTube再生中止を維持し、
 変更のないv0.1.0の素材アーカイブを再利用します。
 リポジトリーには独自ソースと生成スクリプトを置き、大容量のContent/SourceArtは
 ルートの `release-assets.json` に記録してGitHub Releasesから配布します。
 
 ```powershell
-git clone --branch v0.1.4 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.5 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```

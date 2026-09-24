@@ -17,10 +17,16 @@ private:
     FString ReportPath, StreamPath;
     TArray<TSharedPtr<class FJsonValue>> Samples, Checks;
     TMap<FString, int32> OriginalDenoisers;
+    TMap<FString, double> OriginalHDRPolicy;
+    TSet<FString> Unmeasured;
     double Started = 0, NextAction = 0, StageStarted = 0;
     int32 Phase = 0, Index = 0, Collected = 0;
     bool bFinished = false, bResumeOnly = false, bHDRSupported = false, bRRSupported = false;
-    double BaselineEvaluations = 0, BaselinePresents = 0;
+    bool bHDROnly = false, bBaselineRRAvailable = false;
+    bool bDXGIObserved = false, bRRNativeObserved = false, bTextureObserved = false;
+    double BaselineEvaluations = 0;
     bool Check(bool Passed, const FString& Name);
+    void Missing(const FString& Name, const FString& Reason);
+    bool CheckHDRReadbacks(const FMode& Mode, const TSharedRef<class FJsonObject>& Evidence, bool TextureSample);
     void Finish(const FString& Failure = FString());
 };

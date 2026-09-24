@@ -1,4 +1,5 @@
 #include "EWGameInstance.h"
+#include "HDRHelper.h"
 #include "EWLocalization.h"
 #include "EWMediaPolicy.h"
 #include "EWTerminal.h"
@@ -570,6 +571,7 @@ void UEWGameInstance::UpdatePresentationState()
     if (bWorldEnding || FParse::Param(FCommandLine::Get(),TEXT("EWCinematic95"))) NativeHUD.Hide(); else NativeHUD.Update(*this);
     Graphics.UpdateRuntime(CurrentMenu != EEWMenu::None, !bSessionStarted || !Manager || Manager->IsTravelling() || bWorldEnding,
         Foreground, NativeHUD.IsVisible());
+    if (bSoftStyleOutputHDR != IsHDREnabled()) ApplySoftStyleToOutput();
     if (Graphics.ConsumeOutputStatusChange() && CurrentMenu == EEWMenu::Settings)
         if (auto* PC = Cast<AEWPlayerController>(UGameplayStatics::GetPlayerController(this, 0))) PC->RefreshInterface();
 }
@@ -805,15 +807,27 @@ bool UEWGameInstance::CanContinue() const { EW::PlaceBookmark P; return Saves &&
 void UEWGameInstance::SetSoftStyle(bool Value)
 {
     bSoftStyle=Value;
+    ApplySoftStyleToOutput();
+    GConfig->SetBool(TEXT("EndlessWorld"),TEXT("SoftStyle"),Value,GGameUserSettingsIni);
+    GConfig->Flush(false,GGameUserSettingsIni); RefreshUI();
+}
+void UEWGameInstance::ApplySoftStyleToOutput()
+{
+    bSoftStyleOutputHDR=IsHDREnabled();
+    // This authored blendable grades SDR after the tonemapper. Its RGB math
+    // must not operate on PQ-encoded Rec.2020 output. Retain the user's style
+    // preference so returning to SDR restores it without rewriting the save.
+    bool Apply=bSoftStyle && !bSoftStyleOutputHDR;
+    // Explicit comparison fixture only; never used by normal play.
+    if (FParse::Param(FCommandLine::Get(),TEXT("EWArtStudy")) &&
+        FParse::Param(FCommandLine::Get(),TEXT("EWArtLegacyHDRGrade"))) Apply=bSoftStyle;
     auto* Material=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/EndlessWorld/Materials/M_IllustratedLight.M_IllustratedLight"));
     if (Material && GetWorld())
     {
         TArray<AActor*> Volumes; UGameplayStatics::GetAllActorsOfClass(this,APostProcessVolume::StaticClass(),Volumes);
         for (auto* Actor:Volumes) if (auto* Volume=Cast<APostProcessVolume>(Actor))
-            Volume->AddOrUpdateBlendable(Material,Value?1.f:0.f);
+            Volume->AddOrUpdateBlendable(Material,Apply?1.f:0.f);
     }
-    GConfig->SetBool(TEXT("EndlessWorld"),TEXT("SoftStyle"),Value,GGameUserSettingsIni);
-    GConfig->Flush(false,GGameUserSettingsIni); RefreshUI();
 }
 bool UEWGameInstance::CanPlay() const { return Manager && !Manager->IsTravelling(); }
 TArray<EW::PlaceBookmark> UEWGameInstance::JournalPage(int32 Page) const

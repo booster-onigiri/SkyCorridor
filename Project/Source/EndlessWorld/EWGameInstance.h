@@ -142,6 +142,8 @@ private:
     EEWMenu CurrentMenu = EEWMenu::Main;
     bool bSessionStarted = false, bHighQuality = true, bDiscardExit = false;
     bool bSoftStyle = true;
+    bool bSoftStyleOutputHDR = false;
+    void ApplySoftStyleToOutput();
     FString Message;
     FString InputEvidencePath;
     double MessageUntil = 0, LastSaveTime = 0;

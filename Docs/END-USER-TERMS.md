@@ -1,6 +1,6 @@
 # Sky Corridor — end-user terms / 製品利用条件
 
-These terms accompany the **Sky Corridor / 空の回廊 v0.1.4** Windows product.
+These terms accompany the **Sky Corridor / 空の回廊 v0.1.5** Windows product.
 By using the product, you agree to the applicable terms below.
 
 ## English
@@ -38,7 +38,27 @@ replace or restrict rights granted by those third-party licenses. These product
 terms do not grant an account, hosted service, or rights in external YouTube videos
 or other third-party media.
 
+**NVIDIA runtime components (NVIDIA build).** The included DLSS, NGX, Streamline
+and Reflex components remain subject to the NVIDIA terms supplied in
+`Licenses/NVIDIA-RTX-SDK-LICENSE.txt` and `Licenses/NVIDIA-RTX-SDK-EULA.pdf`.
+Permission is limited to their object-code use as an integral part of this
+application on compatible NVIDIA hardware. No permission is granted to extract,
+redistribute or sublicense the SDK as a standalone product, modify proprietary
+SDK components, remove their notices, or reverse engineer, decompile or
+disassemble them except where applicable law expressly permits it. The project's
+PolyForm and CC BY-NC licenses do not apply to NVIDIA components. The NVIDIA
+ownership, restrictions, warranty exclusions and liability limitations in the
+included license remain applicable; no additional rights are granted here.
+
 ## 日本語
+
+**NVIDIA実行部品（NVIDIA構成）。** 同梱するDLSS・NGX・Streamline・Reflexには
+`Licenses/NVIDIA-RTX-SDK-LICENSE.txt` と `Licenses/NVIDIA-RTX-SDK-EULA.pdf` の条件が適用されます。
+本アプリケーションに組み込まれたオブジェクトコードを対応NVIDIA環境で利用する範囲の許諾です。
+SDK単独での取り出し・再配布・再許諾、非公開SDK部品の改変、権利表示の除去、法令が明示的に
+認める場合を除くリバースエンジニアリング・逆コンパイル・逆アセンブルは許諾しません。
+本作独自のPolyForm・CC BY-NCはNVIDIA部品に適用されません。同梱ライセンスの権利帰属・制限・
+無保証・責任制限を保持し、本書によって追加の権利を与えるものではありません。
 
 **本作独自の著作物。** 独自コードは同梱のPolyForm Noncommercial 1.0.0（`LICENSE`）、
 独自素材はCC BY-NC 4.0（`ASSET-LICENSE`）の条件で提供します。

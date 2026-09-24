@@ -1,8 +1,24 @@
-# Sky Corridor / 空の回廊 — playing v0.1.4
+# Sky Corridor / 空の回廊 — playing v0.1.5, NVIDIA build
 
 A free Windows exploration prototype. Walk an empty city above the clouds and use
 a small handheld device to collect traces of its former residents. The in-game
 interface supports English and Japanese.
+
+This build includes runtimes from the official UE 5.8 DLSS 4.5 plugin **8.7.2**. On supported hardware, select
+**DLSS Quality** or another mode in **Graphics & Controls**. Unsupported features
+remain unavailable; TSR is also available. Frame generation, ray reconstruction
+and Reflex report their support separately. Dynamic frame generation follows the
+display refresh rate automatically; it does not guarantee the selected FPS cap.
+
+HDR requires a compatible display and Windows HDR enabled. Match **Display peak
+brightness** to your display and adjust **HDR brightness** to control reference
+white. For the game's native HDR, keep **Windows HDR On**, **in-game HDR On**, and
+**NVIDIA RTX HDR Off for this game**. RTX HDR is a separate conversion path; NVIDIA
+requires in-game HDR to be disabled when using it ([NVIDIA App FAQ](https://nvidia.custhelp.com/app/answers/detail/a_id/5521/~/nvidia-app-faq)).
+“Softer colors” applies only in SDR; its saved preference returns when HDR is off.
+The reported appearance issue is resolved on the reporting user's setup; a possible
+RTX HDR interaction is not a confirmed cause. If the result is unsuitable on your
+display, turn HDR off to return to SDR. This is not a guarantee for all displays.
 
 ## Start and save
 
@@ -64,7 +80,7 @@ their doors, landing floors and guards retained.
 **In-game YouTube playback has been discontinued in the public release.** The plaza,
 cinema and sky screens remain scenery and do not offer online-video playback or controls.
 The cinema and Sky Theatre can still be visited. Older promotional footage may show
-the historical playback prototype; it is not a feature of v0.1.4.
+the historical playback prototype; it is not a feature of this public-game build.
 
 ## Prototype scope
 
@@ -72,7 +88,7 @@ Solo exploration is the main experience. Online rooms are experimental and disab
 by default. External-network multiplayer and physical spatial audio still have
 unverified conditions. Built-in menus, handheld apps, memories, destination names, transit guidance and fishing descriptions support English. Online experimental tools are outside the translation scope.
 
-For problem reports, include **v0.1.4**, Windows/GPU details, the location, action,
+For problem reports, include **v0.1.5 NVIDIA**, Windows/GPU details, the location, action,
 and time of day. Remove personal information from logs; do not publish your entire
 save folder or account data.
 
@@ -83,7 +99,7 @@ External videos and music retain their owners' rights. Keep
 The included **END-USER-TERMS.md** contains the product's Unreal technology terms
 and Epic disclaimer.
 
-## Unavailable features in v0.1.4
+## Unavailable features in v0.1.5
 
 City browsing/hosting, world eggs/add-ons and the phone Friends app
 are marked **In development** (English) or **開発中** (Japanese) and cannot be selected in normal play.

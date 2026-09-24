@@ -451,8 +451,8 @@ TSharedRef<SWidget> SEWOverlay::SettingsPanel()
             [this] { if (Owner.IsValid()) { Owner->Graphics.SetVSync(!Owner->Graphics.VSync); Owner->RefreshUI(); } },
             GI->Graphics.VSync || GI->Graphics.CanUseVSync())];
     Box->AddSlot().AutoHeight().Padding(0, 4, 0, 6)
-        [Label(GI->Graphics.MaxDisplayFPS ? EWL::Format(TEXT("最大フレームレート：%d FPS（生成込み）"), TEXT("Frame limit: %d FPS (including generated frames)"), GI->Graphics.MaxDisplayFPS) :
-            EWL::Pick(TEXT("最大フレームレート：上限なし"), TEXT("Frame limit: Unlimited")), 16, Ink)];
+        [Label(GI->Graphics.MaxDisplayFPS ? EWL::Format(TEXT("ゲーム描画の上限：%d FPS"), TEXT("Game rendering limit: %d FPS"), GI->Graphics.MaxDisplayFPS) :
+            EWL::Pick(TEXT("ゲーム描画の上限：上限なし"), TEXT("Game rendering limit: Unlimited")), 16, Ink)];
     Box->AddSlot().AutoHeight().Padding(0, 0, 0, 8)[SNew(SHorizontalBox)
         + SHorizontalBox::Slot().FillWidth(1).Padding(0, 0, 6, 0)
             [Button(EWL::Pick(TEXT("下げる"), TEXT("Lower")), [this] { if (Owner.IsValid()) { Owner->Graphics.StepMaxDisplayFPS(-1); Owner->RefreshUI(); } }, GI->Graphics.MaxDisplayFPS != 30)]
@@ -469,8 +469,9 @@ TSharedRef<SWidget> SEWOverlay::SettingsPanel()
         [Button(GI->IsHighQuality() ? EWL::Pick(TEXT("軽量設定"), TEXT("Performance preset")) : EWL::Pick(TEXT("● 軽量設定"), TEXT("● Performance preset")),
             [this] { if (Owner.IsValid()) Owner->SetQuality(false); })];
     Box->AddSlot().AutoHeight().Padding(0, 0, 0, 18)
-        [Button(GI->IsSoftStyle() ? EWL::Pick(TEXT("● 色合いをやわらかく"), TEXT("● Softer colors")) : EWL::Pick(TEXT("色合いをやわらかく"), TEXT("Softer colors")),
-            [this] { if (Owner.IsValid()) Owner->SetSoftStyle(!Owner->IsSoftStyle()); })];
+        [Button(GI->Graphics.IsHDRActive() ? EWL::Pick(TEXT("色合いをやわらかく（SDR時のみ）"), TEXT("Softer colors (SDR only)")) :
+            GI->IsSoftStyle() ? EWL::Pick(TEXT("● 色合いをやわらかく"), TEXT("● Softer colors")) : EWL::Pick(TEXT("色合いをやわらかく"), TEXT("Softer colors")),
+            [this] { if (Owner.IsValid()) Owner->SetSoftStyle(!Owner->IsSoftStyle()); }, !GI->Graphics.IsHDRActive())];
     Box->AddSlot().AutoHeight().Padding(0, 4, 0, 8)[Label(TEXT("DLSS 4.5"), 20, Accent)];
     Box->AddSlot().AutoHeight().Padding(0, 0, 0, 12)[Label(GI->Graphics.Status(), 13, Muted)];
     for (const auto& Option : GI->Graphics.SuperResolutionOptions())

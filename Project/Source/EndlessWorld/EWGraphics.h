@@ -32,7 +32,9 @@ public:
     TArray<FEWGraphicsOption> SuperResolutionOptions() const;
     TArray<FEWGraphicsOption> FrameGenerationOptions() const;
     FString Status() const;
-    TSharedRef<class FJsonObject> Evidence() const;
+    // Optional render-thread target snapshot synchronizes CPU render commands;
+    // request only outside timing samples, never for per-frame status polling.
+    TSharedRef<class FJsonObject> Evidence(bool ReadOutputTexture = false) const;
     int32 SuperResolution = 0; // 0 native TSR, 1 DLAA, 2 quality, 3 balanced, 4 performance, 5 ultra performance
     int32 FrameGeneration = 0; // 0 off, 2..6 multiplier, 10 dynamic
     bool RayReconstruction = false, Reflex = true;
@@ -66,9 +68,12 @@ private:
     bool bRRRuntimeFailure = false, bRRApplied = false;
     uint64 RRStartEvaluations = 0, RRStartFailures = 0, RRStartFallbacks = 0;
     bool bHDRScreenSupported = false, bHDRApplied = false, bHDRInitialized = false;
+    bool bHDRCalibrationActive = false;
     bool bOutputStatusChanged = false;
     int32 AppliedHDRPeakNits = 0, AppliedHDRBrightness = 0;
     void UpdateHDROutput();
+    void ApplyHDRCalibration(bool Enabled);
+    friend class FEWHDRCalibrationTest;
     void ApplyRayReconstruction(bool Enable);
     void ApplyPresentation();
 };

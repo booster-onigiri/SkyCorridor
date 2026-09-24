@@ -1,5 +1,8 @@
 #include "EWArtStudy.h"
 #include "EWGameInstance.h"
+#include "EWDayCycle.h"
+#include "HDRHelper.h"
+#include "Engine/PostProcessVolume.h"
 #include "EWChunkManager.h"
 #include "EWWorld.h"
 #include "Camera/CameraActor.h"
@@ -138,18 +141,31 @@ void AEWArtStudy::Tick(float DeltaSeconds)
     }
     if (CapturedAt==0 && Now>=ReadyAt)
     {
-        const FString Path=OutputPrefix+TEXT("-")+V.Name+TEXT(".png");
+        const bool HDRCapture=IsHDREnabled();
+        const FString Path=OutputPrefix+TEXT("-")+V.Name+(HDRCapture?TEXT(".exr"):TEXT(".png"));
+        CapturePath=Path;
         if (IFileManager::Get().FileExists(*Path)) { Finish(TEXT("Refusing to overwrite an existing art image.")); return; }
-        FScreenshotRequest::RequestScreenshot(Path,false,false);
+        const bool IncludeSlate=FParse::Param(FCommandLine::Get(),TEXT("EWArtIncludeSlate"));
+        FScreenshotRequest::RequestScreenshot(Path,IncludeSlate,false,HDRCapture,FIntRect(),IncludeSlate);
         auto O=MakeShared<FJsonObject>(); O->SetStringField(TEXT("name"),V.Name); O->SetStringField(TEXT("file"),Path);
         O->SetStringField(TEXT("chunk"),V.Coord.Text()); O->SetStringField(TEXT("camera"),Camera->GetActorLocation().ToString());
         O->SetStringField(TEXT("rotation"),Camera->GetActorRotation().ToString()); O->SetNumberField(TEXT("elapsed_seconds"),Now-Started);
+        O->SetObjectField(TEXT("graphics"),GI->Graphics.Evidence(true));
+        if (GI->DayCycle) O->SetObjectField(TEXT("lighting"),GI->DayCycle->Evidence());
+        O->SetStringField(TEXT("capture_encoding"),HDRCapture?TEXT("linear_scRGB_EXR_80_nits_per_unit_engine_readback_not_photometry"):TEXT("sRGB_PNG"));
+        O->SetBoolField(TEXT("include_slate"),IncludeSlate);
+        O->SetBoolField(TEXT("soft_style_preference"),GI->IsSoftStyle());
+        TArray<TSharedPtr<FJsonValue>> Grades;
+        for(TActorIterator<APostProcessVolume> It(GetWorld());It;++It)
+            for(const auto& B:It->Settings.WeightedBlendables.Array)
+                if (B.Object && B.Object->GetName()==TEXT("M_IllustratedLight"))
+                    Grades.Add(MakeShared<FJsonValueNumber>(B.Weight));
+        O->SetArrayField(TEXT("sdr_grade_blend_weights"),Grades);
         Views.Add(MakeShared<FJsonValueObject>(O)); CapturedAt=Now; return;
     }
     if (CapturedAt>0 && Now-CapturedAt>3)
     {
-        const FString Path=OutputPrefix+TEXT("-")+V.Name+TEXT(".png");
-        if (!IFileManager::Get().FileExists(*Path)) { Finish(TEXT("The screenshot file was not written.")); return; }
+        if (!IFileManager::Get().FileExists(*CapturePath)) { Finish(TEXT("The screenshot file was not written.")); return; }
         ++ViewIndex; CapturedAt=0; bDestinationSet=false; bCameraSet=false;
     }
 }

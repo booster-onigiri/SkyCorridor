@@ -1,4 +1,5 @@
 #include "EWGraphics.h"
+#include "EWNativeDisplayProbe.h"
 #include "EWLocalization.h"
 #if EW_WITH_NVIDIA
 #include "DLSSLibrary.h"
@@ -17,6 +18,9 @@
 #include "UnrealClient.h"
 #include "HDRHelper.h"
 #include "RenderUtils.h"
+#include "RenderingThread.h"
+#include "RHICommandList.h"
+#include "PixelFormat.h"
 #include "Widgets/SWindow.h"
 #include "GenericPlatform/GenericWindow.h"
 // These probes are optional local instrumentation, not part of stock plugins.
@@ -79,7 +83,7 @@ TSharedPtr<SWindow> GameWindow()
 {
     return GEngine && GEngine->GameViewport ? GEngine->GameViewport->GetWindow() : nullptr;
 }
-bool CurrentDisplaySupportsHDR()
+bool CurrentDisplayInformation(FDisplayInformation& OutDisplay)
 {
     const auto Window = GameWindow();
     if (!Window) return false;
@@ -87,15 +91,31 @@ bool CurrentDisplaySupportsHDR()
     FDisplayInformationArray Displays;
     RHIGetDisplaysInformation(Displays);
     double BestArea = 0;
-    bool Supported = false;
     for (const auto& Display : Displays)
     {
         const auto& Rect = Display.DesktopCoordinates;
         const double W = FMath::Max(0., FMath::Min(BottomRight.X, double(Rect.Max.X)) - FMath::Max(TopLeft.X, double(Rect.Min.X)));
         const double H = FMath::Max(0., FMath::Min(BottomRight.Y, double(Rect.Max.Y)) - FMath::Max(TopLeft.Y, double(Rect.Min.Y)));
-        if (W * H > BestArea) { BestArea = W * H; Supported = Display.bHDRSupported; }
+        if (W * H > BestArea) { BestArea = W * H; OutDisplay = Display; }
     }
-    return BestArea > 0 && Supported;
+    return BestArea > 0;
+}
+const FName HDRCalibrationTag(TEXT("EndlessWorldHDRCalibration"));
+const TCHAR* const HDRCalibrationCVars[] = {
+    TEXT("r.HDR.Aces.Version"), TEXT("r.HDR.Display.OverrideOSMaxLuminance"),
+    TEXT("r.HDR.PaperWhite.Mode"), TEXT("r.HDR.PaperWhite"),
+    TEXT("r.HDR.UI.Luminance.Mode"), TEXT("r.HDR.UI.Luminance"),
+    TEXT("r.HDR.UI.Level"), TEXT("r.HDR.UI.CompositeMode")};
+float RequestedHDRPaperWhite(int32 Brightness, int32 PeakNits)
+{
+    // UE 5.8 ACES2 consumes paper white, not the ACES1 MidLuminance curve.
+    return FMath::Min(203.f * FMath::Clamp(Brightness, 50, 200) / 100.f,
+        float(FMath::Clamp(PeakNits, 400, 2000)));
+}
+double ReadCVar(const TCHAR* Name, double Fallback = 0)
+{
+    const auto* C = IConsoleManager::Get().FindConsoleVariable(Name);
+    return C ? C->GetFloat() : Fallback;
 }
 #if EW_WITH_PRESENTATION_EVIDENCE
 FEWPresentationEvidence PresentationEvidence()
@@ -185,8 +205,7 @@ bool FEWGraphics::CanUseVSync() const
 {
 #if EW_WITH_NVIDIA
     if (!FrameGeneration || !CanFrameGenerate()) return true;
-    if (!UStreamlineLibraryDLSSG::IsDLSSGModeSupported(FGMode(FrameGeneration)) ||
-        (FrameGeneration == 10 && !NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")))) return true;
+    if (!UStreamlineLibraryDLSSG::IsDLSSGModeSupported(FGMode(FrameGeneration))) return true;
     return FrameGeneration != 10 && UStreamlineLibraryDLSSG::GetDLSSGIsVsyncSupportAvailable();
 #else
     return true;
@@ -233,7 +252,10 @@ void FEWGraphics::Initialize()
     // Art comparisons keep the original native render contract. A dedicated
     // graphics audit enables the requested modes after its own warm-up.
     if (FParse::Param(FCommandLine::Get(), TEXT("EWArtStudy")))
-    { SuperResolution = 0; FrameGeneration = 0; RayReconstruction = false; HDR = false; }
+    {
+        SuperResolution = 0; FrameGeneration = 0; RayReconstruction = false;
+        if (!FParse::Param(FCommandLine::Get(), TEXT("EWArtHDRComparison"))) HDR = false;
+    }
     SuperResolution = FMath::Clamp(SuperResolution, 0, 5);
     if (!(FrameGeneration == 0 || (FrameGeneration >= 2 && FrameGeneration <= 6) || FrameGeneration == 10)) FrameGeneration = 0;
     MaxDisplayFPS = MaxDisplayFPS <= 0 ? 0 : FMath::Clamp(MaxDisplayFPS, 30, 360);
@@ -263,8 +285,7 @@ TArray<FEWGraphicsOption> FEWGraphics::FrameGenerationOptions() const
         bool Supported = I == 0;
 #if EW_WITH_NVIDIA
         Supported |= CanFrameGenerate() && UStreamlineLibraryDLSSG::IsDLSSGModeSupported(FGMode(I)) &&
-            (!VSync || (I != 10 && UStreamlineLibraryDLSSG::GetDLSSGIsVsyncSupportAvailable())) &&
-            (I != 10 || NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")));
+            (!VSync || (I != 10 && UStreamlineLibraryDLSSG::GetDLSSGIsVsyncSupportAvailable()));
 #endif
         Result.Add({I, I == 0 ? EWL::Pick(TEXT("フレーム生成なし"), TEXT("Frame generation off")) : I == 10 ? EWL::Pick(TEXT("動的マルチフレーム生成"), TEXT("Dynamic multi-frame generation")) :
             EWL::Format(TEXT("フレーム生成 %d倍"), TEXT("Frame generation %dx"), I), Supported});
@@ -356,6 +377,9 @@ void FEWGraphics::Shutdown()
     UStreamlineLibraryDLSSG::SetDLSSGMode(EStreamlineDLSSGMode::Off);
     UDLSSLibrary::EnableDLSSRR(false);
 #endif
+    ApplyHDRCalibration(false);
+    bInitialized = false;
+    bHDRInitialized = false;
 }
 void FEWGraphics::SetNative()
 { SuperResolution = 0; FrameGeneration = 0; RayReconstruction = false; if (bInitialized) Apply(true); }
@@ -447,9 +471,31 @@ void FEWGraphics::ApplyRayReconstruction(bool Enable)
 #endif
 }
 
+void FEWGraphics::ApplyHDRCalibration(bool Enabled)
+{
+    auto& Console = IConsoleManager::Get();
+    if (!Enabled)
+    {
+        if (!bHDRCalibrationActive) return;
+        // Remove only this game's temporary layer, retaining the earlier
+        // project/OS policy and any higher-priority interactive overrides.
+        for (const TCHAR* Name : HDRCalibrationCVars)
+            if (auto* C = Console.FindConsoleVariable(Name)) C->Unset(ECVF_SetByTemp, HDRCalibrationTag);
+        bHDRCalibrationActive = false;
+        return;
+    }
+    const float Values[] = {2, 1, 1, RequestedHDRPaperWhite(HDRBrightness, HDRPeakNits), 1, 80, 1, 1};
+    static_assert(UE_ARRAY_COUNT(Values) == UE_ARRAY_COUNT(HDRCalibrationCVars));
+    for (int32 I = 0; I < UE_ARRAY_COUNT(Values); ++I)
+        if (auto* C = Console.FindConsoleVariable(HDRCalibrationCVars[I]))
+            C->Set(Values[I], ECVF_SetByTemp, HDRCalibrationTag);
+    bHDRCalibrationActive = true;
+}
+
 void FEWGraphics::UpdateHDROutput()
 {
-    const bool Supported = CurrentDisplaySupportsHDR();
+    FDisplayInformation Display;
+    const bool Supported = CurrentDisplayInformation(Display) && Display.bHDRSupported;
     if (Supported != bHDRScreenSupported) { bHDRScreenSupported = Supported; bOutputStatusChanged = true; }
     auto* Settings = GEngine ? GEngine->GetGameUserSettings() : nullptr;
     if (!Settings) return;
@@ -460,19 +506,16 @@ void FEWGraphics::UpdateHDROutput()
         // Pause frame generation before the HDR swapchain is recreated.
         DisplayChangeUntil = FPlatformTime::Seconds() + 1.25;
         if (EffectiveFG) { SuspendReason = TEXT("display_change"); ApplyPresentation(); }
-        SetCVar(TEXT("r.HDR.UI.CompositeMode"), 1);
-        // Keep paper menus near the 80-nit SDR reference white. A brighter
-        // UI clips pale button fills and helper text in SDR screen captures.
-        SetCVar(TEXT("r.HDR.UI.Luminance"), 80);
-        SetCVar(TEXT("r.HDR.UI.Level"), 1);
-        SetCVar(TEXT("r.HDR.Display.MidLuminance"), Wanted ? 15.f * HDRBrightness / 100.f : 15.f);
+        ApplyHDRCalibration(Wanted);
         Settings->EnableHDRDisplayOutput(Wanted, HDRPeakNits);
         HDRConfigureCVars(Wanted, HDRPeakNits, false);
         bHDRApplied = Wanted; bHDRInitialized = true;
         AppliedHDRPeakNits = HDRPeakNits; AppliedHDRBrightness = HDRBrightness;
         bOutputStatusChanged = true;
-        UE_LOG(LogTemp, Display, TEXT("EW_HDR preference=%d screen_supported=%d applied=%d peak=%d brightness=%d"),
-            HDR, bHDRScreenSupported, Wanted, HDRPeakNits, HDRBrightness);
+        UE_LOG(LogTemp, Display, TEXT("EW_HDR preference=%d screen_supported=%d applied=%d peak=%d brightness=%d paper_white=%.3f peak_override=%d aces=%d"),
+            HDR, bHDRScreenSupported, Wanted, HDRPeakNits, HDRBrightness,
+            ReadCVar(TEXT("r.HDR.PaperWhite")), int32(ReadCVar(TEXT("r.HDR.Display.OverrideOSMaxLuminance"))),
+            int32(ReadCVar(TEXT("r.HDR.Aces.Version"))));
     }
 }
 
@@ -513,8 +556,9 @@ void FEWGraphics::ApplyPresentation()
 {
     if (!bInitialized) return;
 #if EW_WITH_NVIDIA
-    const bool FGAvailable = FrameGeneration && CanFrameGenerate() && UStreamlineLibraryDLSSG::IsDLSSGModeSupported(FGMode(FrameGeneration)) &&
-        (FrameGeneration != 10 || NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")));
+    // Stock OnDynamic targets the display refresh rate automatically. The
+    // optional explicit-target extension is not required for mode support.
+    const bool FGAvailable = FrameGeneration && CanFrameGenerate() && UStreamlineLibraryDLSSG::IsDLSSGModeSupported(FGMode(FrameGeneration));
 #else
     const bool FGAvailable = false;
 #endif
@@ -549,7 +593,12 @@ FString FEWGraphics::PresentationStatus() const
 {
     if (!CanFrameGenerate()) return EWL::Pick(TEXT("ゲーム描画のFPS上限を設定します。垂直同期と併用できます。"), TEXT("Set the game rendering FPS limit. Can be used with VSync."));
     if (!NvidiaCVarAvailable(TEXT("t.Streamline.Reflex.PresentationMaxFPS")))
-        return EWL::Pick(TEXT("ゲーム描画のFPS上限を設定します。フレーム生成を使う場合、生成フレームを含む表示FPSの上限は保証されません。"), TEXT("Set the game rendering FPS limit. With frame generation, the total displayed FPS limit is not guaranteed."));
+    {
+        FString Result = EWL::Pick(TEXT("ゲーム描画のFPS上限を設定します。フレーム生成を使う場合、生成フレームを含む表示FPSの上限は保証されません。"), TEXT("Set the game rendering FPS limit. With frame generation, the total displayed FPS limit is not guaranteed."));
+        if (FrameGeneration == 10)
+            Result += EWL::Pick(TEXT("\n動的フレーム生成は画面のリフレッシュレート（Hz）へ自動追従します。垂直同期とは併用できません。"), TEXT("\nDynamic frame generation automatically targets the display refresh rate (Hz). It cannot be combined with VSync."));
+        return Result;
+    }
     FString Result = EWL::Pick(TEXT("上限には生成したフレームも含みます。"), TEXT("This limit includes generated frames."));
     if (FrameGeneration >= 2 && FrameGeneration <= 6 && MaxDisplayFPS)
         Result += EWL::Format(TEXT(" %d倍ではゲーム描画の上限は %.1f FPS です。"), TEXT(" At %dx, the game rendering limit is %.1f FPS."), FrameGeneration, float(MaxDisplayFPS) / FrameGeneration);
@@ -577,9 +626,10 @@ FString FEWGraphics::Status() const
         }
     }
     if (SuperResolution && !UDLSSLibrary::IsDLSSEnabled()) Result += EWL::Pick(TEXT("\n現在はネイティブ描画を使用しています。"), TEXT("\nCurrently using native rendering."));
-    if (FrameGeneration == 10 && !NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")))
-        Result += EWL::Pick(TEXT("\nこの構成は動的フレーム生成の目標FPS設定に対応していません。保存設定を保持し、生成を停止しています。"), TEXT("\nThis build does not support a target FPS for dynamic frame generation. Generation is paused; your setting is retained."));
-    else if (FrameGeneration && SuspendReason == TEXT("hud_unavailable"))
+    if (FrameGeneration == 10 && CanFrameGenerate() && UStreamlineLibraryDLSSG::IsDLSSGModeSupported(FGMode(FrameGeneration)) &&
+        !NvidiaCVarAvailable(TEXT("r.Streamline.DLSSG.DynamicTargetFrameRate")))
+        Result += EWL::Pick(TEXT("\n動的フレーム生成は画面のリフレッシュレート（Hz）へ自動追従します。設定したFPS上限は生成フレームを含む表示FPSの上限を保証しません。"), TEXT("\nDynamic frame generation automatically targets the display refresh rate (Hz). The configured FPS limit does not guarantee a cap on displayed FPS including generated frames."));
+    if (FrameGeneration && SuspendReason == TEXT("hud_unavailable"))
         Result += EWL::Pick(TEXT("\n案内表示の準備ができないため、フレーム生成を一時停止しています。"), TEXT("\nFrame generation is paused while the HUD is unavailable."));
     else if (FrameGeneration && CanFrameGenerate() && !SuspendReason.IsEmpty())
         Result += bMenuOpen ? EWL::Pick(TEXT("\nメニュー中はフレーム生成を一時停止します。探索へ戻ると再開します。"), TEXT("\nFrame generation pauses in menus and resumes during exploration.")) : EWL::Pick(TEXT("\nフレーム生成を一時停止しています。"), TEXT("\nFrame generation is paused."));
@@ -590,9 +640,10 @@ FString FEWGraphics::Status() const
     return EWL::Pick(TEXT("ネイティブ / TSR 描画を使用しています。\nこの配布版にはDLSS・フレーム生成・Reflexが含まれていません。保存済みの設定は保持されます。"), TEXT("Using Native / TSR rendering.\nThis build does not include DLSS, frame generation or Reflex. Saved preferences are retained."));
 #endif
 }
-TSharedRef<FJsonObject> FEWGraphics::Evidence() const
+TSharedRef<FJsonObject> FEWGraphics::Evidence(bool ReadOutputTexture) const
 {
     auto O = MakeShared<FJsonObject>();
+    if (ReadOutputTexture) O->SetObjectField(TEXT("native_display"), EWNativeDisplayProbe::Read());
     O->SetBoolField(TEXT("nvidia_compiled"), EW_WITH_NVIDIA != 0);
     const bool HasPresentationCap = NvidiaCVarAvailable(TEXT("t.Streamline.Reflex.PresentationMaxFPS"));
     O->SetBoolField(TEXT("presentation_cap_extension_available"), HasPresentationCap);
@@ -668,6 +719,82 @@ TSharedRef<FJsonObject> FEWGraphics::Evidence() const
     O->SetBoolField(TEXT("hdr_enabled"), IsHDRActive());
     O->SetNumberField(TEXT("hdr_peak_nits"), HDRPeakNits);
     O->SetNumberField(TEXT("hdr_brightness"), HDRBrightness);
+    O->SetStringField(TEXT("hdr_calibration_scope"), TEXT("ue58_aces2_settings_and_viewport_metadata_not_physical_display_measurement"));
+    O->SetStringField(TEXT("hdr_physical_luminance_status"), TEXT("not_measured"));
+    FDisplayInformation Display;
+    const bool HasDisplay = CurrentDisplayInformation(Display);
+    O->SetBoolField(TEXT("hdr_rhi_display_available"), HasDisplay);
+    O->SetStringField(TEXT("hdr_rhi_display_source"), TEXT("rhi_display_information_os_or_engine_fallback"));
+    if (HasDisplay)
+    {
+        O->SetNumberField(TEXT("hdr_rhi_display_minimum_luminance_nits"), Display.MinimumLuminanceInNits);
+        O->SetNumberField(TEXT("hdr_rhi_display_maximum_luminance_nits"), Display.MaximumLuminanceInNits);
+        O->SetNumberField(TEXT("hdr_rhi_display_maximum_full_frame_luminance_nits"), Display.MaximumFullFrameLuminanceInNits);
+    }
+    else for (const TCHAR* Name : {TEXT("hdr_rhi_display_minimum_luminance_nits"),
+        TEXT("hdr_rhi_display_maximum_luminance_nits"), TEXT("hdr_rhi_display_maximum_full_frame_luminance_nits")})
+        O->SetField(Name, MakeShared<FJsonValueNull>());
+    const FViewport* Viewport = GEngine && GEngine->GameViewport ? GEngine->GameViewport->Viewport : nullptr;
+    O->SetBoolField(TEXT("hdr_viewport_metadata_available"), Viewport != nullptr);
+    EPixelFormat OutputTextureFormat = PF_Unknown;
+    if (ReadOutputTexture && Viewport && IsInGameThread() && !IsRunningCommandlet())
+    {
+        // The game-thread texture may be null for direct-to-window rendering.
+        // Snapshot the actual output target on its owning thread. This explicit
+        // evidence call waits for CPU render commands, so exclude it from FPS samples.
+        ENQUEUE_RENDER_COMMAND(EWReadHDRTargetFormat)([Viewport, &OutputTextureFormat](FRHICommandListImmediate&)
+        {
+            const FTextureRHIRef& Texture = Viewport->GetRenderTargetTexture();
+            if (Texture.IsValid()) OutputTextureFormat = Texture->GetFormat();
+        });
+        FlushRenderingCommands();
+    }
+    O->SetBoolField(TEXT("hdr_viewport_output_texture_available"), OutputTextureFormat != PF_Unknown);
+    O->SetBoolField(TEXT("hdr_viewport_output_texture_requested"), ReadOutputTexture);
+    O->SetStringField(TEXT("hdr_viewport_output_texture_source"), TEXT("render_thread_scene_viewport_target_not_dxgi_or_photometry"));
+    if (OutputTextureFormat != PF_Unknown)
+    {
+        O->SetNumberField(TEXT("hdr_viewport_output_texture_format"), int32(OutputTextureFormat));
+        O->SetStringField(TEXT("hdr_viewport_output_texture_format_name"), GetPixelFormatString(OutputTextureFormat));
+    }
+    else
+    {
+        O->SetField(TEXT("hdr_viewport_output_texture_format"), MakeShared<FJsonValueNull>());
+        O->SetField(TEXT("hdr_viewport_output_texture_format_name"), MakeShared<FJsonValueNull>());
+    }
+    const bool CalibrationMatches = ReadCVar(TEXT("r.HDR.Aces.Version")) == 2 &&
+        ReadCVar(TEXT("r.HDR.Display.OverrideOSMaxLuminance")) == 1 &&
+        ReadCVar(TEXT("r.HDR.PaperWhite.Mode")) == 1 &&
+        FMath::IsNearlyEqual(ReadCVar(TEXT("r.HDR.PaperWhite")), double(RequestedHDRPaperWhite(HDRBrightness, HDRPeakNits)), .001) &&
+        ReadCVar(TEXT("r.HDR.UI.Luminance.Mode")) == 1 && ReadCVar(TEXT("r.HDR.UI.Luminance")) == 80 &&
+        ReadCVar(TEXT("r.HDR.UI.Level")) == 1 && ReadCVar(TEXT("r.HDR.UI.CompositeMode")) == 1 &&
+        ReadCVar(TEXT("r.HDR.Display.MaxLuminance")) == HDRPeakNits;
+    FString CalibrationStatus = !HDR || !CanHDR() || !bHDRApplied ? TEXT("inactive") :
+        !CalibrationMatches ? TEXT("overridden") : TEXT("pending");
+    if (Viewport)
+    {
+        const bool ViewportHDR = Viewport->GetSceneHDREnabled();
+        const double PaperWhite = Viewport->GetHDRPaperWhiteInNits();
+        O->SetBoolField(TEXT("hdr_viewport_hdr"), ViewportHDR);
+        O->SetNumberField(TEXT("hdr_viewport_output_device"), int32(Viewport->GetDisplayOutputFormat()));
+        O->SetNumberField(TEXT("hdr_viewport_color_gamut"), int32(Viewport->GetDisplayColorGamut()));
+        O->SetNumberField(TEXT("hdr_viewport_maximum_luminance_nits"), Viewport->GetMaximumLuminanceInNits());
+        O->SetNumberField(TEXT("hdr_viewport_paper_white_nits"), PaperWhite);
+        // Match UE's actual ACES2 / Slate policy, not only the requested controls.
+        O->SetNumberField(TEXT("hdr_effective_peak_nits"), ReadCVar(TEXT("r.HDR.Display.OverrideOSMaxLuminance")) != 0 ?
+            (ViewportHDR ? ReadCVar(TEXT("r.HDR.Display.MaxLuminance")) : 100.) : Viewport->GetMaximumLuminanceInNits());
+        O->SetNumberField(TEXT("hdr_effective_ui_luminance_nits"),
+            (ReadCVar(TEXT("r.HDR.UI.Luminance.Mode")) != 0 ? ReadCVar(TEXT("r.HDR.UI.Luminance")) : PaperWhite) * ReadCVar(TEXT("r.HDR.UI.Level")));
+        O->SetNumberField(TEXT("hdr_effective_scene_multiplier"), PaperWhite / 203. * ReadCVar(TEXT("r.HDR.Aces.SceneColorMultiplier")));
+        if (CalibrationStatus == TEXT("pending") && ViewportHDR &&
+            FMath::IsNearlyEqual(PaperWhite, double(RequestedHDRPaperWhite(HDRBrightness, HDRPeakNits)), .001))
+            CalibrationStatus = TEXT("applied");
+    }
+    else for (const TCHAR* Name : {TEXT("hdr_viewport_hdr"), TEXT("hdr_viewport_output_device"), TEXT("hdr_viewport_color_gamut"),
+        TEXT("hdr_viewport_maximum_luminance_nits"), TEXT("hdr_viewport_paper_white_nits"), TEXT("hdr_effective_peak_nits"),
+        TEXT("hdr_effective_ui_luminance_nits"), TEXT("hdr_effective_scene_multiplier")})
+        O->SetField(Name, MakeShared<FJsonValueNull>());
+    O->SetStringField(TEXT("hdr_calibration_status"), CalibrationStatus);
     // Missing probes are missing measurements, never successful DXGI checks.
     O->SetBoolField(TEXT("dxgi_evidence_available"), false);
     O->SetStringField(TEXT("dxgi_evidence_status"), TEXT("probe_not_compiled"));
@@ -717,7 +844,9 @@ TSharedRef<FJsonObject> FEWGraphics::Evidence() const
         TEXT("r.Lumen.Reflections.ScreenSpaceReconstruction"), TEXT("r.Lumen.Reflections.Temporal"),
         TEXT("r.Lumen.Reflections.BilateralFilter"), TEXT("r.Lumen.Reflections.ExportHitT"), TEXT("r.Shadow.Denoiser"),
         TEXT("r.AllowHDR"), TEXT("r.HDR.EnableHDROutput"), TEXT("r.HDR.Display.OutputDevice"), TEXT("r.HDR.Display.ColorGamut"),
-        TEXT("r.HDR.Display.MaxLuminance"), TEXT("r.HDR.Display.MidLuminance"), TEXT("r.HDR.UI.Luminance"), TEXT("r.HDR.UI.CompositeMode")})
+        TEXT("r.HDR.Display.MaxLuminance"), TEXT("r.HDR.Display.MidLuminance"), TEXT("r.HDR.UI.Luminance"), TEXT("r.HDR.UI.CompositeMode"),
+        TEXT("r.HDR.Display.OverrideOSMaxLuminance"), TEXT("r.HDR.Aces.Version"), TEXT("r.HDR.Aces.SceneColorMultiplier"),
+        TEXT("r.HDR.PaperWhite.Mode"), TEXT("r.HDR.PaperWhite"), TEXT("r.HDR.UI.Luminance.Mode"), TEXT("r.HDR.UI.Level")})
         if (auto* C = IConsoleManager::Get().FindConsoleVariable(Name)) O->SetNumberField(Name, C->GetFloat());
     return O;
 }

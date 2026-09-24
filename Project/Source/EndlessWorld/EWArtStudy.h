@@ -18,6 +18,7 @@ public:
 private:
     UPROPERTY() TObjectPtr<ACameraActor> Camera;
     FString OutputPrefix;
+    FString CapturePath;
     double Started=0, ReadyAt=0, CapturedAt=0;
     int32 ViewIndex=0, SelectedViewIndex=-1;
     bool bDestinationSet=false, bCameraSet=false, bFinished=false;

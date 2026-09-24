@@ -28,14 +28,15 @@ than the packaged game.
 
 ## Restore the versioned assets
 
-Check out **v0.1.4** and use the asset archives pinned in its manifest.
-This release removes skyline-spanning elevator rods through the city-generation code.
+Check out **v0.1.5** and use the asset archives pinned in its manifest.
+This release adds the NVIDIA-enabled Windows package and corrects native HDR settings and SDR-only grading.
+The source checkout still defaults to TSR; developer NVIDIA SDK installation is optional ([instructions](NVIDIA.md)).
 Public YouTube playback remains discontinued. It reuses the unchanged v0.1.0 development asset archives. The repository
 contains original source and generator scripts. Large Content/SourceArt files are
 listed in the root `release-assets.json` and delivered through GitHub Releases.
 
 ```powershell
-git clone --branch v0.1.4 https://github.com/booster-onigiri/SkyCorridor.git
+git clone --branch v0.1.5 https://github.com/booster-onigiri/SkyCorridor.git
 cd SkyCorridor
 .\setup.ps1 -EngineRoot "C:\Program Files\Epic Games\UE_5.8"
 ```
